@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝剑的个人主页</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">Swordingk</a>
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">关于</a></li>
+                <li><a href="#experience" class="nav-link">经历</a></li>
+                <li><a href="#projects" class="nav-link">项目</a></li>
+                <li><a href="#hobbies" class="nav-link">爱好</a></li>
+                <li><a href="#contact" class="nav-link">联系</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-links">
+            <li><a href="#about" class="mobile-menu-link">关于</a></li>
+            <li><a href="#experience" class="mobile-menu-link">经历</a></li>
+            <li><a href="#projects" class="mobile-menu-link">项目</a></li>
+            <li><a href="#hobbies" class="mobile-menu-link">爱好</a></li>
+            <li><a href="#contact" class="mobile-menu-link">联系</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="hero-glow"></div>
+            <div class="hero-glow-secondary"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="hero-content">
+            <p class="hero-label fade-in">欢迎来到</p>
+            <h1 class="hero-title">
+                <span class="title-line">宝剑的主页</span>
+            </h1>
+            <p class="hero-subtitle fade-in delay-1">
+                AI产品经理 / iOS开发工程师
+            </p>
+            <p class="hero-description fade-in delay-2">
+                中南大学 · 信息安全
+            </p>
+        </div>
+        <a href="#about" class="scroll-indicator fade-in delay-3">
+            <span class="scroll-text">向下滚动</span>
+            <svg class="scroll-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </a>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">01</span>
+                <h2 class="section-title">关于我</h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-intro">
+                    <p class="about-text">
+                        我是杨锟，目前就读于<strong>中南大学</strong>，专业是信息安全（27届本科）。专业成绩83.2/100，位于专业前30%。
+                    </p>
+                    <p class="about-text">
+                        兼具开发能力与AI技术向产品思维，可独立完成从市场调研到产品开发的全流程。热衷于探索AI前沿技术，拥抱vibecoding、claude code、openclow等新一代AI开发范式，致力于用AI工具重塑产品开发流程。
+                    </p>
+                    <div class="about-tags">
+                        <span class="tag">AI产品</span>
+                        <span class="tag">iOS开发</span>
+                        <span class="tag">SwiftUI</span>
+                        <span class="tag">信息安全</span>
+                    </div>
+                </div>
+                <div class="about-education">
+                    <h3 class="education-title">教育背景</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-period">2023 - 2027</span>
+                                <h4 class="timeline-school">中南大学</h4>
+                                <p class="timeline-degree">信息安全 · 本科</p>
+                                <p class="timeline-score">专业成绩：83.2/100，前30%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="education-title" style="margin-top: 30px;">技能证书</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-period">英语</span>
+                                <h4 class="timeline-school">CET-6（499分）</h4>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <span class="timeline-period">认证</span>
+                                <h4 class="timeline-school">CCF-CSP认证（210分）</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="education-title" style="margin-top: 30px;">技术技能</h3>
+                    <div class="skills-brief">
+                        <span class="skill-chip">C++</span>
+                        <span class="skill-chip">Java</span>
+                        <span class="skill-chip">Swift</span>
+                        <span class="skill-chip">SwiftUI</span>
+                        <span class="skill-chip">iOS开发</span>
+                        <span class="skill-chip">PyTorch</span>
+                        <span class="skill-chip">PRD撰写</span>
+                        <span class="skill-chip">原型设计</span>
+                        <span class="skill-chip">vibecoding</span>
+                        <span class="skill-chip">Claude Code</span>
+                        <span class="skill-chip">OpenClow</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience" id="experience">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">02</span>
+                <h2 class="section-title">工作经历</h2>
+            </div>
+            <div class="experience-timeline">
+                <div class="experience-card fade-in-up">
+                    <div class="experience-header">
+                        <div class="experience-company">
+                            <span class="company-badge">泛联新安</span>
+                            <h3 class="company-name">泛联新安 · C++分析工程师</h3>
+                        </div>
+                        <span class="experience-period">2025.07 - 2025.09</span>
+                    </div>
+                    <div class="experience-role">
+                        <span class="role-tag">C++分析工程师（实习生）</span>
+                    </div>
+                    <div class="experience-project">
+                        <ul class="project-tasks">
+                            <li>探究clang-format、clang-tidy核心实现原理，为公司国产单元测试软件集成C++自动化工具提供技术支撑</li>
+                            <li>搭建C++开发环境，通过静态分析源码、编译调试、断点跟踪拆解工具核心模块</li>
+                            <li>整理技术文档，完成原理分析报告，明确移植难点与适配方案</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="experience-card fade-in-up">
+                    <div class="experience-header">
+                        <div class="experience-company">
+                            <span class="company-badge">字节跳动</span>
+                            <h3 class="company-name">字节跳动 · 大模型</h3>
+                        </div>
+                        <span class="experience-period">2025.09 - 2025.12</span>
+                    </div>
+                    <div class="experience-role">
+                        <span class="role-tag">大模型数据标注/审核（兼职）</span>
+                    </div>
+                    <div class="experience-project">
+                        <ul class="project-tasks">
+                            <li>参与大模型训练素材筛选、标注与优化，探索技术场景能力边界</li>
+                            <li>结合信息安全专业知识，整理网络攻防、逆向工程等知识点与实操案例，按规范标注后提交训练平台</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">03</span>
+                <h2 class="section-title">项目作品</h2>
+            </div>
+            <div class="projects-grid">
+                <article class="project-card fade-in-up">
+                    <div class="project-header">
+                        <h3 class="project-title">FitGenius - AI健身助手</h3>
+                        <span class="project-role">独立开发</span>
+                    </div>
+                    <p class="project-description">
+                        腾讯客户端菁英班实战项目，独立完成全流程开发。基于SwiftUI搭建iOS应用，集成阿里云通义千问大模型API，打造AI健身饮食计划助手。主要功能包括：AI生成个性化训练计划、饮食数据分析与统计、训练打卡与进度追踪、云端数据同步、Apple Watch联动等。参与金种子杯创业大赛，计划2026年4月正式上线AppStore。
+                    </p>
+                    <p class="project-description">
+                        <strong>产品工作：</strong>调研健身用户核心需求，拆解训练计划、饮食统计两大核心功能，撰写3版产品需求文档（PRD），设计小组件、云存储、Apple内购等功能，完成首轮内测并收集10+用户反馈。
+                    </p>
+                    <p class="project-description">
+                        <strong>开发工作：</strong>SwiftUI搭建iOS端完整架构，集成阿里云大模型API实现AI训练建议生成，独立完成训练量统计、饮食数据一键生成、计划自定义修改与打卡等功能开发，支持iCloud云同步与多设备适配。
+                    </p>
+                    <div class="project-links">
+                        <a href="https://github.com/swording-k/fit-genius" target="_blank" class="project-link">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                            </svg>
+                            <span>GitHub仓库</span>
+                        </a>
+                        <a href="https://testflight.apple.com/join/BfXc79h1" target="_blank" class="project-link">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                            </svg>
+                            <span>TestFlight内测</span>
+                        </a>
+                    </div>
+                    <div class="project-tags">
+                        <span class="skill-tag">SwiftUI</span>
+                        <span class="skill-tag">iOS开发</span>
+                        <span class="skill-tag">阿里云大模型</span>
+                        <span class="skill-tag">AI产品</span>
+                        <span class="skill-tag">PRD撰写</span>
+                        <span class="skill-tag">原型设计</span>
+                        <span class="skill-tag">独立开发</span>
+                    </div>
+                </article>
+                <article class="project-card fade-in-up">
+                    <div class="project-header">
+                        <h3 class="project-title">计算机视觉目标检测大模型移植项目</h3>
+                        <span class="project-role">项目主导：鲁鸣鸣老师</span>
+                    </div>
+                    <p class="project-description">
+                        基于PyTorch搭建模型运行环境，用Blender构建视觉检测数据集，跑通基础模型推理流程。掌握大模型移植核心流程与网页端部署方法。
+                    </p>
+                    <div class="project-tags">
+                        <span class="skill-tag">PyTorch</span>
+                        <span class="skill-tag">计算机视觉</span>
+                        <span class="skill-tag">模型部署</span>
+                        <span class="skill-tag">Blender</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Honors Section -->
+    <section class="honors" id="honors">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">04</span>
+                <h2 class="section-title">荣誉证书</h2>
+            </div>
+            <div class="honors-grid">
+                <div class="honor-card fade-in-up">
+                    <div class="honor-level">国家级</div>
+                    <h3 class="honor-name">2024国家励志奖学金</h3>
+                </div>
+                <div class="honor-card fade-in-up">
+                    <div class="honor-level">国家级</div>
+                    <h3 class="honor-name">2025美国大学生数学建模竞赛H奖</h3>
+                </div>
+                <div class="honor-card fade-in-up">
+                    <div class="honor-level">省级</div>
+                    <h3 class="honor-name">2025深圳杯数学建模竞赛优秀论文奖</h3>
+                </div>
+                <div class="honor-card fade-in-up">
+                    <div class="honor-level">校级</div>
+                    <h3 class="honor-name">2025中南大学数学建模校赛一等奖</h3>
+                </div>
+                <div class="honor-card fade-in-up">
+                    <div class="honor-level">校级</div>
+                    <h3 class="honor-name">学院学年奖学金</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hobbies Section -->
+    <section class="hobbies" id="hobbies">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">05</span>
+                <h2 class="section-title">兴趣爱好</h2>
+            </div>
+            <div class="hobbies-grid">
+                <div class="hobby-card fade-in-up">
+                    <div class="hobby-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6.5 6.5h11v11h-11z"/>
+                            <path d="M6.5 6.5L17.5 17.5"/>
+                            <path d="M17.5 6.5L6.5 17.5"/>
+                        </svg>
+                    </div>
+                    <h3 class="hobby-title">健身</h3>
+                    <p class="hobby-desc">保持身体活力，追求健康生活</p>
+                </div>
+                <div class="hobby-card fade-in-up">
+                    <div class="hobby-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                    </div>
+                    <h3 class="hobby-title">滑雪</h3>
+                    <p class="hobby-desc">享受速度与激情，感受冬日魅力</p>
+                </div>
+                <div class="hobby-card fade-in-up">
+                    <div class="hobby-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="hobby-title">篮球</h3>
+                    <p class="hobby-desc">团队运动，享受竞技乐趣</p>
+                </div>
+                <div class="hobby-card fade-in-up">
+                    <div class="hobby-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                    </div>
+                    <h3 class="hobby-title">摄影</h3>
+                    <p class="hobby-desc">记录美好瞬间，发现生活之美</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="section-header centered">
+                    <span class="section-label">06</span>
+                    <h2 class="section-title">保持联系</h2>
+                </div>
+                <p class="contact-intro">
+                    对我的经历或项目感兴趣？欢迎随时联系我。
+                </p>
+                <div class="contact-links">
+                    <a href="tel:15193342670" class="contact-link">
+                        <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                        </svg>
+                        <span>151-9334-2670（微信同号）</span>
+                    </a>
+                    <a href="mailto:swordingk@gmail.com" class="contact-link">
+                        <svg class="contact-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        <span>swordingk@gmail.com</span>
+                    </a>
+                </div>
+                <div class="douyin-qrcode">
+                    <div class="qrcode-wrapper">
+                        <div class="qrcode-img">
+                            <img src="images/IMG_7140 copy.jpeg" alt="抖音二维码" />
+                        </div>
+                    </div>
+                    <p class="qrcode-title">
+                        <svg class="douyin-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                        </svg>
+                        欢迎关注我的抖音
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 宝剑的个人主页</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

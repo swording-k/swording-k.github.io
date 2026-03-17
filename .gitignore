@@ -1,0 +1,10 @@
+# Git
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# 临时文件
+*.log
