@@ -1120,9 +1120,10 @@ img {
 /* Project Links */
 .project-links {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+    flex-direction: row;
+    gap: var(--space-md);
     margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
 }
 
 .project-link {
@@ -1130,13 +1131,77 @@ img {
     align-items: center;
     gap: var(--space-sm);
     font-size: 13px;
-    color: var(--accent);
-    transition: all 0.2s ease;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
 }
 
 .project-link:hover {
-    color: var(--accent-hover);
-    transform: translateX(4px);
+    transform: translateY(-2px);
+}
+
+.github-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.github-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--text-secondary);
+}
+
+.appstore-link {
+    background: var(--accent-gradient);
+    color: var(--bg-primary);
+    font-weight: 600;
+}
+
+.appstore-link:hover {
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Project App Icon */
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.project-app-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.project-app-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-title-wrapper {
+    flex: 1;
+    min-width: 200px;
+}
+
+.project-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+    color: white;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
 }
 
 /* ============================================
