@@ -6,7 +6,7 @@
 
 中南大学 | 信息安全 | AI产品经理 / iOS开发工程师
 
-兼具开发能力与AI技术向产品思维，可独立完成从市场调研到产品开发的全流程。热衷于探索AI前沿技术，拥抱vibecoding、claude code、openclow等新一代AI开发范式。
+兼具开发能力与AI技术向产品思维，可独立完成从市场调研到产品开发的全流程。热衷于探索AI前沿技术，拥抱vibecoding、Claude Code、OpenClaw等新一代AI开发范式。
 
 ## 技能
 
