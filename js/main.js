@@ -1,6 +1,6 @@
 /**
  * Yang Kun Portfolio - Main JavaScript
- * Handles navigation, scroll animations, and mobile menu
+ * Enhanced interactions: cursor trail, 3D card tilt, scroll effects
  */
 
 (function() {
@@ -14,11 +14,107 @@
     const heroSection = document.querySelector('.hero');
 
     // ============================================
+    // Custom Cursor Trail Effect
+    // ============================================
+    function initCursorTrail() {
+        const trailCount = 12;
+        const trails = [];
+        const mouse = { x: -100, y: -100 };
+
+        // Create trail elements
+        for (let i = 0; i < trailCount; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.cssText = `
+                position: fixed;
+                width: ${4 + i * 1.5}px;
+                height: ${4 + i * 1.5}px;
+                background: radial-gradient(circle, rgba(232, 184, 109, ${0.3 - i * 0.02}) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+                transition: opacity 0.3s ease;
+            `;
+            document.body.appendChild(trail);
+            trails.push({
+                el: trail,
+                x: -100,
+                y: -100
+            });
+        }
+
+        let isVisible = false;
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            if (!isVisible) {
+                isVisible = true;
+                trails.forEach(t => t.el.style.opacity = '1');
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            isVisible = false;
+            trails.forEach(t => t.el.style.opacity = '0');
+        });
+
+        function animateTrails() {
+            let prevX = mouse.x;
+            let prevY = mouse.y;
+
+            trails.forEach((trail, i) => {
+                const speed = 0.15 - (i * 0.008);
+                trail.x += (prevX - trail.x) * speed;
+                trail.y += (prevY - trail.y) * speed;
+
+                trail.el.style.left = trail.x + 'px';
+                trail.el.style.top = trail.y + 'px';
+
+                prevX = trail.x;
+                prevY = trail.y;
+            });
+
+            requestAnimationFrame(animateTrails);
+        }
+
+        animateTrails();
+    }
+
+    // ============================================
+    // 3D Card Tilt Effect
+    // ============================================
+    function init3DCardTilt() {
+        const cards = document.querySelectorAll('.project-card, .hobby-card, .honor-card');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `perspective(1000px) translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) translateY(0) rotateX(0) rotateY(0)';
+            });
+        });
+    }
+
+    // ============================================
     // Navigation Scroll Effect
     // ============================================
     function handleNavScroll() {
         const scrollY = window.scrollY;
-        const heroHeight = heroSection?.offsetHeight || 0;
 
         if (scrollY > 50) {
             nav.classList.add('scrolled');
@@ -48,7 +144,7 @@
     function initScrollAnimations() {
         const observerOptions = {
             root: null,
-            rootMargin: '0px 0px -100px 0px',
+            rootMargin: '0px 0px -80px 0px',
             threshold: 0.1
         };
 
@@ -99,7 +195,7 @@
         const navLinks = document.querySelectorAll('.nav-link');
 
         function highlightNav() {
-            const scrollY = window.scrollY + 150;
+            const scrollY = window.scrollY + 200;
 
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
@@ -117,7 +213,7 @@
             });
         }
 
-        window.addEventListener('scroll', highlightNav);
+        window.addEventListener('scroll', highlightNav, { passive: true });
     }
 
     // ============================================
@@ -139,6 +235,28 @@
     }
 
     // ============================================
+    // Parallax Effect on Hero
+    // ============================================
+    function initParallax() {
+        const heroGlow = document.querySelector('.hero-glow');
+        const heroGlowSecondary = document.querySelector('.hero-glow-secondary');
+
+        if (!heroGlow || !heroGlowSecondary) return;
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroHeight = heroSection?.offsetHeight || 0;
+
+            if (scrollY < heroHeight) {
+                const progress = scrollY / heroHeight;
+                heroGlow.style.transform = `translateX(-50%) translateY(${scrollY * 0.3}px)`;
+                heroGlowSecondary.style.transform = `translateY(${-scrollY * 0.15}px)`;
+                heroGlow.style.opacity = 0.6 - progress * 0.3;
+            }
+        }, { passive: true });
+    }
+
+    // ============================================
     // Initialize
     // ============================================
     function init() {
@@ -152,6 +270,13 @@
         initScrollAnimations();
         initActiveNav();
         initKeyboardNav();
+
+        // Enhanced interactions (with feature detection)
+        if (window.matchMedia('(pointer: fine)').matches) {
+            initCursorTrail();
+            init3DCardTilt();
+        }
+        initParallax();
 
         // Initial check for nav state
         handleNavScroll();
