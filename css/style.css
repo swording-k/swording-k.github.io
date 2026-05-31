@@ -1199,6 +1199,39 @@ body {
     line-height: 1.45;
 }
 
+.section-shell {
+    --cinema-y: 0px;
+    --cinema-scale: 1;
+    --cinema-presence: 1;
+}
+
+.section-header,
+.profile-grid,
+.featured-project,
+.showcase-rail,
+.honors-grid,
+.contact-panel {
+    transform: translateY(var(--cinema-y)) scale(var(--cinema-scale));
+    transform-origin: center top;
+    transition: transform 0.24s linear;
+}
+
+.section-shell::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 16%;
+    z-index: -1;
+    width: min(70vw, 860px);
+    height: 360px;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.055), transparent 66%);
+    opacity: calc(var(--cinema-presence) * 0.85);
+    transform: translateX(-50%);
+    filter: blur(18px);
+}
+
 .featured-project,
 .showcase-rail,
 .contact-panel {

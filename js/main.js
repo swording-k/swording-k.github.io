@@ -8,6 +8,7 @@
     const scrollProgress = document.getElementById("scrollProgress");
     const heroStage = document.querySelector(".hero-stage");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cinematicTargets = [...document.querySelectorAll(".section-shell, .featured-project, .showcase-rail, .contact-panel")];
     let ticking = false;
 
     function setNavState() {
@@ -29,12 +30,30 @@
         heroStage.style.setProperty("--stage-fade", `${1 - progress * 0.42}`);
     }
 
+    function initCinematicScroll() {
+        if (prefersReducedMotion) return;
+
+        const viewportCenter = window.innerHeight * 0.52;
+        cinematicTargets.forEach((target) => {
+            const rect = target.getBoundingClientRect();
+            const targetCenter = rect.top + rect.height * 0.5;
+            const distance = (targetCenter - viewportCenter) / Math.max(window.innerHeight, 1);
+            const clamped = Math.max(-1, Math.min(1, distance));
+            const presence = 1 - Math.min(1, Math.abs(clamped));
+
+            target.style.setProperty("--cinema-y", `${(clamped * -28).toFixed(2)}px`);
+            target.style.setProperty("--cinema-scale", `${(0.985 + presence * 0.015).toFixed(4)}`);
+            target.style.setProperty("--cinema-presence", presence.toFixed(3));
+        });
+    }
+
     function initScrollProgress() {
         function update() {
             ticking = false;
             setNavState();
             setScrollProgress();
             setHeroParallax();
+            initCinematicScroll();
         }
 
         update();
