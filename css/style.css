@@ -1403,8 +1403,8 @@ body {
 
 .blade-object {
     position: relative;
-    width: 118px;
-    height: 348px;
+    width: 188px;
+    height: 370px;
     display: grid;
     place-items: center;
     transform: rotateX(var(--blade-tilt)) rotateY(var(--blade-rotate)) translateZ(20px);
@@ -1451,73 +1451,15 @@ body {
     filter: drop-shadow(0 36px 45px rgba(0,0,0,0.5)) drop-shadow(0 0 24px rgba(117,217,255,0.14));
 }
 
-.kunwu-sword {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-}
-
-.sword-shadow {
-    fill: rgba(0,0,0,0.26);
-    filter: blur(7px);
-    transform: translate(9px, 12px) scaleX(1.05);
-    transform-origin: center;
-}
-
-.sword-glow {
-    fill: url("#bladeCoreGlow");
-    filter: blur(14px);
-    opacity: 0.76;
-    transform: scaleX(1.28);
-    transform-origin: center;
-}
-
-.sword-blade {
-    fill: url("#bladeSteel");
-    stroke: rgba(255,255,255,0.62);
-    stroke-width: 1;
-}
-
-.sword-ridge,
-.sword-fuller,
-.sword-edge {
-    fill: none;
-    stroke: rgba(255,255,255,0.58);
-    stroke-linecap: round;
-    stroke-width: 1.1;
-}
-
-.sword-ridge {
-    stroke: rgba(255,255,255,0.82);
-    stroke-width: 1.25;
-}
-
-.sword-fuller {
-    stroke: rgba(10,14,22,0.42);
-    stroke-width: 1.35;
-}
-
-.sword-edge {
-    stroke: rgba(117,217,255,0.22);
-    stroke-width: 0.9;
-}
-
-.sword-guard,
-.sword-collar,
-.sword-pommel {
-    fill: url("#bladeAccent");
-    stroke: rgba(255,255,255,0.26);
-    stroke-width: 1.2;
-}
-
-.sword-collar {
-    stroke-width: 0.9;
-}
-
-.sword-grip {
-    fill: url("#bladeCarbon");
-    stroke: rgba(255,255,255,0.2);
-    stroke-width: 1;
+.kunwu-sword-photo {
+    width: auto;
+    height: 370px;
+    display: block;
+    max-width: none;
+    filter: contrast(1.08) saturate(0.82) brightness(1.07) drop-shadow(0 0 18px rgba(117,217,255,0.12));
+    transform: translateY(-4px);
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .blade-hint {
@@ -1836,8 +1778,12 @@ body {
     }
 
     .blade-object {
-        width: 108px;
-        height: 318px;
+        width: 164px;
+        height: 324px;
+    }
+
+    .kunwu-sword-photo {
+        height: 324px;
     }
 
     .blade-hint {
