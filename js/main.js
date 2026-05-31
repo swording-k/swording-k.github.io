@@ -240,6 +240,88 @@
         render();
     }
 
+    function initBladeStage() {
+        const stage = document.querySelector(".blade-stage");
+        const blade = stage?.querySelector(".blade-object");
+        if (!stage || !blade) return;
+
+        let rotateY = -18;
+        let rotateX = -8;
+        let lastX = 0;
+        let lastY = 0;
+        let lastFrame = performance.now();
+        const startedAt = lastFrame;
+        let resumeAt = 0;
+        let dragging = false;
+        let hasInteracted = false;
+        const autoSpeed = 360 / 45000;
+
+        function clamp(value, min, max) {
+            return Math.min(Math.max(value, min), max);
+        }
+
+        function setBladeTransform() {
+            stage.style.setProperty("--blade-rotate", `${rotateY.toFixed(2)}deg`);
+            stage.style.setProperty("--blade-tilt", `${rotateX.toFixed(2)}deg`);
+        }
+
+        function render(now) {
+            const delta = Math.min(now - lastFrame, 34);
+            lastFrame = now;
+
+            if (!prefersReducedMotion && !dragging && now > resumeAt) {
+                const hovering = stage.matches(":hover");
+                rotateY = (rotateY + delta * (hovering ? autoSpeed * 0.52 : autoSpeed)) % 360;
+                rotateX += (-8 - rotateX) * 0.025;
+                setBladeTransform();
+            }
+
+            requestAnimationFrame(render);
+        }
+
+        stage.addEventListener("pointerdown", (event) => {
+            if (event.button !== undefined && event.button !== 0) return;
+            if (!hasInteracted) {
+                rotateY = (-18 + (performance.now() - startedAt) * autoSpeed) % 360;
+                hasInteracted = true;
+                stage.classList.add("has-interacted");
+            }
+            dragging = true;
+            lastX = event.clientX;
+            lastY = event.clientY;
+            stage.classList.add("is-dragging");
+            stage.setPointerCapture?.(event.pointerId);
+            setBladeTransform();
+        });
+
+        stage.addEventListener("pointermove", (event) => {
+            if (!dragging) return;
+            const dx = event.clientX - lastX;
+            const dy = event.clientY - lastY;
+            rotateY = (rotateY + dx * 0.58) % 360;
+            rotateX = clamp(rotateX - dy * 0.18, -18, 14);
+            lastX = event.clientX;
+            lastY = event.clientY;
+            setBladeTransform();
+            event.preventDefault();
+        });
+
+        function releaseBlade(event) {
+            if (!dragging) return;
+            dragging = false;
+            resumeAt = performance.now() + 420;
+            stage.classList.remove("is-dragging");
+            if (event?.pointerId !== undefined) stage.releasePointerCapture?.(event.pointerId);
+        }
+
+        stage.addEventListener("pointerup", releaseBlade);
+        stage.addEventListener("pointercancel", releaseBlade);
+        stage.addEventListener("lostpointercapture", releaseBlade);
+
+        setBladeTransform();
+        requestAnimationFrame(render);
+    }
+
     function initKeyboard() {
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") closeMenu();
@@ -254,6 +336,7 @@
         initMagneticButtons();
         initCardTilt();
         initCursorAura();
+        initBladeStage();
         initKeyboard();
 
         navToggle?.addEventListener("click", toggleMenu);

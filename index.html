@@ -17,7 +17,12 @@
     <nav class="nav" id="nav">
         <div class="nav-container">
             <a href="#hero" class="nav-logo" aria-label="返回首页">
-                <span class="logo-mark">YK</span>
+                <span class="logo-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img">
+                        <path class="logo-blade" d="M12 2.8 14.1 10 12 19.4 9.9 10 12 2.8Z" />
+                        <path class="logo-guard" d="M7.6 11.2h8.8M10.2 19.4h3.6" />
+                    </svg>
+                </span>
                 <span>Skyler Yang</span>
             </a>
             <ul class="nav-links" aria-label="主导航">
@@ -62,7 +67,7 @@
                         </span>
                         <span class="hero-roman">Skyler Yang</span>
                     </h1>
-                    <p class="hero-name-note reveal">“锟”通向锟铻 / 昆吾的典故：山出良铁，可成宝剑。所以「宝剑」不是硬凑的 ID，是名字里自带的一点锋芒。</p>
+                    <p class="hero-name-note reveal">古有锟铻，亦作昆吾。山出良铁，可铸宝剑；于是「宝剑」，成了锟字之外的另一个名字。</p>
                     <p class="hero-subtitle reveal">
                         AI 产品经理 / AI 应用工程师，<span>把前沿 AI 想法做成可体验、可上线、可复盘的产品。</span>
                     </p>
@@ -86,16 +91,49 @@
                     </div>
                 </div>
 
-                <aside class="hero-stage hero-console reveal" aria-label="当前工作台状态">
-                    <div class="stage-glass" aria-hidden="true">
-                        <span class="stage-ring"></span>
-                        <span class="stage-core">YK</span>
+                <aside class="hero-stage hero-console reveal" aria-label="锟铻宝剑个人符号与能力摘要">
+                    <div class="blade-stage" aria-hidden="true">
+                        <div class="blade-aura"></div>
+                        <div class="blade-orbit"></div>
+                        <div class="blade-object">
+                            <svg class="kunwu-sword" viewBox="0 0 180 420" role="img">
+                                <defs>
+                                    <linearGradient id="bladeSteel" x1="0" x2="1" y1="0" y2="0">
+                                        <stop offset="0" stop-color="#6f7480" />
+                                        <stop offset="0.22" stop-color="#f8f2e5" />
+                                        <stop offset="0.5" stop-color="#9ca2ad" />
+                                        <stop offset="0.78" stop-color="#fff8e8" />
+                                        <stop offset="1" stop-color="#535965" />
+                                    </linearGradient>
+                                    <linearGradient id="bladeGold" x1="0" x2="1" y1="0" y2="1">
+                                        <stop offset="0" stop-color="#fff0ba" />
+                                        <stop offset="0.45" stop-color="#d7a94f" />
+                                        <stop offset="1" stop-color="#76512a" />
+                                    </linearGradient>
+                                    <radialGradient id="bladeCoreGlow" cx="50%" cy="18%" r="70%">
+                                        <stop offset="0" stop-color="#ffffff" stop-opacity="0.7" />
+                                        <stop offset="0.45" stop-color="#75d9ff" stop-opacity="0.24" />
+                                        <stop offset="1" stop-color="#75d9ff" stop-opacity="0" />
+                                    </radialGradient>
+                                </defs>
+                                <path class="sword-glow" d="M90 10C112 90 118 174 101 284H79C62 174 68 90 90 10Z" />
+                                <path class="sword-blade" d="M90 10C112 90 118 174 101 284H79C62 174 68 90 90 10Z" />
+                                <path class="sword-ridge" d="M90 26v254" />
+                                <path class="sword-edge left" d="M84 74C75 138 75 208 82 280" />
+                                <path class="sword-edge right" d="M96 74C105 138 105 208 98 280" />
+                                <path class="sword-guard" d="M34 292c22-18 90-18 112 0-15 16-39 24-56 24s-41-8-56-24Z" />
+                                <path class="sword-grip" d="M78 312h24l8 66c-7 6-33 6-40 0l8-66Z" />
+                                <path class="sword-pommel" d="M69 382c9 18 33 18 42 0 8 5 13 11 13 18-18 13-50 13-68 0 0-7 5-13 13-18Z" />
+                                <circle class="sword-gem" cx="90" cy="296" r="8" />
+                            </svg>
+                        </div>
+                        <div class="blade-hint">drag to rotate</div>
                     </div>
                     <div class="console-topbar">
                         <span></span>
                         <span></span>
                         <span></span>
-                        <strong>identity.card</strong>
+                        <strong>kunwu.blade</strong>
                     </div>
                     <div class="console-body">
                         <div class="console-row">
@@ -104,7 +142,15 @@
                         </div>
                         <div class="console-row">
                             <span>stack</span>
-                            <strong>C/C++ · Python · SwiftUI · LLM API · Web</strong>
+                            <div class="stage-tags" aria-label="技术栈">
+                                <span>AI Product</span>
+                                <span>iOS Development</span>
+                                <span>SwiftUI</span>
+                                <span>C/C++</span>
+                                <span>Python</span>
+                                <span>LLM API</span>
+                                <span>Web</span>
+                            </div>
                         </div>
                         <div class="console-row">
                             <span>workflow</span>
