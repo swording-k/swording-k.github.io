@@ -5,11 +5,44 @@
     const navToggle = document.getElementById("navToggle");
     const mobileMenu = document.getElementById("mobileMenu");
     const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
+    const scrollProgress = document.getElementById("scrollProgress");
+    const heroStage = document.querySelector(".hero-stage");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let ticking = false;
 
     function setNavState() {
         if (!nav) return;
         nav.classList.toggle("scrolled", window.scrollY > 28);
+    }
+
+    function setScrollProgress() {
+        if (!scrollProgress) return;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = max > 0 ? window.scrollY / max : 0;
+        scrollProgress.style.transform = `scaleX(${Math.min(Math.max(progress, 0), 1)})`;
+    }
+
+    function setHeroParallax() {
+        if (!heroStage || prefersReducedMotion) return;
+        const progress = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1);
+        heroStage.style.setProperty("--stage-lift", `${progress * -28}px`);
+        heroStage.style.setProperty("--stage-fade", `${1 - progress * 0.42}`);
+    }
+
+    function initScrollProgress() {
+        function update() {
+            ticking = false;
+            setNavState();
+            setScrollProgress();
+            setHeroParallax();
+        }
+
+        update();
+        window.addEventListener("scroll", () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(update);
+        }, { passive: true });
     }
 
     function openMenu() {
@@ -124,6 +157,32 @@
         });
     }
 
+    function initCardTilt() {
+        if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+
+        document.querySelectorAll(".project-card").forEach((card) => {
+            card.addEventListener("mousemove", (event) => {
+                const rect = card.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                const rx = ((y / rect.height) - 0.5) * -7;
+                const ry = ((x / rect.width) - 0.5) * 8;
+
+                card.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+                card.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+                card.style.setProperty("--mx", `${((x / rect.width) * 100).toFixed(1)}%`);
+                card.style.setProperty("--my", `${((y / rect.height) * 100).toFixed(1)}%`);
+            });
+
+            card.addEventListener("mouseleave", () => {
+                card.style.setProperty("--rx", "0deg");
+                card.style.setProperty("--ry", "0deg");
+                card.style.setProperty("--mx", "50%");
+                card.style.setProperty("--my", "50%");
+            });
+        });
+    }
+
     function initCursorAura() {
         if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
 
@@ -169,15 +228,15 @@
     }
 
     function init() {
-        setNavState();
+        initScrollProgress();
         initSmoothScroll();
         initReveal();
         initActiveNav();
         initMagneticButtons();
+        initCardTilt();
         initCursorAura();
         initKeyboard();
 
-        window.addEventListener("scroll", setNavState, { passive: true });
         navToggle?.addEventListener("click", toggleMenu);
         mobileMenuLinks.forEach((link) => link.addEventListener("click", closeMenu));
     }

@@ -12,6 +12,7 @@
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
     <nav class="nav" id="nav">
         <div class="nav-container">
@@ -81,12 +82,16 @@
                     </div>
                 </div>
 
-                <aside class="hero-console reveal" aria-label="当前工作台状态">
+                <aside class="hero-stage hero-console reveal" aria-label="当前工作台状态">
+                    <div class="stage-glass" aria-hidden="true">
+                        <span class="stage-ring"></span>
+                        <span class="stage-core">YK</span>
+                    </div>
                     <div class="console-topbar">
                         <span></span>
                         <span></span>
                         <span></span>
-                            <strong>identity.card</strong>
+                        <strong>identity.card</strong>
                     </div>
                     <div class="console-body">
                         <div class="console-row">
@@ -101,6 +106,10 @@
                             <span>mode</span>
                             <strong>vibe coding · prototype · ship</strong>
                         </div>
+                    </div>
+                    <div class="stage-caption">
+                        <span>Now building</span>
+                        <strong>AI products that feel usable on day one.</strong>
                     </div>
                 </aside>
             </div>
@@ -206,54 +215,56 @@
                     </div>
                 </div>
 
-                <div class="projects-grid">
-                    <article class="project-card esports-card reveal">
-                        <div class="project-card-head">
-                            <img src="images/esports-talent-icon.png" alt="电竞天赋检测站图标">
-                            <div>
-                                <span class="project-label">抖音互动空间</span>
-                                <h3>电竞天赋检测站</h3>
+                <div class="showcase-rail">
+                    <div class="projects-grid">
+                        <article class="project-card esports-card reveal">
+                            <div class="project-card-head">
+                                <img src="images/esports-talent-icon.png" alt="电竞天赋检测站图标">
+                                <div>
+                                    <span class="project-label">抖音互动空间</span>
+                                    <h3>电竞天赋检测站</h3>
+                                </div>
                             </div>
-                        </div>
-                        <p>围绕 FPS 玩家“我有没有电竞天赋”的好奇心，设计 6 项轻量挑战，移动端扫码即玩，强调即时反馈和分享感。</p>
-                        <div class="qr-block">
-                            <img src="images/esports-douyin-qr.png" alt="抖音扫码体验二维码">
-                            <span>抖音扫码体验<br>38.2.0 及以上版本</span>
-                        </div>
-                        <div class="project-actions compact">
-                            <a href="https://swording-k.github.io/esports-talent/" target="_blank" rel="noreferrer">在线预览</a>
-                            <a href="https://github.com/swording-k/esports-talent" target="_blank" rel="noreferrer">代码仓库</a>
-                        </div>
-                    </article>
+                            <p>围绕 FPS 玩家“我有没有电竞天赋”的好奇心，设计 6 项轻量挑战，移动端扫码即玩，强调即时反馈和分享感。</p>
+                            <div class="qr-block">
+                                <img src="images/esports-douyin-qr.png" alt="抖音扫码体验二维码">
+                                <span>抖音扫码体验<br>38.2.0 及以上版本</span>
+                            </div>
+                            <div class="project-actions compact">
+                                <a href="https://swording-k.github.io/esports-talent/" target="_blank" rel="noreferrer">在线预览</a>
+                                <a href="https://github.com/swording-k/esports-talent" target="_blank" rel="noreferrer">代码仓库</a>
+                            </div>
+                        </article>
 
-                    <article class="project-card pet-card reveal">
-                        <div class="project-card-head">
-                            <img src="images/codex-buddy-frame.png" alt="Codex Buddy 桌宠形象">
-                            <div>
-                                <span class="project-label">Codex Pet</span>
-                                <h3>Codex Buddy 桌宠</h3>
+                        <article class="project-card pet-card reveal">
+                            <div class="project-card-head">
+                                <img src="images/codex-buddy-frame.png" alt="Codex Buddy 桌宠形象">
+                                <div>
+                                    <span class="project-label">Codex Pet</span>
+                                    <h3>Codex Buddy 桌宠</h3>
+                                </div>
                             </div>
-                        </div>
-                        <p>自创健身小人形象，并制作成 Codex 动态桌宠资源包，包含 spritesheet 与 pet.json，兼具角色设计和工具生态意识。</p>
-                        <img class="pet-preview" src="images/codex-buddy-pet.png" alt="Codex Buddy 动作预览">
-                        <div class="project-actions compact">
-                            <a href="https://github.com/swording-k/codex-buddy-pet" target="_blank" rel="noreferrer">下载同款小人</a>
-                        </div>
-                    </article>
+                            <p>自创健身小人形象，并制作成 Codex 动态桌宠资源包，包含 spritesheet 与 pet.json，兼具角色设计和工具生态意识。</p>
+                            <img class="pet-preview" src="images/codex-buddy-pet.png" alt="Codex Buddy 动作预览">
+                            <div class="project-actions compact">
+                                <a href="https://github.com/swording-k/codex-buddy-pet" target="_blank" rel="noreferrer">下载同款小人</a>
+                            </div>
+                        </article>
 
-                    <article class="project-card notes-card reveal">
-                        <div class="project-card-head">
-                            <div class="text-icon">AI</div>
-                            <div>
-                                <span class="project-label">求职知识库</span>
-                                <h3>AI Job Notes</h3>
+                        <article class="project-card notes-card reveal">
+                            <div class="project-card-head">
+                                <div class="text-icon">AI</div>
+                                <div>
+                                    <span class="project-label">求职知识库</span>
+                                    <h3>AI Job Notes</h3>
+                                </div>
                             </div>
-                        </div>
-                        <p>持续整理 AI 产品方法论、行业研究、面试准备和技术学习，把求职过程转化为可追踪、可复盘的个人知识系统。</p>
-                        <div class="project-actions compact">
-                            <a href="https://github.com/swording-k/AI-Job-Notes" target="_blank" rel="noreferrer">查看知识库</a>
-                        </div>
-                    </article>
+                            <p>持续整理 AI 产品方法论、行业研究、面试准备和技术学习，把求职过程转化为可追踪、可复盘的个人知识系统。</p>
+                            <div class="project-actions compact">
+                                <a href="https://github.com/swording-k/AI-Job-Notes" target="_blank" rel="noreferrer">查看知识库</a>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </div>
         </section>
