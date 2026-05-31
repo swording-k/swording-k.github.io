@@ -1381,11 +1381,11 @@ body {
     inset: 4% 0 0;
     border-radius: 50%;
     background:
-        radial-gradient(circle at 50% 35%, rgba(255,255,255,0.24), transparent 12%),
-        radial-gradient(circle at 50% 42%, rgba(231,191,120,0.22), transparent 34%),
-        radial-gradient(circle at 50% 45%, rgba(117,217,255,0.17), transparent 62%);
-    filter: blur(4px);
-    opacity: 0.92;
+        radial-gradient(circle at 50% 25%, rgba(255,255,255,0.2), transparent 10%),
+        radial-gradient(circle at 50% 42%, rgba(117,217,255,0.2), transparent 36%),
+        radial-gradient(circle at 50% 58%, rgba(255,255,255,0.06), transparent 62%);
+    filter: blur(6px);
+    opacity: 0.78;
 }
 
 .blade-orbit {
@@ -1393,7 +1393,7 @@ body {
     border-radius: 50%;
     border: 1px solid rgba(255,255,255,0.13);
     background:
-        conic-gradient(from 120deg, transparent, rgba(231,191,120,0.62), transparent 30%, rgba(117,217,255,0.5), transparent 68%),
+        conic-gradient(from 120deg, transparent, rgba(255,255,255,0.22), transparent 30%, rgba(117,217,255,0.38), transparent 68%),
         radial-gradient(circle, rgba(255,255,255,0.05), transparent 58%);
     box-shadow: inset 0 0 80px rgba(255,255,255,0.045), 0 34px 90px rgba(0,0,0,0.44);
     transform: rotateX(68deg) rotateZ(-10deg);
@@ -1403,8 +1403,8 @@ body {
 
 .blade-object {
     position: relative;
-    width: 138px;
-    height: 300px;
+    width: 118px;
+    height: 348px;
     display: grid;
     place-items: center;
     transform: rotateX(var(--blade-tilt)) rotateY(var(--blade-rotate)) translateZ(20px);
@@ -1426,13 +1426,13 @@ body {
 .blade-object::before {
     content: "";
     position: absolute;
-    inset: 9% 25% 12%;
+    inset: 5% 31% 8%;
     z-index: -1;
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-    filter: blur(18px);
-    opacity: 0.62;
-    transform: translateZ(-40px) rotateZ(16deg);
+    background: linear-gradient(90deg, transparent, rgba(117,217,255,0.24), rgba(255,255,255,0.34), rgba(255,255,255,0.08), transparent);
+    filter: blur(22px);
+    opacity: 0.55;
+    transform: translateZ(-45px) rotateZ(10deg);
 }
 
 .blade-object::after {
@@ -1440,7 +1440,7 @@ body {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(105deg, transparent 18%, rgba(255,255,255,0.42) 43%, transparent 56%);
+    background: linear-gradient(105deg, transparent 18%, rgba(255,255,255,0.5) 43%, transparent 56%);
     mix-blend-mode: screen;
     opacity: 0;
     transform: translateX(-42%) skewX(-12deg);
@@ -1457,47 +1457,67 @@ body {
     overflow: visible;
 }
 
+.sword-shadow {
+    fill: rgba(0,0,0,0.26);
+    filter: blur(7px);
+    transform: translate(9px, 12px) scaleX(1.05);
+    transform-origin: center;
+}
+
 .sword-glow {
     fill: url("#bladeCoreGlow");
-    filter: blur(10px);
-    transform: scaleX(1.15);
+    filter: blur(14px);
+    opacity: 0.76;
+    transform: scaleX(1.28);
     transform-origin: center;
 }
 
 .sword-blade {
     fill: url("#bladeSteel");
-    stroke: rgba(255,255,255,0.48);
+    stroke: rgba(255,255,255,0.62);
     stroke-width: 1;
 }
 
 .sword-ridge,
+.sword-fuller,
 .sword-edge {
     fill: none;
-    stroke: rgba(255,255,255,0.5);
+    stroke: rgba(255,255,255,0.58);
     stroke-linecap: round;
     stroke-width: 1.1;
 }
 
+.sword-ridge {
+    stroke: rgba(255,255,255,0.82);
+    stroke-width: 1.25;
+}
+
+.sword-fuller {
+    stroke: rgba(10,14,22,0.42);
+    stroke-width: 1.35;
+}
+
 .sword-edge {
-    stroke: rgba(8,10,14,0.35);
+    stroke: rgba(117,217,255,0.22);
+    stroke-width: 0.9;
 }
 
 .sword-guard,
+.sword-collar,
 .sword-pommel {
-    fill: url("#bladeGold");
-    stroke: rgba(255,240,186,0.58);
+    fill: url("#bladeAccent");
+    stroke: rgba(255,255,255,0.26);
     stroke-width: 1.2;
 }
 
-.sword-grip {
-    fill: #11141c;
-    stroke: rgba(255,255,255,0.24);
-    stroke-width: 1;
+.sword-collar {
+    stroke-width: 0.9;
 }
 
-.sword-gem {
-    fill: var(--cyan);
-    filter: drop-shadow(0 0 12px rgba(117,217,255,0.75));
+.sword-grip {
+    fill: url("#bladeCarbon");
+    stroke: rgba(255,255,255,0.2);
+    stroke-width: 1;
 }
 
 .blade-hint {
@@ -1816,8 +1836,8 @@ body {
     }
 
     .blade-object {
-        width: 124px;
-        height: 270px;
+        width: 108px;
+        height: 318px;
     }
 
     .blade-hint {
