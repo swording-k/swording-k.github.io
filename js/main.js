@@ -200,7 +200,6 @@
 
         gsap.to(".hero-copy", {
             y: -56,
-            autoAlpha: 0.72,
             ease: "none",
             scrollTrigger: {
                 trigger: "#hero",
@@ -213,7 +212,6 @@
         gsap.to(".hero-stage", {
             y: -76,
             scale: 1.06,
-            autoAlpha: 0.72,
             ease: "none",
             scrollTrigger: {
                 trigger: "#hero",
