@@ -96,7 +96,8 @@
                         <div class="blade-aura"></div>
                         <div class="blade-orbit"></div>
                         <div class="blade-object">
-                            <img class="kunwu-sword-photo" src="images/kunwu-blade-real.png" alt="">
+                            <canvas class="kunwu-blade-canvas" aria-hidden="true"></canvas>
+                            <img class="kunwu-sword-photo blade-fallback" src="images/kunwu-blade-real.png" alt="">
                         </div>
                         <div class="blade-hint">drag to rotate</div>
                     </div>
@@ -228,7 +229,21 @@
                             <span>SwiftUI</span>
                         </div>
                         <h3>FitGenius</h3>
-                        <p>从市场调研、需求拆解到 iOS 开发与上线，独立完成 AI 健身饮食计划助手。产品集成阿里大模型 API，围绕训练计划、饮食记录和 AI 建议构建轻量体验。</p>
+                        <p>从市场调研、需求拆解到 iOS 开发与上线，独立完成 AI 健身饮食计划助手。它不是简单的聊天壳，而是围绕训练计划、饮食记录和可执行建议搭建的轻量产品闭环。</p>
+                        <div class="project-detail-grid" aria-label="FitGenius 项目细节">
+                            <div>
+                                <span>产品目标</span>
+                                <strong>让健身新手用更低成本获得计划、饮食和复盘建议。</strong>
+                            </div>
+                            <div>
+                                <span>技术实现</span>
+                                <strong>SwiftUI 独立开发，接入阿里大模型 API，完成 App Store 上线链路。</strong>
+                            </div>
+                            <div>
+                                <span>我的角色</span>
+                                <strong>负责需求定义、交互原型、界面设计、工程实现和发布复盘。</strong>
+                            </div>
+                        </div>
                         <div class="project-actions">
                             <a class="button button-primary magnetic" href="https://apps.apple.com/app/fitgenius/id6755933024" target="_blank" rel="noreferrer">App Store</a>
                             <a class="button button-ghost magnetic" href="https://github.com/swording-k/fit-genius" target="_blank" rel="noreferrer">GitHub</a>
@@ -246,7 +261,12 @@
                                     <h3>电竞天赋检测站</h3>
                                 </div>
                             </div>
-                            <p>围绕 FPS 玩家“我有没有电竞天赋”的好奇心，设计 6 项轻量挑战，移动端扫码即玩，强调即时反馈和分享感。</p>
+                            <p>围绕 FPS 玩家“我有没有电竞天赋”的好奇心，设计 6 项轻量挑战，把反应、准星、节奏感等能力转化成可以在手机上快速完成的互动测试。</p>
+                            <div class="project-notes">
+                                <span>移动端扫码即玩</span>
+                                <span>即时反馈与分享感</span>
+                                <span>抖音场景轻量传播</span>
+                            </div>
                             <div class="qr-block">
                                 <img src="images/esports-douyin-qr.png" alt="抖音扫码体验二维码">
                                 <span>抖音扫码体验<br>38.2.0 及以上版本</span>
@@ -265,7 +285,12 @@
                                     <h3>Codex Buddy 桌宠</h3>
                                 </div>
                             </div>
-                            <p>自创健身小人形象，并制作成 Codex 动态桌宠资源包，包含 spritesheet 与 pet.json，兼具角色设计和工具生态意识。</p>
+                            <p>自创健身小人形象，并制作成 Codex 动态桌宠资源包。它更像一个“小型品牌资产实验”：从角色设定、动作切片到可安装配置都完整交付。</p>
+                            <div class="project-notes">
+                                <span>Spritesheet 动画</span>
+                                <span>pet.json 配置</span>
+                                <span>角色设计 + 工具生态</span>
+                            </div>
                             <img class="pet-preview" src="images/codex-buddy-pet.png" alt="Codex Buddy 动作预览">
                             <div class="project-actions compact">
                                 <a href="https://github.com/swording-k/codex-buddy-pet" target="_blank" rel="noreferrer">下载同款小人</a>
@@ -280,7 +305,12 @@
                                     <h3>AI Job Notes</h3>
                                 </div>
                             </div>
-                            <p>持续整理 AI 产品方法论、行业研究、面试准备和技术学习，把求职过程转化为可追踪、可复盘的个人知识系统。</p>
+                            <p>持续整理 AI 产品方法论、行业研究、面试准备和技术学习。它不是资料堆叠，而是把求职、学习和项目复盘变成可检索、可追踪的个人知识系统。</p>
+                            <div class="project-notes">
+                                <span>AI 产品方法论</span>
+                                <span>行业研究</span>
+                                <span>面试与复盘沉淀</span>
+                            </div>
                             <div class="project-actions compact">
                                 <a href="https://github.com/swording-k/AI-Job-Notes" target="_blank" rel="noreferrer">查看知识库</a>
                             </div>
@@ -391,6 +421,7 @@
         </div>
     </footer>
 
+    <script src="js/three.min.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
