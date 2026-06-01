@@ -564,6 +564,8 @@ ul {
 
 .hero-console {
     position: relative;
+    width: 100%;
+    min-width: 0;
     overflow: hidden;
     border-radius: 12px;
 }
@@ -1289,6 +1291,19 @@ ul {
     transform: translateY(0);
 }
 
+.gsap-motion .reveal {
+    transition: none;
+}
+
+.gsap-motion .hero-copy,
+.gsap-motion .hero-stage,
+.gsap-motion .featured-project,
+.gsap-motion .showcase-rail,
+.gsap-motion .project-card,
+.gsap-motion .contact-panel {
+    will-change: transform, opacity;
+}
+
 .cursor-aura {
     position: fixed;
     left: 0;
@@ -1833,6 +1848,8 @@ body {
     }
 
     .hero-stage {
+        width: 100%;
+        max-width: 100%;
         min-height: 520px;
         padding-top: 270px;
     }

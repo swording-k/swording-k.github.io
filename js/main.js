@@ -9,6 +9,7 @@
     const heroStage = document.querySelector(".hero-stage");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cinematicTargets = [...document.querySelectorAll(".section-shell, .featured-project, .showcase-rail, .contact-panel")];
+    const hasGsap = Boolean(window.gsap && window.ScrollTrigger);
     let ticking = false;
 
     function setNavState() {
@@ -24,14 +25,14 @@
     }
 
     function setHeroParallax() {
-        if (!heroStage || prefersReducedMotion) return;
+        if (!heroStage || prefersReducedMotion || hasGsap) return;
         const progress = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1);
         heroStage.style.setProperty("--stage-lift", `${progress * -28}px`);
         heroStage.style.setProperty("--stage-fade", `${1 - progress * 0.42}`);
     }
 
     function initCinematicScroll() {
-        if (prefersReducedMotion) return;
+        if (prefersReducedMotion || hasGsap) return;
 
         const viewportCenter = window.innerHeight * 0.52;
         cinematicTargets.forEach((target) => {
@@ -110,6 +111,8 @@
     }
 
     function initReveal() {
+        if (hasGsap && !prefersReducedMotion) return;
+
         const revealItems = document.querySelectorAll(".reveal");
 
         if (prefersReducedMotion || !("IntersectionObserver" in window)) {
@@ -133,6 +136,172 @@
             item.style.transitionDelay = `${Math.min(index % 4, 3) * 55}ms`;
             observer.observe(item);
         });
+    }
+
+    function initGsapMotion() {
+        if (!hasGsap) return false;
+
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
+        document.body.classList.add("gsap-motion");
+
+        if (prefersReducedMotion) {
+            gsap.set(".reveal", { autoAlpha: 1, y: 0, clearProps: "transform" });
+            return true;
+        }
+
+        gsap.defaults({ ease: "power3.out" });
+        gsap.set(".project-detail-grid > div, .project-notes span, .contact-link, .douyin-contact", {
+            autoAlpha: 0
+        });
+
+        const heroTimeline = gsap.timeline({ defaults: { duration: 0.82 } });
+        heroTimeline
+            .fromTo(".hero .eyebrow", { autoAlpha: 0.72, y: 14 }, { autoAlpha: 1, y: 0 })
+            .fromTo(".hero-title", { autoAlpha: 0.72, y: 36, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.95 }, "-=0.56")
+            .fromTo(".hero-name-note", { autoAlpha: 0.72, y: 18 }, { autoAlpha: 1, y: 0 }, "-=0.72")
+            .fromTo(".hero-subtitle", { autoAlpha: 0.76, y: 22 }, { autoAlpha: 1, y: 0 }, "-=0.62")
+            .fromTo(".hero-actions", { autoAlpha: 0.8, y: 16 }, { autoAlpha: 1, y: 0 }, "-=0.48")
+            .fromTo(".hero-metrics", { autoAlpha: 0.82, y: 20 }, { autoAlpha: 1, y: 0 }, "-=0.42")
+            .fromTo(".hero-stage", { autoAlpha: 0.76, y: 46, scale: 0.96, rotateX: 3 }, { autoAlpha: 1, y: 0, scale: 1, rotateX: 0, duration: 1 }, "-=0.88")
+            .fromTo(".blade-orbit", { autoAlpha: 0.64, scale: 0.84, rotateZ: -22 }, { autoAlpha: 1, scale: 1, rotateZ: -10, duration: 1 }, "-=0.72")
+            .fromTo(".kunwu-sword-photo", { autoAlpha: 0.78, y: 18, scale: 0.94 }, { autoAlpha: 1, y: -18, scale: 1, duration: 0.98 }, "-=0.9");
+
+        gsap.to(".hero-copy", {
+            y: -56,
+            autoAlpha: 0.72,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 0.8
+            }
+        });
+
+        gsap.to(".hero-stage", {
+            y: -54,
+            autoAlpha: 0.62,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 0.8
+            }
+        });
+
+        ScrollTrigger.batch(".section-header, .profile-panel, .capability-card, .honor-card, .life-panel", {
+            start: "top 82%",
+            once: true,
+            onEnter: (elements) => {
+                gsap.fromTo(elements,
+                    { autoAlpha: 0, y: 46, scale: 0.985 },
+                    { autoAlpha: 1, y: 0, scale: 1, duration: 0.86, stagger: 0.08 }
+                );
+            }
+        });
+
+        gsap.fromTo(".featured-project",
+            { autoAlpha: 0, y: 70, scale: 0.96 },
+            {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: ".featured-project",
+                    start: "top 78%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+
+        gsap.to(".featured-visual img", {
+            y: -28,
+            scale: 1.08,
+            rotate: -2,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".featured-project",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1
+            }
+        });
+
+        ScrollTrigger.batch(".project-detail-grid > div, .project-notes span", {
+            start: "top 86%",
+            once: true,
+            onEnter: (elements) => {
+                gsap.fromTo(elements,
+                    { autoAlpha: 0, y: 20 },
+                    { autoAlpha: 1, y: 0, duration: 0.58, stagger: 0.04, ease: "power2.out" }
+                );
+            }
+        });
+
+        ScrollTrigger.batch(".project-card", {
+            start: "top 82%",
+            once: true,
+            onEnter: (cards) => {
+                gsap.fromTo(cards,
+                    { autoAlpha: 0, y: 62, rotateX: 7, scale: 0.965 },
+                    { autoAlpha: 1, y: 0, rotateX: 0, scale: 1, duration: 0.92, stagger: 0.12 }
+                );
+            }
+        });
+
+        gsap.to(".showcase-rail", {
+            y: -34,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".projects",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1.1
+            }
+        });
+
+        gsap.fromTo(".contact-panel",
+            { autoAlpha: 0, y: 64, scale: 0.97 },
+            {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.92,
+                scrollTrigger: {
+                    trigger: ".contact-panel",
+                    start: "top 82%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+
+        gsap.fromTo(".contact-link, .douyin-contact",
+            { autoAlpha: 0, x: 24 },
+            {
+                autoAlpha: 1,
+                x: 0,
+                duration: 0.62,
+                stagger: 0.06,
+                scrollTrigger: {
+                    trigger: ".contact-stack",
+                    start: "top 82%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+
+        const refreshScrollTriggers = () => {
+            ScrollTrigger.refresh(true);
+            ScrollTrigger.update();
+        };
+        requestAnimationFrame(refreshScrollTriggers);
+        window.setTimeout(refreshScrollTriggers, 300);
+        window.addEventListener("load", refreshScrollTriggers, { once: true });
+        return true;
     }
 
     function initActiveNav() {
@@ -335,7 +504,8 @@
     function init() {
         initScrollProgress();
         initSmoothScroll();
-        initReveal();
+        const gsapReady = initGsapMotion();
+        if (!gsapReady) initReveal();
         initActiveNav();
         initMagneticButtons();
         initCardTilt();
