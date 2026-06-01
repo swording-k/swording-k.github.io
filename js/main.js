@@ -243,79 +243,77 @@
     function initBladeStage() {
         const stage = document.querySelector(".blade-stage");
         const blade = stage?.querySelector(".blade-object");
-        const canvas = stage?.querySelector(".kunwu-blade-canvas");
         if (!stage || !blade) return;
 
-        if (canvas && window.THREE) {
-            initThreeBladeStage(stage, canvas);
-            return;
-        }
-
-        let rotateY = -18;
-        let rotateX = -8;
+        let targetY = -8;
+        let targetX = -6;
+        let currentY = targetY;
+        let currentX = targetX;
         let lastX = 0;
         let lastY = 0;
-        let lastFrame = performance.now();
-        const startedAt = lastFrame;
-        let resumeAt = 0;
         let dragging = false;
-        let hasInteracted = false;
-        const autoSpeed = 360 / 45000;
 
         function clamp(value, min, max) {
             return Math.min(Math.max(value, min), max);
         }
 
         function setBladeTransform() {
-            stage.style.setProperty("--blade-rotate", `${rotateY.toFixed(2)}deg`);
-            stage.style.setProperty("--blade-tilt", `${rotateX.toFixed(2)}deg`);
+            stage.style.setProperty("--blade-rotate", `${currentY.toFixed(2)}deg`);
+            stage.style.setProperty("--blade-tilt", `${currentX.toFixed(2)}deg`);
         }
 
         function render(now) {
-            const delta = Math.min(now - lastFrame, 34);
-            lastFrame = now;
-
-            if (!prefersReducedMotion && !dragging && now > resumeAt) {
-                const hovering = stage.matches(":hover");
-                rotateY = (rotateY + delta * (hovering ? autoSpeed * 0.52 : autoSpeed)) % 360;
-                rotateX += (-8 - rotateX) * 0.025;
-                setBladeTransform();
+            if (!prefersReducedMotion && !dragging && !stage.matches(":hover")) {
+                targetY = -8 + Math.sin(now * 0.00045) * 2.6;
+                targetX = -6 + Math.cos(now * 0.00038) * 1.4;
             }
 
+            currentY += (targetY - currentY) * 0.1;
+            currentX += (targetX - currentX) * 0.1;
+            setBladeTransform();
             requestAnimationFrame(render);
         }
 
         stage.addEventListener("pointerdown", (event) => {
             if (event.button !== undefined && event.button !== 0) return;
-            if (!hasInteracted) {
-                rotateY = (-18 + (performance.now() - startedAt) * autoSpeed) % 360;
-                hasInteracted = true;
-                stage.classList.add("has-interacted");
-            }
             dragging = true;
             lastX = event.clientX;
             lastY = event.clientY;
+            stage.classList.add("has-interacted");
             stage.classList.add("is-dragging");
             stage.setPointerCapture?.(event.pointerId);
-            setBladeTransform();
         });
 
         stage.addEventListener("pointermove", (event) => {
-            if (!dragging) return;
+            const rect = stage.getBoundingClientRect();
+            const pointerX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+            const pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+
+            if (!dragging) {
+                targetY = clamp(pointerX * 12, -16, 16);
+                targetX = clamp(-6 - pointerY * 4.5, -13, 5);
+                stage.classList.add("has-interacted");
+                return;
+            }
+
             const dx = event.clientX - lastX;
             const dy = event.clientY - lastY;
-            rotateY = (rotateY + dx * 0.58) % 360;
-            rotateX = clamp(rotateX - dy * 0.18, -18, 14);
+            targetY = clamp(targetY + dx * 0.16, -24, 24);
+            targetX = clamp(targetX - dy * 0.08, -14, 8);
             lastX = event.clientX;
             lastY = event.clientY;
-            setBladeTransform();
             event.preventDefault();
+        });
+
+        stage.addEventListener("pointerleave", () => {
+            if (dragging) return;
+            targetY = -8;
+            targetX = -6;
         });
 
         function releaseBlade(event) {
             if (!dragging) return;
             dragging = false;
-            resumeAt = performance.now() + 420;
             stage.classList.remove("is-dragging");
             if (event?.pointerId !== undefined) stage.releasePointerCapture?.(event.pointerId);
         }
@@ -325,224 +323,6 @@
         stage.addEventListener("lostpointercapture", releaseBlade);
 
         setBladeTransform();
-        requestAnimationFrame(render);
-    }
-
-    function createBladeGeometry(THREE) {
-        const sections = [
-            { y: -0.84, width: 0.24, depth: 0.105 },
-            { y: 0.28, width: 0.195, depth: 0.092 },
-            { y: 1.54, width: 0.13, depth: 0.072 },
-            { y: 2.48, width: 0.052, depth: 0.04 }
-        ];
-        const tip = [0, 2.96, 0];
-        const positions = [];
-
-        const diamond = (section) => ({
-            front: [0, section.y, section.depth],
-            right: [section.width, section.y, 0],
-            back: [0, section.y, -section.depth],
-            left: [-section.width, section.y, 0]
-        });
-        const pushFace = (...points) => points.forEach((point) => positions.push(...point));
-        const rings = sections.map(diamond);
-
-        for (let index = 0; index < rings.length - 1; index += 1) {
-            const a = rings[index];
-            const b = rings[index + 1];
-            pushFace(a.front, b.front, b.right, a.front, b.right, a.right);
-            pushFace(a.right, b.right, b.back, a.right, b.back, a.back);
-            pushFace(a.back, b.back, b.left, a.back, b.left, a.left);
-            pushFace(a.left, b.left, b.front, a.left, b.front, a.front);
-        }
-
-        const last = rings[rings.length - 1];
-        pushFace(last.front, tip, last.right);
-        pushFace(last.right, tip, last.back);
-        pushFace(last.back, tip, last.left);
-        pushFace(last.left, tip, last.front);
-
-        const base = rings[0];
-        pushFace(base.front, base.right, base.back, base.front, base.back, base.left);
-
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
-        geometry.computeVertexNormals();
-        return geometry;
-    }
-
-    function initThreeBladeStage(stage, canvas) {
-        const THREE = window.THREE;
-        const renderer = new THREE.WebGLRenderer({
-            canvas,
-            alpha: true,
-            antialias: true,
-            powerPreference: "high-performance"
-        });
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-        camera.position.set(0, 0.28, 7.2);
-
-        const sword = new THREE.Group();
-        sword.rotation.x = -0.08;
-        scene.add(sword);
-
-        const bladeMaterial = new THREE.MeshStandardMaterial({
-            color: 0xdfe6ee,
-            metalness: 0.96,
-            roughness: 0.18
-        });
-        const darkMaterial = new THREE.MeshStandardMaterial({
-            color: 0x080b10,
-            metalness: 0.72,
-            roughness: 0.36
-        });
-        const accentMaterial = new THREE.MeshStandardMaterial({
-            color: 0xb8a278,
-            metalness: 0.88,
-            roughness: 0.3
-        });
-        const edgeMaterial = new THREE.MeshStandardMaterial({
-            color: 0xf6fbff,
-            metalness: 1,
-            roughness: 0.12,
-            emissive: 0x5bbdda,
-            emissiveIntensity: 0.08
-        });
-
-        const bladeMesh = new THREE.Mesh(createBladeGeometry(THREE), bladeMaterial);
-        sword.add(bladeMesh);
-
-        const ridge = new THREE.Mesh(
-            new THREE.BoxGeometry(0.018, 3.34, 0.028),
-            edgeMaterial
-        );
-        ridge.position.y = 0.79;
-        ridge.position.z = 0.093;
-        sword.add(ridge);
-
-        const leftEdge = ridge.clone();
-        leftEdge.scale.set(0.55, 0.86, 0.65);
-        leftEdge.position.set(-0.085, 0.56, 0.05);
-        leftEdge.rotation.z = -0.027;
-        sword.add(leftEdge);
-
-        const rightEdge = ridge.clone();
-        rightEdge.scale.set(0.55, 0.86, 0.65);
-        rightEdge.position.set(0.085, 0.56, 0.05);
-        rightEdge.rotation.z = 0.027;
-        sword.add(rightEdge);
-
-        const guard = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.075, 0.28), accentMaterial);
-        guard.position.y = -0.86;
-        sword.add(guard);
-
-        const guardCore = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.14, 0.34), accentMaterial);
-        guardCore.position.y = -0.86;
-        sword.add(guardCore);
-
-        const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.18, 32), accentMaterial);
-        collar.position.y = -0.98;
-        sword.add(collar);
-
-        const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.118, 0.88, 32), darkMaterial);
-        grip.position.y = -1.48;
-        sword.add(grip);
-
-        const wrapTop = new THREE.Mesh(new THREE.TorusGeometry(0.114, 0.012, 8, 32), accentMaterial);
-        wrapTop.position.y = -1.16;
-        wrapTop.rotation.x = Math.PI / 2;
-        sword.add(wrapTop);
-
-        const wrapBottom = wrapTop.clone();
-        wrapBottom.position.y = -1.8;
-        sword.add(wrapBottom);
-
-        const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.135, 0.18, 32), accentMaterial);
-        pommel.position.y = -1.98;
-        sword.add(pommel);
-
-        const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-        keyLight.position.set(2.4, 3.2, 4.5);
-        scene.add(keyLight);
-        const rimLight = new THREE.DirectionalLight(0x77d9ff, 2.8);
-        rimLight.position.set(-3.2, 1.4, -2.6);
-        scene.add(rimLight);
-        const fillLight = new THREE.HemisphereLight(0xe9eef7, 0x05070b, 1.25);
-        scene.add(fillLight);
-
-        let targetY = -0.92;
-        let currentY = targetY;
-        let targetX = -0.16;
-        let currentX = targetX;
-        let lastX = 0;
-        let lastY = 0;
-        let dragging = false;
-        let resumeAt = 0;
-        let lastFrame = performance.now();
-        const clock = new THREE.Clock();
-
-        function resize() {
-            const rect = stage.getBoundingClientRect();
-            const width = Math.max(Math.floor(rect.width), 1);
-            const height = Math.max(Math.floor(rect.height), 1);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-            renderer.setSize(width, height, false);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        }
-
-        function render(now) {
-            const delta = Math.min(now - lastFrame, 34);
-            lastFrame = now;
-
-            if (!prefersReducedMotion && !dragging && now > resumeAt) {
-                targetY += delta * (stage.matches(":hover") ? 0.00034 : 0.00062);
-            }
-            currentY += (targetY - currentY) * 0.12;
-            currentX += (targetX - currentX) * 0.12;
-            sword.rotation.y = currentY;
-            sword.rotation.x = currentX;
-            sword.position.y = Math.sin(clock.getElapsedTime() * 1.1) * 0.018;
-            renderer.render(scene, camera);
-            requestAnimationFrame(render);
-        }
-
-        stage.addEventListener("pointerdown", (event) => {
-            if (event.button !== undefined && event.button !== 0) return;
-            dragging = true;
-            lastX = event.clientX;
-            lastY = event.clientY;
-            stage.classList.add("is-dragging");
-            stage.setPointerCapture?.(event.pointerId);
-        });
-
-        stage.addEventListener("pointermove", (event) => {
-            if (!dragging) return;
-            const dx = event.clientX - lastX;
-            const dy = event.clientY - lastY;
-            targetY += dx * 0.012;
-            targetX = Math.min(Math.max(targetX + dy * 0.004, -0.32), 0.26);
-            lastX = event.clientX;
-            lastY = event.clientY;
-            event.preventDefault();
-        });
-
-        function releaseBlade(event) {
-            if (!dragging) return;
-            dragging = false;
-            resumeAt = performance.now() + 520;
-            stage.classList.remove("is-dragging");
-            if (event?.pointerId !== undefined) stage.releasePointerCapture?.(event.pointerId);
-        }
-
-        stage.addEventListener("pointerup", releaseBlade);
-        stage.addEventListener("pointercancel", releaseBlade);
-        stage.addEventListener("lostpointercapture", releaseBlade);
-        window.addEventListener("resize", resize);
-
-        resize();
-        stage.classList.add("three-ready");
         requestAnimationFrame(render);
     }
 
