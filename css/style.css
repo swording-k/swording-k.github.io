@@ -2601,23 +2601,23 @@ main {
 }
 
 .hero-artifact .blade-stage {
-    top: 4px;
+    top: 10px;
     width: min(90%, 520px);
-    height: 510px;
+    height: 536px;
 }
 
 .hero-artifact .blade-object {
-    width: 238px;
-    height: 570px;
+    width: 228px;
+    height: 548px;
 }
 
 .hero-artifact .kunwu-sword-photo {
-    height: 552px;
-    transform: translateY(-56px);
+    height: 528px;
+    transform: translateY(0);
 }
 
 .hero-artifact .console-topbar {
-    margin-top: 530px;
+    margin-top: 556px;
 }
 
 .hero-artifact .console-topbar,
@@ -2787,18 +2787,18 @@ main {
     }
 
     .hero-artifact .blade-stage {
-        top: 18px;
-        height: 350px;
+        top: 20px;
+        height: 360px;
     }
 
     .hero-artifact .blade-object {
-        width: 158px;
-        height: 390px;
+        width: 152px;
+        height: 360px;
     }
 
     .hero-artifact .kunwu-sword-photo {
-        height: 382px;
-        transform: translateY(-36px);
+        height: 340px;
+        transform: translateY(0);
     }
 
     .hero-artifact .console-topbar {
