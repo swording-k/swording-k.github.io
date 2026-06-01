@@ -184,7 +184,7 @@
             .fromTo(".hero-metrics > div", { y: 30, rotateX: 8, autoAlpha: 0 }, { y: 0, rotateX: 0, autoAlpha: 1, stagger: 0.08 }, "-=0.3")
             .fromTo(".hero-stage", { x: 58, scale: 0.88, rotateY: -9, autoAlpha: 0 }, { x: 0, scale: 1, rotateY: 0, autoAlpha: 1, duration: 1.12 }, "-=1.2")
             .fromTo(".blade-orbit", { scale: 0.62, rotateZ: -58, autoAlpha: 0 }, { scale: 1, rotateZ: -10, autoAlpha: 1, duration: 1.14 }, "-=0.72")
-            .fromTo(".kunwu-sword-photo", { y: 54, scale: 0.84, autoAlpha: 0 }, { y: -34, scale: 1, autoAlpha: 1, duration: 1.08 }, "-=0.98")
+            .fromTo(".kunwu-sword-photo", { y: 42, scale: 0.9, autoAlpha: 0 }, { y: -56, scale: 1, autoAlpha: 1, duration: 1.08 }, "-=0.98")
             .fromTo(".artifact-label, .hero-artifact .console-row, .stage-caption", { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.62, stagger: 0.06 }, "-=0.52")
             .fromTo(".stage-timeline span", { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.1 }, "-=0.48");
 
@@ -217,18 +217,6 @@
                 start: "top top",
                 end: "bottom top",
                 scrub: 0.8
-            }
-        });
-
-        gsap.to(".kunwu-sword-photo", {
-            y: -68,
-            scale: 1.06,
-            ease: "none",
-            scrollTrigger: {
-                trigger: "#hero",
-                start: "top top",
-                end: "bottom top",
-                scrub: 0.9
             }
         });
 
