@@ -1989,7 +1989,7 @@ body {
 }
 
 .hero-artifact {
-    min-height: 660px;
+    min-height: 752px;
     padding: 0;
     overflow: visible;
     border: 0;
@@ -2002,7 +2002,7 @@ body {
 .hero-artifact::before {
     content: "";
     position: absolute;
-    inset: 12% 4% 8%;
+    inset: 8% 3% 4%;
     z-index: -2;
     border: 1px solid rgba(255,255,255,0.09);
     border-radius: 999px;
@@ -2024,19 +2024,6 @@ body {
     filter: blur(26px);
 }
 
-.artifact-ribbon {
-    position: absolute;
-    left: 6%;
-    top: 46px;
-    z-index: 2;
-    display: grid;
-    gap: 2px;
-    padding: 12px 14px;
-    border-left: 1px solid rgba(231,191,120,0.44);
-    background: linear-gradient(90deg, rgba(255,255,255,0.055), transparent);
-}
-
-.artifact-ribbon span,
 .artifact-label span {
     color: rgba(126,226,255,0.78);
     font-family: var(--font-mono);
@@ -2051,15 +2038,10 @@ body {
     background: transparent;
 }
 
-.artifact-ribbon strong {
-    color: var(--text);
-    font-size: 17px;
-}
-
 .hero-artifact .blade-stage {
-    top: 52px;
-    width: min(92%, 520px);
-    height: 510px;
+    top: 42px;
+    width: min(90%, 500px);
+    height: 468px;
 }
 
 .hero-artifact .blade-aura {
@@ -2074,8 +2056,8 @@ body {
 }
 
 .hero-artifact .blade-object {
-    width: 250px;
-    height: 590px;
+    width: 222px;
+    height: 530px;
     transform: rotateX(var(--blade-tilt)) rotateY(var(--blade-rotate)) rotateZ(-1.8deg) translateZ(58px);
 }
 
@@ -2089,8 +2071,8 @@ body {
 }
 
 .hero-artifact .kunwu-sword-photo {
-    height: 570px;
-    transform: translateY(-26px);
+    height: 508px;
+    transform: translateY(-34px);
     filter:
         contrast(1.1)
         saturate(0.98)
@@ -2117,7 +2099,7 @@ body {
 }
 
 .hero-artifact .console-topbar {
-    margin-top: 486px;
+    margin-top: 560px;
     justify-content: space-between;
     border-radius: 14px 14px 0 0;
 }
@@ -2366,17 +2348,12 @@ body {
     }
 
     .hero-artifact {
-        min-height: 640px;
+        min-height: 678px;
         padding: 0;
     }
 
     .hero-artifact::before {
-        inset: 8% 0 11%;
-    }
-
-    .artifact-ribbon {
-        left: 4%;
-        top: 18px;
+        inset: 7% 0 5%;
     }
 
     .blade-stage {
@@ -2395,22 +2372,23 @@ body {
     }
 
     .hero-artifact .blade-stage {
-        top: 68px;
+        top: 54px;
         width: min(96%, 360px);
-        height: 360px;
+        height: 330px;
     }
 
     .hero-artifact .blade-object {
-        width: 176px;
-        height: 420px;
+        width: 152px;
+        height: 370px;
     }
 
     .hero-artifact .kunwu-sword-photo {
-        height: 410px;
+        height: 360px;
+        transform: translateY(-24px);
     }
 
     .hero-artifact .console-topbar {
-        margin-top: 420px;
+        margin-top: 428px;
     }
 
     .hero-artifact .console-topbar,

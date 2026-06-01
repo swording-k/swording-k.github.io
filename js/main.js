@@ -183,7 +183,6 @@
             .fromTo(".hero-actions .button", { y: 18 }, { y: 0, stagger: 0.08 }, "-=0.34")
             .fromTo(".hero-metrics > div", { y: 28, rotateX: 8 }, { y: 0, rotateX: 0, stagger: 0.08 }, "-=0.28")
             .fromTo(".hero-stage", { x: 40, scale: 0.94, rotateY: -6 }, { x: 0, scale: 1, rotateY: 0, duration: 0.92 }, "-=1.12")
-            .fromTo(".artifact-ribbon", { y: -18, x: -10 }, { y: 0, x: 0, duration: 0.7 }, "-=0.78")
             .fromTo(".blade-orbit", { scale: 0.68, rotateZ: -42 }, { scale: 1, rotateZ: -10, duration: 1.05 }, "-=0.62")
             .fromTo(".kunwu-sword-photo", { y: 44, scale: 0.88 }, { y: -30, scale: 1, duration: 0.98 }, "-=0.92")
             .fromTo(".artifact-label, .hero-artifact .console-row, .stage-caption", { y: 22 }, { y: 0, duration: 0.58, stagger: 0.06 }, "-=0.48")
