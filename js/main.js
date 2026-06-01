@@ -170,23 +170,24 @@
 
         gsap.defaults({ ease: "power3.out" });
         splitMotionText(".hero-name-main, .hero-roman");
-        const heroTimeline = gsap.timeline({ defaults: { duration: 0.72 } });
+        const heroTimeline = gsap.timeline({ defaults: { duration: 0.78, ease: "expo.out" } });
         heroTimeline
-            .fromTo(".hero .eyebrow", { y: 18 }, { y: 0 })
-            .fromTo(".hero-edition span", { y: 14 }, { y: 0, duration: 0.5, stagger: 0.06 }, "-=0.24")
-            .fromTo(".hero-name-main .motion-char", { yPercent: 86, rotateX: -42 }, { yPercent: 0, rotateX: 0, duration: 0.78, stagger: 0.07 }, "-=0.32")
-            .fromTo(".hero-alias", { y: -10, scale: 0.9 }, { y: 0, scale: 1, duration: 0.56 }, "-=0.42")
-            .fromTo(".hero-roman .motion-char", { y: 22 }, { y: 0, duration: 0.52, stagger: 0.022 }, "-=0.48")
-            .fromTo(".hero-name-note", { y: 20 }, { y: 0 }, "-=0.4")
-            .fromTo(".hero-signal-row span", { y: 18, scale: 0.94 }, { y: 0, scale: 1, stagger: 0.055 }, "-=0.42")
-            .fromTo(".hero-subtitle", { y: 26 }, { y: 0 }, "-=0.42")
-            .fromTo(".hero-actions .button", { y: 18 }, { y: 0, stagger: 0.08 }, "-=0.34")
-            .fromTo(".hero-metrics > div", { y: 28, rotateX: 8 }, { y: 0, rotateX: 0, stagger: 0.08 }, "-=0.28")
-            .fromTo(".hero-stage", { x: 40, scale: 0.94, rotateY: -6 }, { x: 0, scale: 1, rotateY: 0, duration: 0.92 }, "-=1.12")
-            .fromTo(".blade-orbit", { scale: 0.68, rotateZ: -42 }, { scale: 1, rotateZ: -10, duration: 1.05 }, "-=0.62")
-            .fromTo(".kunwu-sword-photo", { y: 44, scale: 0.88 }, { y: -30, scale: 1, duration: 0.98 }, "-=0.92")
-            .fromTo(".artifact-label, .hero-artifact .console-row, .stage-caption", { y: 22 }, { y: 0, duration: 0.58, stagger: 0.06 }, "-=0.48")
-            .fromTo(".stage-timeline span", { y: 14 }, { y: 0, stagger: 0.1 }, "-=0.48");
+            .fromTo(".hero .eyebrow", { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1 })
+            .fromTo(".hero-edition span", { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.54, stagger: 0.06 }, "-=0.42")
+            .fromTo(".hero-name-main .motion-char", { yPercent: 100, rotateX: -54, autoAlpha: 0 }, { yPercent: 0, rotateX: 0, autoAlpha: 1, duration: 0.88, stagger: 0.07 }, "-=0.32")
+            .fromTo(".hero-alias", { y: -14, scale: 0.9, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 0.62 }, "-=0.52")
+            .fromTo(".hero-roman .motion-char", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.56, stagger: 0.022 }, "-=0.5")
+            .fromTo(".hero-name-note", { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, "-=0.38")
+            .fromTo(".hero-signal-row span", { y: 18, scale: 0.94, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, stagger: 0.055 }, "-=0.42")
+            .fromTo(".hero-subtitle", { y: 32, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, "-=0.42")
+            .fromTo(".keynote-lines span", { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.065, duration: 0.62 }, "-=0.34")
+            .fromTo(".hero-actions .button", { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.08 }, "-=0.34")
+            .fromTo(".hero-metrics > div", { y: 30, rotateX: 8, autoAlpha: 0 }, { y: 0, rotateX: 0, autoAlpha: 1, stagger: 0.08 }, "-=0.3")
+            .fromTo(".hero-stage", { x: 58, scale: 0.88, rotateY: -9, autoAlpha: 0 }, { x: 0, scale: 1, rotateY: 0, autoAlpha: 1, duration: 1.12 }, "-=1.2")
+            .fromTo(".blade-orbit", { scale: 0.62, rotateZ: -58, autoAlpha: 0 }, { scale: 1, rotateZ: -10, autoAlpha: 1, duration: 1.14 }, "-=0.72")
+            .fromTo(".kunwu-sword-photo", { y: 54, scale: 0.84, autoAlpha: 0 }, { y: -34, scale: 1, autoAlpha: 1, duration: 1.08 }, "-=0.98")
+            .fromTo(".artifact-label, .hero-artifact .console-row, .stage-caption", { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.62, stagger: 0.06 }, "-=0.52")
+            .fromTo(".stage-timeline span", { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.1 }, "-=0.48");
 
         gsap.to(".stage-timeline span", {
             autoAlpha: 0.38,
@@ -210,14 +211,27 @@
         });
 
         gsap.to(".hero-stage", {
-            y: -54,
-            autoAlpha: 0.62,
+            y: -76,
+            scale: 1.06,
+            autoAlpha: 0.72,
             ease: "none",
             scrollTrigger: {
                 trigger: "#hero",
                 start: "top top",
                 end: "bottom top",
                 scrub: 0.8
+            }
+        });
+
+        gsap.to(".kunwu-sword-photo", {
+            y: -68,
+            scale: 1.06,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 0.9
             }
         });
 
@@ -233,14 +247,31 @@
         });
 
         gsap.fromTo(".featured-project",
-            { y: 70, scale: 0.96 },
+            { y: 88, scale: 0.94, autoAlpha: 0 },
             {
                 y: 0,
                 scale: 1,
-                duration: 1,
+                autoAlpha: 1,
+                duration: 1.05,
+                ease: "expo.out",
                 scrollTrigger: {
                     trigger: ".featured-project",
                     start: "top 78%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+
+        gsap.fromTo(".launch-strip span",
+            { y: 24, autoAlpha: 0 },
+            {
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.68,
+                stagger: 0.08,
+                scrollTrigger: {
+                    trigger: ".launch-strip",
+                    start: "top 84%",
                     toggleActions: "play none none none"
                 }
             }
@@ -258,9 +289,21 @@
         });
 
         gsap.to(".featured-visual img", {
-            y: -28,
-            scale: 1.08,
-            rotate: -2,
+            y: -42,
+            scale: 1.12,
+            rotate: -3,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".featured-project",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1
+            }
+        });
+
+        gsap.to(".fit-stage-glow", {
+            scale: 1.22,
+            rotate: 40,
             ease: "none",
             scrollTrigger: {
                 trigger: ".featured-project",
@@ -348,9 +391,10 @@
 
         function updateActiveLink() {
             const currentY = window.scrollY + (nav?.offsetHeight || 0) + 120;
-            let currentId = sections[0].id;
+            const orderedSections = [...sections].sort((a, b) => a.offsetTop - b.offsetTop);
+            let currentId = orderedSections[0].id;
 
-            sections.forEach((section) => {
+            orderedSections.forEach((section) => {
                 if (currentY >= section.offsetTop) currentId = section.id;
             });
 

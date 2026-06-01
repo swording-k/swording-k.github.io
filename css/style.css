@@ -2481,6 +2481,368 @@ body {
     }
 }
 
+/* Apple Keynote product-showcase redesign layer */
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero { order: 1; }
+.projects { order: 2; }
+.about { order: 3; }
+.life-section { order: 4; }
+.honors { order: 5; }
+.contact { order: 6; }
+
+.hero {
+    min-height: 100svh;
+    padding: calc(var(--nav-height) + 30px) 0 58px;
+    background:
+        radial-gradient(circle at 72% 44%, rgba(138, 222, 255, 0.15), transparent 29rem),
+        radial-gradient(circle at 30% 38%, rgba(238, 194, 119, 0.11), transparent 30rem),
+        linear-gradient(180deg, rgba(255,255,255,0.018), transparent 45%);
+}
+
+.hero::before {
+    content: "PRODUCT ENGINEER";
+    top: 54%;
+    color: rgba(255,255,255,0.018);
+    -webkit-text-stroke: 1px rgba(255,255,255,0.038);
+    font-size: clamp(72px, 11vw, 168px);
+    letter-spacing: 0;
+}
+
+.hero::after {
+    bottom: 6%;
+    width: min(82vw, 1080px);
+    opacity: 0.75;
+}
+
+.hero-layout {
+    width: min(100% - 48px, 1240px);
+    grid-template-columns: minmax(0, 0.86fr) minmax(440px, 0.9fr);
+    gap: clamp(44px, 7vw, 110px);
+}
+
+.hero-copy {
+    gap: 18px;
+}
+
+.eyebrow {
+    color: rgba(141, 231, 255, 0.88);
+}
+
+.hero-edition {
+    max-width: 520px;
+    padding: 5px;
+    border-color: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.03);
+}
+
+.hero-edition span {
+    min-height: 25px;
+    font-size: 10px;
+}
+
+.hero-title {
+    max-width: 520px;
+    gap: 10px;
+    font-size: clamp(40px, 4.4vw, 64px);
+    letter-spacing: 0;
+}
+
+.hero-name-main {
+    color: #f7f2e7;
+    text-shadow: 0 18px 60px rgba(255,255,255,0.16);
+}
+
+.hero-alias {
+    border-radius: 12px;
+    background:
+        linear-gradient(135deg, rgba(255,235,184,0.22), rgba(117,217,255,0.06)),
+        rgba(255,255,255,0.045);
+}
+
+.hero-roman {
+    color: rgba(247, 242, 231, 0.54);
+}
+
+.hero-name-note {
+    max-width: 540px;
+    color: rgba(247,242,231,0.62);
+}
+
+.hero-subtitle {
+    max-width: 560px;
+    font-size: clamp(20px, 1.75vw, 26px);
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.keynote-lines {
+    display: grid;
+    max-width: 560px;
+    margin: 2px 0 0;
+    border-top: 1px solid rgba(255,255,255,0.11);
+    border-bottom: 1px solid rgba(255,255,255,0.11);
+}
+
+.keynote-lines span {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    color: rgba(247,242,231,0.78);
+    font-size: 14px;
+}
+
+.keynote-lines span:last-child {
+    border-bottom: 0;
+}
+
+.hero-dossier {
+    max-width: 560px;
+}
+
+.hero-artifact {
+    min-height: 704px;
+    transform-origin: center;
+}
+
+.hero-artifact::before {
+    inset: 4% 0 7%;
+    border-radius: 46% 46% 42% 42% / 39% 39% 24% 24%;
+    background:
+        radial-gradient(circle at 50% 25%, rgba(255,255,255,0.17), transparent 13%),
+        radial-gradient(circle at 50% 43%, rgba(126,226,255,0.17), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.014));
+}
+
+.hero-artifact .blade-stage {
+    top: 22px;
+    width: min(88%, 510px);
+    height: 500px;
+}
+
+.hero-artifact .blade-object {
+    width: 226px;
+    height: 550px;
+}
+
+.hero-artifact .kunwu-sword-photo {
+    height: 528px;
+    transform: translateY(-34px);
+}
+
+.hero-artifact .console-topbar {
+    margin-top: 540px;
+}
+
+.hero-artifact .console-topbar,
+.hero-artifact .console-body,
+.hero-artifact .stage-caption {
+    width: min(84%, 448px);
+}
+
+.projects {
+    padding-top: 118px;
+}
+
+.projects .section-header {
+    margin-bottom: 34px;
+}
+
+.project-ledger {
+    margin: -8px 0 26px;
+}
+
+.featured-project {
+    grid-template-columns: minmax(360px, 0.88fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 62px);
+    min-height: 620px;
+    padding: clamp(32px, 6vw, 72px);
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 25% 40%, rgba(231,191,120,0.16), transparent 17rem),
+        radial-gradient(circle at 68% 28%, rgba(120,224,255,0.12), transparent 20rem),
+        linear-gradient(180deg, rgba(255,255,255,0.095), rgba(255,255,255,0.022));
+}
+
+.featured-visual {
+    min-height: 460px;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,0.22), transparent 7rem),
+        radial-gradient(circle at 50% 52%, rgba(231,191,120,0.22), transparent 17rem),
+        linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.02));
+}
+
+.fit-stage-glow {
+    position: absolute;
+    inset: 18%;
+    border-radius: 50%;
+    background: conic-gradient(from 130deg, rgba(231,191,120,0.05), rgba(255,255,255,0.28), rgba(126,226,255,0.11), rgba(231,191,120,0.05));
+    filter: blur(4px);
+    animation: keynote-spin 18s linear infinite;
+}
+
+.featured-visual img {
+    width: min(52%, 228px);
+    position: relative;
+    z-index: 1;
+}
+
+.featured-copy h3 {
+    font-family: var(--font-body);
+    font-size: clamp(44px, 6.5vw, 82px);
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.featured-copy > p {
+    max-width: 620px;
+    font-size: 17px;
+    line-height: 1.78;
+}
+
+.launch-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.launch-strip span {
+    min-height: 78px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    color: rgba(247,242,231,0.7);
+    background: rgba(255,255,255,0.035);
+    font-size: 12px;
+}
+
+.launch-strip strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 11px;
+}
+
+.showcase-rail {
+    padding: 18px;
+    border-radius: 28px;
+}
+
+.project-card {
+    min-height: 468px;
+    border-radius: 22px;
+}
+
+.about {
+    padding-top: 126px;
+}
+
+.profile-grid {
+    grid-template-columns: 0.72fr 1.55fr;
+}
+
+.capability-card {
+    min-height: 218px;
+    border-radius: 20px;
+}
+
+.card-index {
+    margin-bottom: 28px;
+}
+
+@keyframes keynote-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1080px) {
+    .hero-layout,
+    .featured-project,
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .featured-project {
+        min-height: auto;
+    }
+
+    .launch-strip {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .hero-layout {
+        width: min(100% - 28px, var(--max));
+        gap: 28px;
+    }
+
+    .hero::before {
+        content: "AI";
+        top: 44%;
+        font-size: clamp(92px, 34vw, 148px);
+    }
+
+    .hero-title {
+        font-size: clamp(42px, 12vw, 58px);
+    }
+
+    .hero-subtitle {
+        max-width: 100%;
+        font-size: clamp(20px, 6vw, 25px);
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .keynote-lines span {
+        min-height: 38px;
+        font-size: 13px;
+    }
+
+    .hero-artifact {
+        min-height: 638px;
+    }
+
+    .hero-artifact .blade-stage {
+        top: 30px;
+        height: 340px;
+    }
+
+    .hero-artifact .blade-object {
+        width: 150px;
+        height: 370px;
+    }
+
+    .hero-artifact .kunwu-sword-photo {
+        height: 360px;
+        transform: translateY(-20px);
+    }
+
+    .hero-artifact .console-topbar {
+        margin-top: 394px;
+    }
+
+    .featured-project {
+        padding: 22px;
+        border-radius: 22px;
+    }
+
+    .featured-visual {
+        min-height: 260px;
+        border-radius: 18px;
+    }
+
+    .featured-copy h3 {
+        font-size: clamp(40px, 13vw, 58px);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
