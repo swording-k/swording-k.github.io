@@ -359,62 +359,6 @@
             }
         );
 
-        if (document.body.classList.contains("portfolio-v3")) {
-            gsap.fromTo(".hero-proofline span",
-                { y: 18, autoAlpha: 0, scale: 0.94 },
-                { y: 0, autoAlpha: 1, scale: 1, duration: 0.62, stagger: 0.07, ease: "expo.out" }
-            );
-
-            gsap.to(".hero-bg", {
-                scale: 1.08,
-                y: -42,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "#hero",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1
-                }
-            });
-
-            gsap.to(".hero-artifact .blade-stage", {
-                y: -18,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "#hero",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 0.9
-                }
-            });
-
-            ScrollTrigger.batch(".project-copy-stack p", {
-                start: "top 88%",
-                once: true,
-                onEnter: (items) => {
-                    gsap.fromTo(items,
-                        { x: 22, autoAlpha: 0 },
-                        { x: 0, autoAlpha: 1, duration: 0.64, stagger: 0.045, ease: "power2.out" }
-                    );
-                }
-            });
-
-            gsap.fromTo(".stage-specs span",
-                { y: 12, autoAlpha: 0 },
-                {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.52,
-                    stagger: 0.06,
-                    scrollTrigger: {
-                        trigger: ".hero-artifact",
-                        start: "top 68%",
-                        toggleActions: "play none none none"
-                    }
-                }
-            );
-        }
-
         const refreshScrollTriggers = () => {
             ScrollTrigger.refresh(true);
             ScrollTrigger.update();
