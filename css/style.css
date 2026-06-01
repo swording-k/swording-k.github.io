@@ -2853,6 +2853,538 @@ main {
     }
 }
 
+/* Experimental portfolio V3: product keynote plus case archive */
+body.portfolio-v3 {
+    --bg: #050509;
+    --bg-soft: #090b12;
+    --surface: rgba(11, 13, 19, 0.72);
+    --surface-strong: rgba(18, 20, 28, 0.9);
+    --line: rgba(255, 255, 255, 0.105);
+    --line-strong: rgba(255, 255, 255, 0.2);
+    --text: #f7f2e8;
+    --text-soft: #b6b1a8;
+    --text-muted: #727680;
+    --gold: #f1c77c;
+    --cyan: #8de7ff;
+    background:
+        radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.08), transparent 30rem),
+        radial-gradient(circle at 78% 16%, rgba(141, 231, 255, 0.12), transparent 34rem),
+        radial-gradient(circle at 20% 20%, rgba(241, 199, 124, 0.1), transparent 30rem),
+        linear-gradient(180deg, #040406 0%, #080910 52%, #050507 100%);
+}
+
+body.portfolio-v3::before {
+    opacity: 0.42;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px);
+    background-size: 96px 96px;
+}
+
+body.portfolio-v3 .nav {
+    inset: 14px auto auto 50%;
+    width: min(100% - 32px, 1120px);
+    height: 58px;
+    border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 999px;
+    background: rgba(8, 9, 13, 0.64);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 70px rgba(0,0,0,0.32);
+    transform: translateX(-50%);
+}
+
+body.portfolio-v3 .nav.scrolled {
+    border-color: rgba(255,255,255,0.16);
+    background: rgba(8, 9, 13, 0.84);
+}
+
+body.portfolio-v3 .nav-container {
+    width: 100%;
+    padding: 0 14px 0 16px;
+}
+
+body.portfolio-v3 .nav-links a {
+    min-height: 34px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+body.portfolio-v3 .nav-links a:hover,
+body.portfolio-v3 .nav-links a.active {
+    color: var(--text);
+    background: rgba(255,255,255,0.07);
+}
+
+body.portfolio-v3 .hero {
+    min-height: 100svh;
+    padding: calc(var(--nav-height) + 44px) 0 52px;
+}
+
+body.portfolio-v3 .hero::before {
+    content: "BAOJIAN";
+    top: 43%;
+    color: rgba(255,255,255,0.02);
+    -webkit-text-stroke: 1px rgba(255,255,255,0.055);
+    font-family: var(--font-body);
+    font-size: clamp(72px, 14vw, 190px);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+body.portfolio-v3 .hero::after {
+    bottom: 4%;
+    height: 1px;
+    opacity: 1;
+    background: linear-gradient(90deg, transparent, rgba(241,199,124,0.8), rgba(141,231,255,0.5), transparent);
+    filter: blur(0);
+}
+
+body.portfolio-v3 .hero-layout {
+    width: min(100% - 48px, 1220px);
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 430px);
+    gap: clamp(36px, 6vw, 82px);
+}
+
+body.portfolio-v3 .hero-copy {
+    max-width: 780px;
+    gap: 16px;
+}
+
+body.portfolio-v3 .hero-edition {
+    width: fit-content;
+    padding: 7px;
+    border: 1px solid rgba(255,255,255,0.105);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.045);
+}
+
+body.portfolio-v3 .hero-edition span {
+    padding: 6px 10px;
+}
+
+body.portfolio-v3 .hero-proofline {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 2px 0 4px;
+}
+
+body.portfolio-v3 .hero-proofline span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 999px;
+    color: rgba(247,242,232,0.72);
+    background: rgba(255,255,255,0.035);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+body.portfolio-v3 .hero-title {
+    max-width: 760px;
+    font-family: var(--font-body);
+    font-size: clamp(56px, 8vw, 108px);
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 0.86;
+}
+
+body.portfolio-v3 .hero-name-row {
+    gap: 18px;
+}
+
+body.portfolio-v3 .hero-alias {
+    margin-bottom: 12px;
+    min-height: 38px;
+    border-radius: 10px;
+    color: #0b0c10;
+    background: linear-gradient(135deg, #f4d49b, #d99f4d);
+    box-shadow: 0 18px 42px rgba(241,199,124,0.18);
+}
+
+body.portfolio-v3 .hero-roman {
+    margin-top: 4px;
+    color: rgba(247,242,232,0.38);
+    -webkit-text-stroke: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(16px, 1.7vw, 22px);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+body.portfolio-v3 .hero-name-note {
+    max-width: 650px;
+    margin-top: 2px;
+    padding-left: 16px;
+    border-left: 1px solid rgba(241,199,124,0.42);
+    color: rgba(247,242,232,0.72);
+}
+
+body.portfolio-v3 .hero-subtitle {
+    max-width: 760px;
+    color: rgba(247,242,232,0.94);
+    font-size: clamp(22px, 2.7vw, 34px);
+    font-weight: 800;
+    line-height: 1.18;
+}
+
+body.portfolio-v3 .hero-signal-row span,
+body.portfolio-v3 .chip-row span,
+body.portfolio-v3 .project-meta span,
+body.portfolio-v3 .life-tags span {
+    border-color: rgba(255,255,255,0.115);
+    background: rgba(255,255,255,0.045);
+}
+
+body.portfolio-v3 .hero-metrics {
+    max-width: 760px;
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.105);
+    border-radius: 18px;
+    background: rgba(255,255,255,0.035);
+}
+
+body.portfolio-v3 .hero-metrics div {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+body.portfolio-v3 .hero-metrics div + div {
+    border-left: 1px solid rgba(255,255,255,0.09);
+}
+
+body.portfolio-v3 .hero-artifact {
+    min-height: 646px;
+    overflow: visible;
+    border: 0;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 50% 31%, rgba(255,255,255,0.18), transparent 8rem),
+        radial-gradient(circle at 50% 44%, rgba(141,231,255,0.18), transparent 19rem),
+        linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.018));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 38px 120px rgba(0,0,0,0.42);
+    backdrop-filter: blur(24px);
+}
+
+body.portfolio-v3 .hero-artifact::before {
+    inset: 7% -4% 10%;
+    border-radius: 50%;
+    opacity: 0.72;
+}
+
+body.portfolio-v3 .hero-artifact .blade-stage {
+    top: 12px;
+    width: min(94%, 520px);
+    height: 510px;
+}
+
+body.portfolio-v3 .hero-artifact .blade-object {
+    width: 210px;
+    height: 512px;
+}
+
+body.portfolio-v3 .hero-artifact .kunwu-sword-photo {
+    height: 494px;
+}
+
+body.portfolio-v3 .hero-artifact .console-topbar {
+    margin-top: 520px;
+    border-radius: 18px 18px 0 0;
+}
+
+body.portfolio-v3 .hero-artifact .console-body,
+body.portfolio-v3 .hero-artifact .stage-caption {
+    border-radius: 0;
+}
+
+body.portfolio-v3 .stage-specs {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    width: min(84%, 448px);
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.105);
+    border-top: 0;
+    border-radius: 0 0 18px 18px;
+    overflow: hidden;
+    background: rgba(6, 8, 12, 0.52);
+}
+
+body.portfolio-v3 .stage-specs span {
+    flex: 1;
+    padding: 9px 8px;
+    color: rgba(247,242,232,0.68);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-align: center;
+}
+
+body.portfolio-v3 .stage-specs span + span {
+    border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+body.portfolio-v3 .projects {
+    padding-top: 104px;
+    padding-bottom: 96px;
+}
+
+body.portfolio-v3 .projects .section-header {
+    max-width: 920px;
+}
+
+body.portfolio-v3 .section-title {
+    font-family: var(--font-body);
+    font-size: clamp(40px, 5.8vw, 78px);
+    font-weight: 900;
+    line-height: 0.92;
+}
+
+body.portfolio-v3 .project-ledger {
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.035);
+}
+
+body.portfolio-v3 .featured-project {
+    grid-template-columns: minmax(210px, 0.38fr) minmax(0, 1fr);
+    align-items: stretch;
+    padding: clamp(22px, 3vw, 34px);
+    border-radius: 28px;
+}
+
+body.portfolio-v3 .featured-visual {
+    min-height: 100%;
+    border-radius: 22px;
+}
+
+body.portfolio-v3 .featured-visual img {
+    width: min(42%, 118px);
+}
+
+body.portfolio-v3 .featured-copy h3 {
+    font-size: clamp(40px, 5vw, 66px);
+    line-height: 0.92;
+}
+
+body.portfolio-v3 .project-copy-stack {
+    gap: 8px;
+}
+
+body.portfolio-v3 .project-copy-stack p {
+    border-left-color: rgba(141,231,255,0.28);
+    color: rgba(247,242,232,0.72);
+}
+
+body.portfolio-v3 .showcase-rail {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+body.portfolio-v3 .showcase-rail::before {
+    display: none;
+}
+
+body.portfolio-v3 .projects-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+}
+
+body.portfolio-v3 .project-card {
+    grid-column: span 3;
+    min-height: 0;
+    padding: 24px;
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(141,231,255,0.1), transparent 13rem),
+        linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.022));
+}
+
+body.portfolio-v3 .notes-card {
+    grid-column: span 6;
+    display: grid;
+    grid-template-columns: minmax(220px, 0.36fr) minmax(0, 1fr);
+    column-gap: 22px;
+    align-items: start;
+}
+
+body.portfolio-v3 .notes-card > p,
+body.portfolio-v3 .notes-card .project-copy-stack,
+body.portfolio-v3 .notes-card .project-notes,
+body.portfolio-v3 .notes-card .project-actions {
+    grid-column: 2;
+}
+
+body.portfolio-v3 .project-card-head {
+    margin-bottom: 12px;
+}
+
+body.portfolio-v3 .project-card-head img,
+body.portfolio-v3 .text-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+}
+
+body.portfolio-v3 .project-card h3 {
+    font-size: clamp(28px, 2.5vw, 40px);
+}
+
+body.portfolio-v3 .pet-preview {
+    max-height: 150px;
+    border-radius: 18px;
+}
+
+body.portfolio-v3 .qr-block {
+    border-radius: 18px;
+}
+
+body.portfolio-v3 .about {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(241,199,124,0.08), transparent 28rem),
+        linear-gradient(180deg, transparent, rgba(255,255,255,0.025), transparent);
+}
+
+body.portfolio-v3 .profile-grid {
+    grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
+}
+
+body.portfolio-v3 .profile-panel,
+body.portfolio-v3 .capability-card,
+body.portfolio-v3 .honor-card,
+body.portfolio-v3 .contact-panel,
+body.portfolio-v3 .life-panel {
+    border-radius: 24px;
+}
+
+body.portfolio-v3 .capability-card {
+    min-height: 176px;
+    padding: 22px;
+}
+
+body.portfolio-v3 .card-index {
+    margin-bottom: 22px;
+}
+
+body.portfolio-v3 .life-panel,
+body.portfolio-v3 .contact-panel {
+    background:
+        radial-gradient(circle at 15% 0%, rgba(241,199,124,0.14), transparent 24rem),
+        radial-gradient(circle at 90% 80%, rgba(141,231,255,0.09), transparent 26rem),
+        linear-gradient(145deg, rgba(255,255,255,0.085), rgba(255,255,255,0.026));
+}
+
+body.portfolio-v3 .cursor-aura {
+    background: radial-gradient(circle, rgba(241,199,124,0.13), rgba(141,231,255,0.08) 34%, transparent 68%);
+}
+
+@media (max-width: 1080px) {
+    body.portfolio-v3 .hero-layout,
+    body.portfolio-v3 .featured-project,
+    body.portfolio-v3 .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.portfolio-v3 .hero-artifact {
+        min-height: 616px;
+    }
+
+    body.portfolio-v3 .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.portfolio-v3 .project-card,
+    body.portfolio-v3 .notes-card {
+        grid-column: auto;
+    }
+
+    body.portfolio-v3 .notes-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.portfolio-v3 .notes-card > p,
+    body.portfolio-v3 .notes-card .project-copy-stack,
+    body.portfolio-v3 .notes-card .project-notes,
+    body.portfolio-v3 .notes-card .project-actions {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 760px) {
+    body.portfolio-v3 .nav {
+        top: 10px;
+        width: min(100% - 20px, 1120px);
+    }
+
+    body.portfolio-v3 .hero-layout {
+        width: min(100% - 28px, var(--max));
+    }
+
+    body.portfolio-v3 .hero-title {
+        font-size: clamp(46px, 16vw, 70px);
+    }
+
+    body.portfolio-v3 .hero-subtitle {
+        font-size: clamp(20px, 6vw, 28px);
+    }
+
+    body.portfolio-v3 .hero-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    body.portfolio-v3 .hero-metrics div + div {
+        border-left: 0;
+        border-top: 1px solid rgba(255,255,255,0.09);
+    }
+
+    body.portfolio-v3 .hero-artifact {
+        min-height: 548px;
+    }
+
+    body.portfolio-v3 .hero-artifact .blade-stage {
+        top: 14px;
+        height: 318px;
+    }
+
+    body.portfolio-v3 .hero-artifact .blade-object {
+        width: 142px;
+        height: 326px;
+    }
+
+    body.portfolio-v3 .hero-artifact .kunwu-sword-photo {
+        height: 310px;
+    }
+
+    body.portfolio-v3 .hero-artifact .console-topbar {
+        margin-top: 338px;
+    }
+
+    body.portfolio-v3 .project-detail-grid,
+    body.portfolio-v3 .launch-strip {
+        grid-template-columns: 1fr;
+    }
+
+    body.portfolio-v3 .featured-visual {
+        min-height: 190px;
+    }
+
+    body.portfolio-v3 .project-card {
+        padding: 20px;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
