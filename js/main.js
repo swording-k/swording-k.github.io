@@ -180,7 +180,6 @@
             .fromTo(".hero-name-note", { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, "-=0.38")
             .fromTo(".hero-signal-row span", { y: 18, scale: 0.94, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, stagger: 0.055 }, "-=0.42")
             .fromTo(".hero-subtitle", { y: 32, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }, "-=0.42")
-            .fromTo(".keynote-lines span", { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.065, duration: 0.62 }, "-=0.34")
             .fromTo(".hero-actions .button", { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.08 }, "-=0.34")
             .fromTo(".hero-metrics > div", { y: 30, rotateX: 8, autoAlpha: 0 }, { y: 0, rotateX: 0, autoAlpha: 1, stagger: 0.08 }, "-=0.3")
             .fromTo(".hero-stage", { x: 58, scale: 0.88, rotateY: -9, autoAlpha: 0 }, { x: 0, scale: 1, rotateY: 0, autoAlpha: 1, duration: 1.12 }, "-=1.2")
