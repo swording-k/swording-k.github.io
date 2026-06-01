@@ -138,6 +138,23 @@
         });
     }
 
+    function splitMotionText(selector) {
+        document.querySelectorAll(selector).forEach((element) => {
+            if (element.dataset.splitReady === "true") return;
+            const text = element.textContent || "";
+            element.setAttribute("aria-label", text);
+            element.textContent = "";
+            [...text].forEach((char) => {
+                const span = document.createElement("span");
+                span.className = "motion-char";
+                span.setAttribute("aria-hidden", "true");
+                span.textContent = char === " " ? "\u00a0" : char;
+                element.appendChild(span);
+            });
+            element.dataset.splitReady = "true";
+        });
+    }
+
     function initGsapMotion() {
         if (!hasGsap) return false;
 
@@ -147,26 +164,36 @@
         document.body.classList.add("gsap-motion");
 
         if (prefersReducedMotion) {
-            gsap.set(".reveal", { autoAlpha: 1, y: 0, clearProps: "transform" });
+            gsap.set(".reveal", { y: 0, clearProps: "transform" });
             return true;
         }
 
         gsap.defaults({ ease: "power3.out" });
-        gsap.set(".project-detail-grid > div, .project-notes span, .contact-link, .douyin-contact", {
-            autoAlpha: 0
-        });
-
-        const heroTimeline = gsap.timeline({ defaults: { duration: 0.82 } });
+        splitMotionText(".hero-name-main, .hero-roman");
+        const heroTimeline = gsap.timeline({ defaults: { duration: 0.72 } });
         heroTimeline
-            .fromTo(".hero .eyebrow", { autoAlpha: 0.72, y: 14 }, { autoAlpha: 1, y: 0 })
-            .fromTo(".hero-title", { autoAlpha: 0.72, y: 36, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.95 }, "-=0.56")
-            .fromTo(".hero-name-note", { autoAlpha: 0.72, y: 18 }, { autoAlpha: 1, y: 0 }, "-=0.72")
-            .fromTo(".hero-subtitle", { autoAlpha: 0.76, y: 22 }, { autoAlpha: 1, y: 0 }, "-=0.62")
-            .fromTo(".hero-actions", { autoAlpha: 0.8, y: 16 }, { autoAlpha: 1, y: 0 }, "-=0.48")
-            .fromTo(".hero-metrics", { autoAlpha: 0.82, y: 20 }, { autoAlpha: 1, y: 0 }, "-=0.42")
-            .fromTo(".hero-stage", { autoAlpha: 0.76, y: 46, scale: 0.96, rotateX: 3 }, { autoAlpha: 1, y: 0, scale: 1, rotateX: 0, duration: 1 }, "-=0.88")
-            .fromTo(".blade-orbit", { autoAlpha: 0.64, scale: 0.84, rotateZ: -22 }, { autoAlpha: 1, scale: 1, rotateZ: -10, duration: 1 }, "-=0.72")
-            .fromTo(".kunwu-sword-photo", { autoAlpha: 0.78, y: 18, scale: 0.94 }, { autoAlpha: 1, y: -18, scale: 1, duration: 0.98 }, "-=0.9");
+            .fromTo(".hero .eyebrow", { y: 18 }, { y: 0 })
+            .fromTo(".hero-name-main .motion-char", { yPercent: 86, rotateX: -42 }, { yPercent: 0, rotateX: 0, duration: 0.78, stagger: 0.07 }, "-=0.32")
+            .fromTo(".hero-alias", { x: -18, scale: 0.9 }, { x: 0, scale: 1, duration: 0.56 }, "-=0.42")
+            .fromTo(".hero-roman .motion-char", { y: 22 }, { y: 0, duration: 0.52, stagger: 0.022 }, "-=0.48")
+            .fromTo(".hero-name-note", { y: 20 }, { y: 0 }, "-=0.4")
+            .fromTo(".hero-signal-row span", { y: 18, scale: 0.94 }, { y: 0, scale: 1, stagger: 0.055 }, "-=0.42")
+            .fromTo(".hero-subtitle", { y: 26 }, { y: 0 }, "-=0.42")
+            .fromTo(".hero-actions .button", { y: 18 }, { y: 0, stagger: 0.08 }, "-=0.34")
+            .fromTo(".hero-metrics > div", { y: 28, rotateX: 8 }, { y: 0, rotateX: 0, stagger: 0.08 }, "-=0.28")
+            .fromTo(".hero-stage", { x: 40, scale: 0.94, rotateY: -6 }, { x: 0, scale: 1, rotateY: 0, duration: 0.92 }, "-=1.12")
+            .fromTo(".blade-orbit", { scale: 0.68, rotateZ: -42 }, { scale: 1, rotateZ: -10, duration: 1.05 }, "-=0.62")
+            .fromTo(".kunwu-sword-photo", { y: 44, scale: 0.88 }, { y: -30, scale: 1, duration: 0.98 }, "-=0.92")
+            .fromTo(".stage-timeline span", { y: 14 }, { y: 0, stagger: 0.1 }, "-=0.48");
+
+        gsap.to(".stage-timeline span", {
+            autoAlpha: 0.38,
+            yoyo: true,
+            repeat: -1,
+            duration: 1.4,
+            stagger: 0.22,
+            ease: "sine.inOut"
+        });
 
         gsap.to(".hero-copy", {
             y: -56,
@@ -197,16 +224,15 @@
             once: true,
             onEnter: (elements) => {
                 gsap.fromTo(elements,
-                    { autoAlpha: 0, y: 46, scale: 0.985 },
-                    { autoAlpha: 1, y: 0, scale: 1, duration: 0.86, stagger: 0.08 }
+                    { y: 46, scale: 0.985 },
+                    { y: 0, scale: 1, duration: 0.86, stagger: 0.08 }
                 );
             }
         });
 
         gsap.fromTo(".featured-project",
-            { autoAlpha: 0, y: 70, scale: 0.96 },
+            { y: 70, scale: 0.96 },
             {
-                autoAlpha: 1,
                 y: 0,
                 scale: 1,
                 duration: 1,
@@ -236,8 +262,8 @@
             once: true,
             onEnter: (elements) => {
                 gsap.fromTo(elements,
-                    { autoAlpha: 0, y: 20 },
-                    { autoAlpha: 1, y: 0, duration: 0.58, stagger: 0.04, ease: "power2.out" }
+                    { y: 20 },
+                    { y: 0, duration: 0.58, stagger: 0.04, ease: "power2.out" }
                 );
             }
         });
@@ -247,8 +273,8 @@
             once: true,
             onEnter: (cards) => {
                 gsap.fromTo(cards,
-                    { autoAlpha: 0, y: 62, rotateX: 7, scale: 0.965 },
-                    { autoAlpha: 1, y: 0, rotateX: 0, scale: 1, duration: 0.92, stagger: 0.12 }
+                    { y: 62, rotateX: 7, scale: 0.965 },
+                    { y: 0, rotateX: 0, scale: 1, duration: 0.92, stagger: 0.12 }
                 );
             }
         });
@@ -265,9 +291,8 @@
         });
 
         gsap.fromTo(".contact-panel",
-            { autoAlpha: 0, y: 64, scale: 0.97 },
+            { y: 64, scale: 0.97 },
             {
-                autoAlpha: 1,
                 y: 0,
                 scale: 1,
                 duration: 0.92,
@@ -280,9 +305,8 @@
         );
 
         gsap.fromTo(".contact-link, .douyin-contact",
-            { autoAlpha: 0, x: 24 },
+            { x: 24 },
             {
-                autoAlpha: 1,
                 x: 0,
                 duration: 0.62,
                 stagger: 0.06,
