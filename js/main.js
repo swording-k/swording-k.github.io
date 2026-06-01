@@ -173,8 +173,9 @@
         const heroTimeline = gsap.timeline({ defaults: { duration: 0.72 } });
         heroTimeline
             .fromTo(".hero .eyebrow", { y: 18 }, { y: 0 })
+            .fromTo(".hero-edition span", { y: 14 }, { y: 0, duration: 0.5, stagger: 0.06 }, "-=0.24")
             .fromTo(".hero-name-main .motion-char", { yPercent: 86, rotateX: -42 }, { yPercent: 0, rotateX: 0, duration: 0.78, stagger: 0.07 }, "-=0.32")
-            .fromTo(".hero-alias", { x: -18, scale: 0.9 }, { x: 0, scale: 1, duration: 0.56 }, "-=0.42")
+            .fromTo(".hero-alias", { y: -10, scale: 0.9 }, { y: 0, scale: 1, duration: 0.56 }, "-=0.42")
             .fromTo(".hero-roman .motion-char", { y: 22 }, { y: 0, duration: 0.52, stagger: 0.022 }, "-=0.48")
             .fromTo(".hero-name-note", { y: 20 }, { y: 0 }, "-=0.4")
             .fromTo(".hero-signal-row span", { y: 18, scale: 0.94 }, { y: 0, scale: 1, stagger: 0.055 }, "-=0.42")
@@ -182,8 +183,10 @@
             .fromTo(".hero-actions .button", { y: 18 }, { y: 0, stagger: 0.08 }, "-=0.34")
             .fromTo(".hero-metrics > div", { y: 28, rotateX: 8 }, { y: 0, rotateX: 0, stagger: 0.08 }, "-=0.28")
             .fromTo(".hero-stage", { x: 40, scale: 0.94, rotateY: -6 }, { x: 0, scale: 1, rotateY: 0, duration: 0.92 }, "-=1.12")
+            .fromTo(".artifact-ribbon", { y: -18, x: -10 }, { y: 0, x: 0, duration: 0.7 }, "-=0.78")
             .fromTo(".blade-orbit", { scale: 0.68, rotateZ: -42 }, { scale: 1, rotateZ: -10, duration: 1.05 }, "-=0.62")
             .fromTo(".kunwu-sword-photo", { y: 44, scale: 0.88 }, { y: -30, scale: 1, duration: 0.98 }, "-=0.92")
+            .fromTo(".artifact-label, .hero-artifact .console-row, .stage-caption", { y: 22 }, { y: 0, duration: 0.58, stagger: 0.06 }, "-=0.48")
             .fromTo(".stage-timeline span", { y: 14 }, { y: 0, stagger: 0.1 }, "-=0.48");
 
         gsap.to(".stage-timeline span", {
@@ -243,6 +246,17 @@
                 }
             }
         );
+
+        ScrollTrigger.batch(".project-ledger span", {
+            start: "top 84%",
+            once: true,
+            onEnter: (items) => {
+                gsap.fromTo(items,
+                    { y: 24 },
+                    { y: 0, duration: 0.58, stagger: 0.055, ease: "power2.out" }
+                );
+            }
+        });
 
         gsap.to(".featured-visual img", {
             y: -28,
