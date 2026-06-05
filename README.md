@@ -18,9 +18,9 @@
 ## 项目
 
 ### FitGenius 🤖
-AI健身助手 - 基于SwiftUI的iOS应用，集成阿里云大模型API
+AI 健身助手 — SwiftUI + SwiftData iOS 应用，独有 Apple Vision 本地动作识别（深蹲/硬拉/卧推评分），云端通义千问生成计划，Apple Watch 配套。
 - [GitHub](https://github.com/swording-k/fit-genius)
-- [TestFlight内测](https://testflight.apple.com/join/BfXc79h1)
+- [TestFlight 内测](https://testflight.apple.com/join/BfXc79h1)
 
 ## 联系方式
 
