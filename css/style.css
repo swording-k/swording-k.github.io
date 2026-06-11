@@ -1194,21 +1194,16 @@ ul {
 }
 
 .project-actions.compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 12px;
 }
 
 .project-actions.compact a {
-    display: inline-flex;
-    min-height: 40px;
-    align-items: center;
-    padding: 8px 12px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    color: var(--text);
-    background: rgba(255,255,255,0.045);
+    min-height: 42px;
+    padding: 10px 14px;
     font-size: 13px;
-    font-weight: 700;
-    transition: border-color 0.25s ease, transform 0.25s var(--ease);
 }
 
 .honors {
