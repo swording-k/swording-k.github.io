@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章 / Blog | Skyler Yang</title>
+    <meta name="description" content="Skyler Yang 的文章索引，记录 AI 产品、应用开发、个人项目和学习复盘。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .blog-page {
+            min-height: 100vh;
+            padding: 120px 0 88px;
+        }
+
+        .blog-shell {
+            width: min(100% - 40px, var(--max));
+            margin: 0 auto;
+        }
+
+        .blog-top {
+            display: grid;
+            gap: 18px;
+            max-width: 820px;
+            margin-bottom: 52px;
+        }
+
+        .blog-top h1 {
+            margin: 0;
+            color: var(--text);
+            font-family: var(--font-display);
+            font-size: clamp(52px, 8vw, 92px);
+            font-weight: 600;
+            line-height: 0.95;
+        }
+
+        .blog-top p {
+            margin: 0;
+            color: var(--text-soft);
+            font-size: 18px;
+        }
+
+        .blog-card {
+            display: grid;
+            gap: 20px;
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background:
+                radial-gradient(circle at 18% 0%, rgba(231, 191, 120, 0.13), transparent 34rem),
+                rgba(18, 22, 32, 0.72);
+            box-shadow: var(--shadow);
+        }
+
+        .blog-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            color: var(--cyan);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .blog-card h2 {
+            margin: 0;
+            color: var(--text);
+            font-size: clamp(28px, 5vw, 44px);
+            line-height: 1.08;
+        }
+
+        .blog-card p {
+            max-width: 760px;
+            margin: 0;
+            color: var(--text-soft);
+        }
+
+        .blog-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .blog-note {
+            margin-top: 28px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .blog-page {
+                padding-top: 104px;
+            }
+
+            .blog-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="blog-page">
+        <div class="blog-shell">
+            <div class="blog-top">
+                <p class="eyebrow">Writing / Product Notes</p>
+                <h1>文章 / Blog</h1>
+                <p>这里先作为个人网站的博客入口。当前已经部署了一个 NotionNext 试运行版，先连接官方示例数据库；等换成你的 Notion 页面 ID 后，就会成为正式博客站。</p>
+            </div>
+
+            <article class="blog-card">
+                <div class="blog-card-meta">
+                    <span>2026-06-25</span>
+                    <span>AI Product</span>
+                    <span>Personal Site</span>
+                </div>
+                <h2>为什么我要把个人网站拆成作品集和博客</h2>
+                <p>第一篇文章记录这次网站改造的产品判断：作品集负责让人快速理解我是谁，博客负责长期沉淀项目、学习和 AI 产品思考。</p>
+                <div class="blog-actions">
+                    <a class="button button-primary magnetic" href="first-post.html">阅读第一篇</a>
+                    <a class="button button-ghost magnetic" href="https://baojian-notionnext-blog.vercel.app" target="_blank" rel="noreferrer">打开 NotionNext 试运行版</a>
+                    <a class="button button-ghost magnetic" href="../">返回首页</a>
+                </div>
+            </article>
+
+            <p class="blog-note">Next step: duplicate the NotionNext database template, publish your first article in Notion, then replace the demo NOTION_PAGE_ID in Vercel.</p>
+        </div>
+    </main>
+</body>
+</html>
