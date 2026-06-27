@@ -398,8 +398,8 @@
         document.querySelectorAll(".magnetic").forEach((item) => {
             item.addEventListener("mousemove", (event) => {
                 const rect = item.getBoundingClientRect();
-                const x = (event.clientX - rect.left - rect.width / 2) * 0.16;
-                const y = (event.clientY - rect.top - rect.height / 2) * 0.2;
+                const x = (event.clientX - rect.left - rect.width / 2) * 0.1;
+                const y = (event.clientY - rect.top - rect.height / 2) * 0.12;
                 item.style.setProperty("--x", `${x}px`);
                 item.style.setProperty("--y", `${y}px`);
             });
@@ -419,8 +419,8 @@
                 const rect = card.getBoundingClientRect();
                 const x = event.clientX - rect.left;
                 const y = event.clientY - rect.top;
-                const rx = ((y / rect.height) - 0.5) * -7;
-                const ry = ((x / rect.width) - 0.5) * 8;
+                const rx = ((y / rect.height) - 0.5) * -4.5;
+                const ry = ((x / rect.width) - 0.5) * 5;
 
                 card.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
                 card.style.setProperty("--ry", `${ry.toFixed(2)}deg`);

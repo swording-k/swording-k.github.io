@@ -6,15 +6,15 @@
     --surface-muted: rgba(255, 255, 255, 0.045);
     --line: rgba(255, 255, 255, 0.09);
     --line-strong: rgba(255, 255, 255, 0.16);
-    --text: #f4f1e9;
-    --text-soft: #b9b4aa;
-    --text-muted: #777b86;
-    --gold: #e7bf78;
-    --gold-deep: #a97734;
-    --cyan: #72e4ff;
+    --text: #f2ede3;
+    --text-soft: #c5bcaf;
+    --text-muted: #8f877b;
+    --gold: #c7a56d;
+    --gold-deep: #8f6b3c;
+    --cyan: #8fd2e3;
     --blue: #7c8dff;
     --rose: #ff668a;
-    --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+    --shadow: 0 18px 56px rgba(0, 0, 0, 0.28);
     --max: 1180px;
     --nav-height: 76px;
     --radius: 8px;
@@ -70,7 +70,7 @@ body::after {
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(90deg, rgba(255,255,255,0.018), transparent 28%, rgba(255,255,255,0.014));
+    background: linear-gradient(90deg, rgba(255,255,255,0.012), transparent 28%, rgba(255,255,255,0.01));
     mix-blend-mode: screen;
 }
 
@@ -137,7 +137,7 @@ ul {
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    color: var(--cyan);
+    color: rgba(242, 237, 227, 0.58);
     text-transform: uppercase;
 }
 
@@ -177,19 +177,19 @@ ul {
 .button-primary {
     color: #0a0b10;
     border-color: transparent;
-    background: linear-gradient(135deg, var(--gold), #f7d99e);
-    box-shadow: 0 16px 44px rgba(231, 191, 120, 0.18);
+    background: linear-gradient(135deg, var(--gold), #d8bb8d);
+    box-shadow: 0 12px 30px rgba(199, 165, 109, 0.14);
 }
 
 .button-ghost {
     color: var(--text);
-    background: rgba(255, 255, 255, 0.055);
+    background: rgba(255, 255, 255, 0.035);
 }
 
 .button:hover,
 .contact-link:hover,
 .project-actions a:hover {
-    border-color: rgba(231, 191, 120, 0.55);
+    border-color: rgba(143, 210, 227, 0.5);
 }
 
 .nav {
@@ -405,7 +405,7 @@ ul {
     background:
         linear-gradient(115deg, transparent 0 48%, rgba(114, 228, 255, 0.12) 49%, transparent 50% 100%),
         radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.06), transparent 22rem);
-    opacity: 0.42;
+    opacity: 0.2;
     mask-image: radial-gradient(circle at 60% 42%, black 0%, transparent 70%);
 }
 
@@ -416,7 +416,7 @@ ul {
     height: 24%;
     transform: translateY(-100%);
     animation: scan 8s linear infinite;
-    opacity: 0.26;
+    opacity: 0.08;
 }
 
 @keyframes float-one {
@@ -527,7 +527,7 @@ ul {
     border: 1px solid rgba(255,255,255,0.11);
     border-radius: 999px;
     padding: 5px 10px;
-    color: rgba(244, 241, 233, 0.72);
+    color: rgba(242, 237, 227, 0.62);
     background: rgba(255,255,255,0.035);
     font-family: var(--font-mono);
     font-size: 11px;
@@ -569,10 +569,10 @@ ul {
 .honor-card,
 .contact-panel {
     border: 1px solid var(--line);
-    background: linear-gradient(145deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+    background: linear-gradient(145deg, rgba(255,255,255,0.058), rgba(255,255,255,0.022));
     box-shadow: var(--shadow);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
 
 .hero-metrics div {
@@ -586,6 +586,19 @@ ul {
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 700;
+}
+
+.metric-link {
+    display: inline-flex;
+    margin-top: 6px;
+    color: rgba(143, 210, 227, 0.92);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    transition: color 0.2s ease;
+}
+
+.metric-link:hover {
+    color: var(--text);
 }
 
 .metric-label {
@@ -893,6 +906,23 @@ ul {
     font-size: 16px;
 }
 
+.life-actions {
+    margin-top: 18px;
+}
+
+.subtle-action {
+    min-height: 40px;
+    padding: 10px 14px;
+    border-color: rgba(255,255,255,0.08);
+    color: rgba(242, 237, 227, 0.86);
+    background: rgba(255,255,255,0.024);
+    box-shadow: none;
+}
+
+.subtle-action:hover {
+    background: rgba(255,255,255,0.04);
+}
+
 .life-tags {
     display: flex;
     flex-wrap: wrap;
@@ -924,7 +954,7 @@ ul {
 
 .life-douyin span {
     display: block;
-    color: var(--cyan);
+    color: rgba(242, 237, 227, 0.56);
     font-family: var(--font-mono);
     font-size: 11px;
     margin-bottom: 4px;
@@ -983,6 +1013,8 @@ ul {
     color: var(--text);
     font-family: var(--font-display);
     font-size: clamp(42px, 6vw, 70px);
+    font-weight: 600;
+    letter-spacing: 0.01em;
     line-height: 0.95;
 }
 
@@ -1073,13 +1105,15 @@ ul {
 
 .project-label {
     display: block;
-    color: var(--cyan);
+    color: rgba(242, 237, 227, 0.56);
     font-family: var(--font-mono);
     font-size: 11px;
 }
 
 .project-card h3 {
+    font-family: var(--font-display);
     font-size: clamp(26px, 2.2vw, 34px);
+    font-weight: 600;
     line-height: 1.08;
 }
 
@@ -1225,7 +1259,7 @@ ul {
 .honor-card span {
     display: block;
     margin-bottom: 16px;
-    color: var(--cyan);
+    color: rgba(242, 237, 227, 0.54);
     font-family: var(--font-mono);
     font-size: 11px;
 }
@@ -1341,7 +1375,7 @@ ul {
 
 .douyin-contact span {
     display: block;
-    color: var(--cyan);
+    color: rgba(242, 237, 227, 0.54);
     font-family: var(--font-mono);
     font-size: 11px;
     margin-bottom: 3px;
@@ -1455,7 +1489,7 @@ body {
 
 .eyebrow,
 .section-kicker {
-    color: rgba(126, 226, 255, 0.9);
+    color: rgba(242, 237, 227, 0.58);
 }
 
 .hero-title {
@@ -1813,8 +1847,8 @@ body {
 }
 
 .featured-project:hover .featured-visual img {
-    filter: drop-shadow(0 30px 48px rgba(121, 223, 255, 0.18));
-    transform: translateY(-8px) scale(1.03);
+    filter: drop-shadow(0 20px 34px rgba(143, 210, 227, 0.12));
+    transform: translateY(-5px) scale(1.02);
 }
 
 .showcase-rail {
@@ -1837,7 +1871,7 @@ body {
     background:
         radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.12), transparent 14rem),
         linear-gradient(145deg, rgba(255,255,255,0.095), rgba(255,255,255,0.03));
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 20px 60px rgba(0,0,0,0.34);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 16px 42px rgba(0,0,0,0.28);
     transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(0);
     transform-style: preserve-3d;
 }
@@ -1854,8 +1888,8 @@ body {
 }
 
 .project-card:hover {
-    transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-14px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 34px 90px rgba(0,0,0,0.5);
+    transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-8px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 54px rgba(0,0,0,0.36);
 }
 
 .project-card:hover::after {
@@ -2149,10 +2183,10 @@ body {
     margin-left: auto;
     margin-right: auto;
     border: 1px solid rgba(255,255,255,0.105);
-    background: rgba(6, 8, 12, 0.52);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 20px 60px rgba(0,0,0,0.32);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: rgba(6, 8, 12, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 16px 42px rgba(0,0,0,0.24);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .hero-artifact .console-topbar {
@@ -2204,7 +2238,7 @@ body {
 }
 
 .project-ledger strong {
-    color: rgba(126,226,255,0.8);
+    color: rgba(242, 237, 227, 0.46);
     font-family: var(--font-mono);
     font-size: 11px;
 }
@@ -2598,7 +2632,7 @@ main {
 }
 
 .eyebrow {
-    color: rgba(141, 231, 255, 0.88);
+    color: rgba(242, 237, 227, 0.58);
 }
 
 .hero-edition {
@@ -2611,6 +2645,7 @@ main {
 .hero-edition span {
     min-height: 25px;
     font-size: 10px;
+    color: rgba(242, 237, 227, 0.68);
 }
 
 .hero-title {
@@ -2741,10 +2776,10 @@ main {
 }
 
 .featured-copy h3 {
-    font-family: var(--font-body);
+    font-family: var(--font-display);
     font-size: clamp(34px, 4.2vw, 52px);
-    font-weight: 800;
-    letter-spacing: 0;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 .featured-copy > p {
@@ -2909,5 +2944,170 @@ main {
 
     .cursor-aura {
         display: none;
+    }
+}
+
+/* Editorial restraint patch */
+body {
+    background:
+        radial-gradient(circle at 18% 0%, rgba(199, 165, 109, 0.08), transparent 26rem),
+        radial-gradient(circle at 82% 10%, rgba(143, 210, 227, 0.045), transparent 28rem),
+        linear-gradient(180deg, #050608 0%, #090a0f 46%, #050608 100%);
+}
+
+body::before {
+    opacity: 0.55;
+}
+
+body::after,
+.circuit-grid,
+.scanline,
+.cursor-aura {
+    opacity: 0.06;
+}
+
+.section-kicker,
+.eyebrow,
+.project-label,
+.honor-card span,
+.life-douyin span,
+.douyin-contact span,
+.project-ledger strong {
+    color: rgba(242, 237, 227, 0.52) !important;
+    letter-spacing: 0.12em;
+}
+
+.hero-actions .button-primary {
+    min-height: 50px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #cfb07d, #dfc59b);
+    box-shadow: 0 10px 24px rgba(199, 165, 109, 0.16);
+}
+
+.button-ghost,
+.subtle-action {
+    border-radius: 999px;
+    background: rgba(255,255,255,0.028);
+}
+
+.hero-dossier {
+    gap: 0;
+    max-width: 580px;
+}
+
+.hero-dossier div {
+    grid-template-columns: 38px 108px 1fr;
+    min-height: 54px;
+    padding: 11px 0;
+}
+
+.hero-dossier .metric-value {
+    color: rgba(242, 237, 227, 0.92);
+    letter-spacing: 0.04em;
+}
+
+.hero-dossier .metric-label {
+    color: rgba(242, 237, 227, 0.68);
+}
+
+.metric-link {
+    display: inline;
+    margin: 0;
+    color: var(--gold);
+    font-size: inherit;
+}
+
+.metric-link-inline:hover {
+    color: rgba(242, 237, 227, 0.92);
+}
+
+.life-panel,
+.featured-project,
+.showcase-rail,
+.project-card,
+.capability-card,
+.honor-card,
+.contact-panel,
+.hero-artifact .console-topbar,
+.hero-artifact .console-body,
+.hero-artifact .stage-caption {
+    border-color: rgba(255,255,255,0.08);
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.014)) !important;
+    box-shadow: 0 16px 44px rgba(0,0,0,0.24) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.featured-project,
+.showcase-rail,
+.contact-panel {
+    border-radius: 26px;
+}
+
+.project-card,
+.capability-card,
+.honor-card {
+    border-radius: 20px;
+}
+
+.project-card {
+    min-height: 0;
+}
+
+.project-card::after,
+.featured-project::before,
+.showcase-rail::before,
+.contact-panel::before {
+    opacity: 0.35;
+}
+
+.project-card:hover {
+    transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-6px);
+}
+
+.featured-project:hover .featured-visual img {
+    transform: translateY(-4px) scale(1.018);
+}
+
+.featured-copy h3,
+.project-card h3,
+.life-copy h3,
+.section-title {
+    letter-spacing: 0.01em;
+}
+
+.featured-copy h3,
+.project-card h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+.project-copy-stack p {
+    border-left-color: rgba(199, 165, 109, 0.24);
+    color: rgba(242, 237, 227, 0.64);
+}
+
+.life-actions .subtle-action {
+    min-height: 42px;
+    padding: 0 16px;
+    color: rgba(242, 237, 227, 0.9);
+    border-color: rgba(199, 165, 109, 0.18);
+}
+
+.life-actions .subtle-action:hover {
+    border-color: rgba(199, 165, 109, 0.34);
+    background: rgba(199, 165, 109, 0.08);
+}
+
+@media (max-width: 760px) {
+    .hero-dossier div {
+        grid-template-columns: 34px 92px 1fr;
+    }
+
+    .hero-actions .button-primary,
+    .life-actions .subtle-action {
+        width: fit-content;
     }
 }
