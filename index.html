@@ -235,9 +235,9 @@
                     <span><strong>01</strong>FitGenius</span>
                     <span><strong>02</strong>最后的书店</span>
                     <span><strong>03</strong>电竞天赋检测站</span>
-                    <span><strong>04</strong>Codex Buddy</span>
-                    <span><strong>05</strong>AI Job Notes</span>
-                    <span><strong>06</strong>个人博客</span>
+                    <span><strong>04</strong>Codex Pets</span>
+                    <span><strong>05</strong>个人博客</span>
+                    <span><strong>06</strong>AI Job Notes</span>
                 </div>
 
                 <div class="featured-project reveal">
@@ -353,33 +353,61 @@
                         <article class="project-card pet-card reveal">
                             <span class="project-number" aria-hidden="true">04</span>
                             <div class="project-card-head">
-                                <img src="images/codex-buddy-frame.png" alt="Codex Buddy 桌宠形象">
+                                <img src="images/codex-buddy-frame.png" alt="Codex Buddy 健身小人桌宠形象">
                                 <div>
-                                    <span class="project-label">Codex Pet</span>
-                                    <h3>Codex Buddy 桌宠</h3>
+                                    <span class="project-label">Codex Pets</span>
+                                    <h3>Codex Pet Collection</h3>
                                 </div>
                             </div>
-                            <p>自创健身小人形象，并制作成 Codex 动态桌宠资源包。它更像一个“小型品牌资产实验”：从角色设定、动作切片到可安装配置都完整交付。</p>
+                            <p>把 Codex 自定义桌宠从单个健身小人扩展成可持续维护的桌宠集合。未来会分成两条主线：一类是各种动漫 IP 的角色合集，一类是个人原创形象合集，让桌宠不只是装饰，而是可以持续扩展的角色资产库。</p>
                             <div class="project-copy-stack">
-                                <p><strong>视觉设定：</strong>蓝色反戴帽、白色 T 恤、橙色短裤和哑铃动作，做成一套能在 Codex 里使用的动态桌宠资源。</p>
-                                <p><strong>交付内容：</strong>包含 <code>spritesheet.webp</code>、<code>pet.json</code> 和动作预览图，覆盖 idle、running、waiting、review 等多种 Codex 状态。</p>
-                                <p><strong>使用方式：</strong>下载后在 Codex 更新到最新版，进入设置，在“外观”下拉中找到自定义宠物并选择 Codex Buddy。</p>
+                                <p><strong>方向规划：</strong>动漫 IP 合集负责承接用户熟悉的角色记忆，个人原创合集则沉淀自己的视觉资产和角色设定。</p>
+                                <p><strong>交付内容：</strong>每个桌宠都有 <code>pet.json</code>、<code>spritesheet.webp</code> 和动作预览图，覆盖 idle、running、waiting、review 等 Codex 状态。</p>
+                                <p><strong>使用方式：</strong>克隆仓库后运行 <code>./install.sh all</code> 安装全部桌宠，或运行 <code>./install.sh one-piece/luffy</code> 安装单个角色。</p>
                             </div>
                             <div class="project-notes">
-                                <span>Spritesheet 动画</span>
-                                <span>pet.json 配置</span>
-                                <span>角色设计 + 工具生态</span>
+                                <span>12 个桌宠</span>
+                                <span>分类安装脚本</span>
+                                <span>Codex 自定义外观</span>
                             </div>
-                            <img class="pet-preview" src="images/codex-buddy-pet.png" alt="Codex Buddy 动作预览">
+                            <img class="pet-preview" src="images/codex-pet-collection-preview.png" alt="Codex Pet Collection 多角色动作预览">
                             <div class="project-actions compact">
-                                <a class="button button-primary magnetic" href="https://github.com/swording-k/codex-pet/tree/main/pets/codex-buddy-pet" target="_blank" rel="noreferrer">下载同款小人</a>
+                                <a class="button button-primary magnetic" href="https://github.com/swording-k/codex-pet" target="_blank" rel="noreferrer">打开 Pets 仓库</a>
+                            </div>
+                        </article>
+
+                        <article class="project-card blog-card reveal">
+                            <span class="project-number" aria-hidden="true">05</span>
+                            <div class="project-card-head">
+                                <img src="images/blog-project-icon.svg" alt="个人博客项目图标">
+                                <div>
+                                    <span class="project-label">NotionNext · 内容资产</span>
+                                    <h3>个人博客</h3>
+                                </div>
+                            </div>
+                            <p>把 AI 产品思考、项目复盘和个人 IP 搭建过程沉淀成可持续更新的文章站。写作继续放在 Notion 里，网站由 NotionNext 负责展示、分类和检索。</p>
+                            <div class="project-copy-stack">
+                                <p><strong>内容方向：</strong>AI 时代个人 IP、产品判断、应用开发复盘、作品集建设和学习笔记。</p>
+                                <p><strong>当前首篇：</strong>《AI 时代个人 IP 的三层结构：自媒体账号、个人主页与知识库》。</p>
+                            </div>
+                            <div class="project-notes">
+                                <span>Notion 写作</span>
+                                <span>NotionNext 展示</span>
+                                <span>长期内容沉淀</span>
+                            </div>
+                            <div class="qr-block project-qr">
+                                <img src="images/qrcode-blog-site.png" alt="个人博客二维码" data-lightbox-image data-lightbox-title="个人博客">
+                                <span>扫码进入<br>个人博客</span>
+                            </div>
+                            <div class="project-actions compact">
+                                <a class="button button-primary magnetic" href="https://baojian-notionnext-blog.vercel.app" target="_blank" rel="noreferrer">进入博客</a>
                             </div>
                         </article>
 
                         <article class="project-card notes-card reveal">
-                            <span class="project-number" aria-hidden="true">05</span>
+                            <span class="project-number" aria-hidden="true">06</span>
                             <div class="project-card-head">
-                                <div class="text-icon">AI</div>
+                                <img src="images/ai-job-notes-icon.svg" alt="AI Job Notes 求职笔记图标">
                                 <div>
                                     <span class="project-label">求职知识库</span>
                                     <h3>AI Job Notes</h3>
@@ -397,30 +425,6 @@
                             </div>
                             <div class="project-actions compact">
                                 <a class="button button-primary magnetic" href="https://github.com/swording-k/notes/tree/main/notes/ai-job-notes" target="_blank" rel="noreferrer">查看知识库</a>
-                            </div>
-                        </article>
-
-                        <article class="project-card reveal">
-                            <span class="project-number" aria-hidden="true">06</span>
-                            <div class="project-card-head">
-                                <div class="text-icon">Blog</div>
-                                <div>
-                                    <span class="project-label">NotionNext · 内容资产</span>
-                                    <h3>个人博客</h3>
-                                </div>
-                            </div>
-                            <p>把 AI 产品思考、项目复盘和个人 IP 搭建过程沉淀成可持续更新的文章站。写作继续放在 Notion 里，网站由 NotionNext 负责展示、分类和检索。</p>
-                            <div class="project-copy-stack">
-                                <p><strong>内容方向：</strong>AI 时代个人 IP、产品判断、应用开发复盘、作品集建设和学习笔记。</p>
-                                <p><strong>当前首篇：</strong>《AI 时代个人 IP 的三层结构：自媒体账号、个人主页与知识库》。</p>
-                            </div>
-                            <div class="project-notes">
-                                <span>Notion 写作</span>
-                                <span>NotionNext 展示</span>
-                                <span>长期内容沉淀</span>
-                            </div>
-                            <div class="project-actions compact">
-                                <a class="button button-primary magnetic" href="https://baojian-notionnext-blog.vercel.app" target="_blank" rel="noreferrer">进入博客</a>
                             </div>
                         </article>
                     </div>
@@ -531,6 +535,42 @@
                             </div>
                         </div>
                     </div>
+                    <div class="social-qr-panel" aria-label="社交媒体二维码">
+                        <div class="social-qr-head">
+                            <span class="section-kicker">Social</span>
+                            <h3>也可以在这些平台找到我。</h3>
+                        </div>
+                        <div class="social-qr-grid">
+                            <article class="social-qr-card">
+                                <img src="images/qrcode-wechat-official.jpg" alt="微信公众号二维码" data-lightbox-image data-lightbox-title="微信公众号">
+                                <div>
+                                    <span>微信公众号</span>
+                                    <strong>宝剑的 AI 产品笔记</strong>
+                                </div>
+                            </article>
+                            <article class="social-qr-card">
+                                <img src="images/qrcode-xiaohongshu.jpg" alt="小红书二维码" data-lightbox-image data-lightbox-title="小红书">
+                                <div>
+                                    <span>小红书</span>
+                                    <strong>宝剑</strong>
+                                </div>
+                            </article>
+                            <article class="social-qr-card">
+                                <img src="images/qrcode-douyin.jpg" alt="抖音二维码" data-lightbox-image data-lightbox-title="抖音">
+                                <div>
+                                    <span>抖音</span>
+                                    <strong>@ 宝剑 Skyler</strong>
+                                </div>
+                            </article>
+                            <article class="social-qr-card">
+                                <img src="images/qrcode-bilibili.png" alt="B 站二维码" data-lightbox-image data-lightbox-title="B 站">
+                                <div>
+                                    <span>B 站</span>
+                                    <strong>宝剑Skyler</strong>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -541,6 +581,27 @@
             <p>© 2026 Skyler Yang · Built as an AI product workbench.</p>
         </div>
     </footer>
+
+    <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+        <button class="lightbox-backdrop" type="button" data-lightbox-close aria-label="关闭图片预览"></button>
+        <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+            <div class="lightbox-topbar">
+                <div>
+                    <span>Preview</span>
+                    <strong id="lightboxTitle">二维码</strong>
+                </div>
+                <button class="lightbox-close" type="button" data-lightbox-close aria-label="关闭图片预览">×</button>
+            </div>
+            <div class="lightbox-image-wrap">
+                <img id="lightboxImage" alt="">
+            </div>
+            <div class="lightbox-actions">
+                <a class="button button-primary" id="lightboxOpen" href="#" target="_blank" rel="noreferrer">打开原图</a>
+                <a class="button button-ghost" id="lightboxDownload" href="#" download>下载图片</a>
+                <button class="button button-ghost" id="lightboxCopy" type="button">复制图片</button>
+            </div>
+        </div>
+    </div>
 
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>

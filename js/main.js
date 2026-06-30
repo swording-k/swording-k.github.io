@@ -563,7 +563,129 @@
 
     function initKeyboard() {
         document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape") closeMenu();
+            if (event.key === "Escape") {
+                closeImageLightbox();
+                closeMenu();
+            }
+        });
+    }
+
+    function imageNameFromSrc(src) {
+        try {
+            const url = new URL(src, window.location.href);
+            const name = url.pathname.split("/").filter(Boolean).pop();
+            return name || "image";
+        } catch (_) {
+            return "image";
+        }
+    }
+
+    function setCopyButtonState(button, label, copied = false) {
+        if (!button) return;
+        button.textContent = label;
+        button.classList.toggle("is-copied", copied);
+    }
+
+    function canvasToPngBlob(canvas) {
+        return new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    resolve(blob);
+                } else {
+                    reject(new Error("Unable to export canvas"));
+                }
+            }, "image/png");
+        });
+    }
+
+    async function normalizeClipboardImage(blob) {
+        if (blob.type === "image/png") return blob;
+        if (!window.createImageBitmap) return blob;
+
+        const bitmap = await createImageBitmap(blob);
+        const canvas = document.createElement("canvas");
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        const context = canvas.getContext("2d");
+        context.drawImage(bitmap, 0, 0);
+        bitmap.close?.();
+        return canvasToPngBlob(canvas);
+    }
+
+    function closeImageLightbox() {
+        const lightbox = document.getElementById("imageLightbox");
+        if (!lightbox?.classList.contains("is-open")) return;
+
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+    }
+
+    async function copyImageToClipboard(src, button, fallbackLink) {
+        setCopyButtonState(button, "复制中...");
+
+        try {
+            if (!navigator.clipboard || !window.ClipboardItem) {
+                throw new Error("Clipboard image copy is not supported");
+            }
+
+            const response = await fetch(src);
+            const blob = await response.blob();
+            const clipboardBlob = await normalizeClipboardImage(blob);
+            await navigator.clipboard.write([
+                new ClipboardItem({ [clipboardBlob.type || "image/png"]: clipboardBlob })
+            ]);
+            setCopyButtonState(button, "已复制", true);
+            window.setTimeout(() => setCopyButtonState(button, "复制图片"), 1400);
+        } catch (_) {
+            setCopyButtonState(button, "打开原图后复制");
+            fallbackLink?.click();
+            window.setTimeout(() => setCopyButtonState(button, "复制图片"), 1800);
+        }
+    }
+
+    function initImageLightbox() {
+        const lightbox = document.getElementById("imageLightbox");
+        const image = document.getElementById("lightboxImage");
+        const title = document.getElementById("lightboxTitle");
+        const openLink = document.getElementById("lightboxOpen");
+        const downloadLink = document.getElementById("lightboxDownload");
+        const copyButton = document.getElementById("lightboxCopy");
+        if (!lightbox || !image || !title || !openLink || !downloadLink || !copyButton) return;
+
+        function openImageLightbox(sourceImage) {
+            const src = sourceImage.currentSrc || sourceImage.src;
+            const imageTitle = sourceImage.dataset.lightboxTitle || sourceImage.alt || "图片";
+            image.src = src;
+            image.alt = sourceImage.alt || imageTitle;
+            title.textContent = imageTitle;
+            openLink.href = src;
+            downloadLink.href = src;
+            downloadLink.download = imageNameFromSrc(src);
+            setCopyButtonState(copyButton, "复制图片");
+            lightbox.classList.add("is-open");
+            lightbox.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        document.querySelectorAll("[data-lightbox-image]").forEach((item) => {
+            item.setAttribute("tabindex", "0");
+            item.setAttribute("role", "button");
+            item.setAttribute("aria-label", `放大查看${item.dataset.lightboxTitle || item.alt || "图片"}`);
+            item.addEventListener("click", () => openImageLightbox(item));
+            item.addEventListener("keydown", (event) => {
+                if (event.key !== "Enter" && event.key !== " ") return;
+                event.preventDefault();
+                openImageLightbox(item);
+            });
+        });
+
+        lightbox.querySelectorAll("[data-lightbox-close]").forEach((button) => {
+            button.addEventListener("click", closeImageLightbox);
+        });
+
+        copyButton.addEventListener("click", () => {
+            copyImageToClipboard(image.src, copyButton, openLink);
         });
     }
 
@@ -577,6 +699,7 @@
         initCardTilt();
         initCursorAura();
         initBladeStage();
+        initImageLightbox();
         initKeyboard();
 
         navToggle?.addEventListener("click", toggleMenu);
