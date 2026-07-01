@@ -1221,6 +1221,10 @@ ul {
     margin-top: 14px;
 }
 
+[data-lightbox-image] {
+    cursor: zoom-in;
+}
+
 .pet-preview {
     width: 100%;
     max-height: 132px;
@@ -1396,13 +1400,13 @@ ul {
     font-size: 13px;
 }
 
-.social-qr-panel {
+.social-link-panel {
     grid-column: 1 / -1;
     padding-top: 28px;
     border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-.social-qr-head {
+.social-link-head {
     display: flex;
     align-items: end;
     justify-content: space-between;
@@ -1410,7 +1414,7 @@ ul {
     margin-bottom: 16px;
 }
 
-.social-qr-head h3 {
+.social-link-head h3 {
     margin: 0;
     color: var(--text);
     font-family: var(--font-display);
@@ -1419,10 +1423,75 @@ ul {
     line-height: 1;
 }
 
-.social-qr-grid {
+.social-link-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
+}
+
+.social-link-card {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    color: var(--text);
+    background: rgba(255,255,255,0.038);
+    text-decoration: none;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.social-link-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.075);
+}
+
+.social-link-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.social-link-card.wechat .social-link-icon {
+    background: #1aad19;
+}
+
+.social-link-card.xiaohongshu .social-link-icon {
+    background: #ff2442;
+    font-size: 11px;
+}
+
+.social-link-card.douyin .social-link-icon {
+    background: linear-gradient(135deg, #00f2ea, #111 48%, #ff0050);
+}
+
+.social-link-card.bilibili .social-link-icon {
+    background: #00aeec;
+}
+
+.social-link-card strong {
+    display: block;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.25;
+}
+
+.social-link-card small {
+    display: block;
+    margin-top: 4px;
+    color: rgba(242, 237, 227, 0.58);
+    font-size: 12px;
+    line-height: 1.35;
 }
 
 .social-qr-card {
@@ -2769,16 +2838,21 @@ body {
         overflow-wrap: anywhere;
     }
 
-    .social-qr-head {
+    .social-link-head {
         display: block;
     }
 
-    .social-qr-head h3 {
+    .social-link-head h3 {
         margin-top: 8px;
     }
 
-    .social-qr-grid {
+    .social-link-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .social-link-card {
+        align-items: flex-start;
+        padding: 12px;
     }
 
     .douyin-contact {
