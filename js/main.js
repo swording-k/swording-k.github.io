@@ -654,10 +654,10 @@
         if (!lightbox || !image || !title || !openLink || !downloadLink || !copyButton) return;
 
         function openImageLightbox(sourceImage) {
-            const src = sourceImage.currentSrc || sourceImage.src;
+            const src = sourceImage.dataset.lightboxSrc || sourceImage.currentSrc || sourceImage.src;
             const imageTitle = sourceImage.dataset.lightboxTitle || sourceImage.alt || "图片";
             image.src = src;
-            image.alt = sourceImage.alt || imageTitle;
+            image.alt = sourceImage.dataset.lightboxAlt || sourceImage.alt || imageTitle;
             title.textContent = imageTitle;
             openLink.href = src;
             downloadLink.href = src;
@@ -668,11 +668,16 @@
             document.body.style.overflow = "hidden";
         }
 
-        document.querySelectorAll("[data-lightbox-image]").forEach((item) => {
+        document.querySelectorAll("[data-lightbox-image], [data-lightbox-src]").forEach((item) => {
             item.setAttribute("tabindex", "0");
             item.setAttribute("role", "button");
-            item.setAttribute("aria-label", `放大查看${item.dataset.lightboxTitle || item.alt || "图片"}`);
-            item.addEventListener("click", () => openImageLightbox(item));
+            if (!item.getAttribute("aria-label")) {
+                item.setAttribute("aria-label", `放大查看${item.dataset.lightboxTitle || item.alt || "图片"}`);
+            }
+            item.addEventListener("click", (event) => {
+                event.preventDefault();
+                openImageLightbox(item);
+            });
             item.addEventListener("keydown", (event) => {
                 if (event.key !== "Enter" && event.key !== " ") return;
                 event.preventDefault();
