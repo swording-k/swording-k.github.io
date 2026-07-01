@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=20260701-social-icons">
+    <link rel="stylesheet" href="css/style.css?v=20260701-life-mbti">
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -440,7 +440,7 @@
                         <h3>你朋友圈中无法放弃任何一种生活的那个朋友。</h3>
                         <p>爱好很广，健身、滑雪、旅游、拍照都会出现在我的日常里。想看更丰富的一面，可以去抖音看看那些不太像简历的生活切片。</p>
                         <div class="life-actions">
-                            <a class="button button-ghost subtle-action magnetic" href="https://www.16personalities.com/profiles/c0fb697012ac8" target="_blank" rel="noreferrer">我的 MBTI</a>
+                            <a class="button button-gold magnetic" href="https://www.16personalities.com/profiles/c0fb697012ac8" target="_blank" rel="noreferrer">查看我的 MBTI</a>
                         </div>
                         <div class="life-tags">
                             <span>健身</span>
@@ -449,12 +449,24 @@
                             <span>拍照</span>
                         </div>
                     </div>
-                    <div class="life-douyin">
-                        <img src="images/IMG_7140 copy.jpeg" alt="抖音二维码" data-lightbox-image data-lightbox-title="抖音">
-                        <div>
-                            <span>Douyin</span>
-                            <strong>YK1158447544</strong>
-                            <p>扫码看更多生活切片</p>
+                    <div class="life-entry-stack" aria-label="生活与性格入口">
+                        <div class="life-entry-card mbti">
+                            <a class="life-qr-link" href="https://www.16personalities.com/profiles/c0fb697012ac8" target="_blank" rel="noreferrer" aria-label="打开 MBTI 详情页面">
+                                <img src="images/qrcode-mbti.png" alt="MBTI 详情页面二维码" data-lightbox-image data-lightbox-title="MBTI 详情页面">
+                            </a>
+                            <div>
+                                <span>MBTI</span>
+                                <strong>16Personalities</strong>
+                                <p>点击按钮或扫码进入性格详情</p>
+                            </div>
+                        </div>
+                        <div class="life-entry-card douyin">
+                            <img src="images/IMG_7140 copy.jpeg" alt="抖音二维码" data-lightbox-image data-lightbox-title="抖音">
+                            <div>
+                                <span>Douyin</span>
+                                <strong>YK1158447544</strong>
+                                <p>扫码看更多生活切片</p>
+                            </div>
                         </div>
                     </div>
                 </aside>
@@ -624,6 +636,6 @@
 
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>
-    <script src="js/main.js?v=20260701-social-icons"></script>
+    <script src="js/main.js?v=20260701-life-mbti"></script>
 </body>
 </html>

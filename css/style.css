@@ -181,6 +181,20 @@ ul {
     box-shadow: 0 12px 30px rgba(199, 165, 109, 0.14);
 }
 
+.button-gold {
+    color: #12100a;
+    border-color: rgba(231, 191, 120, 0.78);
+    background:
+        linear-gradient(135deg, rgba(255, 236, 190, 0.96), rgba(205, 156, 71, 0.94));
+    box-shadow: 0 14px 34px rgba(199, 165, 109, 0.2);
+}
+
+.button-gold:hover {
+    border-color: rgba(255, 229, 176, 0.92);
+    background:
+        linear-gradient(135deg, rgba(255, 243, 210, 1), rgba(222, 174, 88, 0.98));
+}
+
 .button-ghost {
     color: var(--text);
     background: rgba(255, 255, 255, 0.035);
@@ -965,6 +979,71 @@ ul {
 }
 
 .life-douyin p {
+    margin: 3px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.life-entry-stack {
+    display: grid;
+    gap: 14px;
+}
+
+.life-entry-card {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 15px;
+    align-items: center;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+}
+
+.life-entry-card.mbti {
+    border-color: rgba(231, 191, 120, 0.3);
+    background:
+        linear-gradient(135deg, rgba(231,191,120,0.18), rgba(255,255,255,0.045)),
+        rgba(255,255,255,0.035);
+}
+
+.life-entry-card.douyin {
+    background:
+        linear-gradient(135deg, rgba(254,44,85,0.12), rgba(37,244,238,0.07)),
+        rgba(255,255,255,0.04);
+}
+
+.life-entry-card img {
+    width: 96px;
+    height: 96px;
+    padding: 6px;
+    border-radius: 12px;
+    background: #fff;
+    object-fit: contain;
+}
+
+.life-entry-card.douyin img {
+    object-fit: cover;
+}
+
+.life-qr-link {
+    display: block;
+    border-radius: 12px;
+}
+
+.life-entry-card span {
+    display: block;
+    color: rgba(242, 237, 227, 0.56);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.life-entry-card strong {
+    color: var(--text);
+}
+
+.life-entry-card p {
     margin: 3px 0 0;
     color: var(--text-muted);
     font-size: 13px;
@@ -2804,6 +2883,15 @@ body {
     }
 
     .life-douyin img {
+        width: 86px;
+        height: 86px;
+    }
+
+    .life-entry-card {
+        grid-template-columns: 86px 1fr;
+    }
+
+    .life-entry-card img {
         width: 86px;
         height: 86px;
     }
