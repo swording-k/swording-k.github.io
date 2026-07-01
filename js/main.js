@@ -345,7 +345,7 @@
             }
         );
 
-        gsap.fromTo(".contact-link, .douyin-contact",
+        gsap.fromTo(".contact-link",
             { x: 24 },
             {
                 x: 0,
