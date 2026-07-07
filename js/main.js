@@ -220,7 +220,7 @@
             }
         });
 
-        ScrollTrigger.batch(".section-header, .profile-panel, .capability-card, .honor-card, .life-panel", {
+        ScrollTrigger.batch(".section-header, .profile-panel, .capability-card, .life-panel", {
             start: "top 82%",
             once: true,
             onEnter: (elements) => {
@@ -621,6 +621,266 @@
         document.body.style.overflow = "";
     }
 
+    /* =============================================
+       Advanced Dynamic Interactions
+       ============================================= */
+
+    // --- Particle Network ---
+    function initParticleNetwork() {
+        if (prefersReducedMotion) return;
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "particle-canvas";
+        canvas.setAttribute("aria-hidden", "true");
+        document.body.prepend(canvas);
+        const ctx = canvas.getContext("2d");
+
+        const particles = [];
+        const PARTICLE_COUNT = 48;
+        const CONNECTION_DIST = 140;
+        const MOUSE_RADIUS = 180;
+
+        let mouseX = -200;
+        let mouseY = -200;
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.45,
+                vy: (Math.random() - 0.5) * 0.45,
+                radius: Math.random() * 1.6 + 0.6,
+                baseAlpha: Math.random() * 0.35 + 0.15
+            });
+        }
+
+        document.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        document.addEventListener("mouseleave", () => {
+            mouseX = -200;
+            mouseY = -200;
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            particles.forEach((p) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < -20) p.x = width + 20;
+                if (p.x > width + 20) p.x = -20;
+                if (p.y < -20) p.y = height + 20;
+                if (p.y > height + 20) p.y = -20;
+
+                // Mouse interaction
+                const dx = mouseX - p.x;
+                const dy = mouseY - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < MOUSE_RADIUS) {
+                    const force = (1 - dist / MOUSE_RADIUS) * 0.5;
+                    p.vx -= (dx / dist) * force * 0.08;
+                    p.vy -= (dy / dist) * force * 0.08;
+                }
+
+                // Speed damping
+                p.vx *= 0.998;
+                p.vy *= 0.998;
+            });
+
+            // Draw connections
+            ctx.strokeStyle = "rgba(199, 165, 109, 0.08)";
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < CONNECTION_DIST) {
+                        const alpha = (1 - dist / CONNECTION_DIST) * 0.5;
+                        ctx.strokeStyle = `rgba(199, 165, 109, ${alpha})`;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw particles
+            particles.forEach((p) => {
+                const dx = mouseX - p.x;
+                const dy = mouseY - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const glowAlpha = dist < MOUSE_RADIUS
+                    ? p.baseAlpha + (1 - dist / MOUSE_RADIUS) * 0.4
+                    : p.baseAlpha;
+
+                ctx.fillStyle = `rgba(199, 165, 109, ${glowAlpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Glow halo
+                if (dist < MOUSE_RADIUS * 1.5) {
+                    ctx.fillStyle = `rgba(143, 210, 227, ${glowAlpha * 0.3})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius * 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    }
+
+    // --- Typewriter Effect ---
+    function initTypewriter() {
+        const subtitle = document.querySelector(".hero-subtitle span");
+        if (!subtitle) return;
+
+        const fullText = subtitle.textContent || "";
+        subtitle.textContent = "";
+
+        const cursor = document.createElement("span");
+        cursor.className = "typewriter-cursor";
+        cursor.setAttribute("aria-hidden", "true");
+        subtitle.parentNode.appendChild(cursor);
+
+        let charIndex = 0;
+        const baseSpeed = 72;
+        const variation = () => baseSpeed + Math.random() * 50;
+
+        function type() {
+            if (charIndex < fullText.length) {
+                subtitle.textContent += fullText[charIndex];
+                charIndex++;
+                setTimeout(type, variation());
+            } else {
+                // Keep cursor blinking, then fade after a while
+                setTimeout(() => {
+                    cursor.style.transition = "opacity 1.2s ease";
+                    cursor.style.opacity = "0";
+                }, 3000);
+            }
+        }
+
+        // Start typing after hero animation settles
+        setTimeout(type, 1800);
+    }
+
+    // --- Mouse Trail Particles ---
+    function initMouseTrail() {
+        if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+
+        const colors = [
+            "rgba(199, 165, 109, 0.4)",
+            "rgba(143, 210, 227, 0.3)",
+            "rgba(255, 255, 255, 0.2)"
+        ];
+
+        let lastTime = 0;
+        const throttle = 40;
+
+        document.addEventListener("mousemove", (e) => {
+            const now = Date.now();
+            if (now - lastTime < throttle) return;
+            lastTime = now;
+
+            const trail = document.createElement("div");
+            trail.className = "mouse-trail";
+            const size = Math.random() * 8 + 4;
+            trail.style.width = `${size}px`;
+            trail.style.height = `${size}px`;
+            trail.style.left = `${e.clientX - size / 2}px`;
+            trail.style.top = `${e.clientY - size / 2}px`;
+            trail.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            document.body.appendChild(trail);
+
+            trail.addEventListener("animationend", () => trail.remove());
+            // Safety cleanup
+            setTimeout(() => trail.remove(), 900);
+        });
+    }
+
+    // --- Scroll-driven Accent Shift ---
+    function initScrollAccentShift() {
+        if (prefersReducedMotion) return;
+
+        function updateAccent() {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (maxScroll <= 0) return;
+            const progress = window.scrollY / maxScroll;
+            // Subtle hue shift from gold (0) to slightly warmer (8deg)
+            const shift = progress * 8;
+            document.documentElement.style.setProperty("--accent-shift", `${shift.toFixed(1)}deg`);
+        }
+
+        window.addEventListener("scroll", updateAccent, { passive: true });
+        updateAccent();
+    }
+
+    // --- Card Glare Elements ---
+    function initCardGlare() {
+        if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+
+        document.querySelectorAll(".project-card").forEach((card) => {
+            if (card.querySelector(".card-glare")) return;
+
+            const glare = document.createElement("div");
+            glare.className = "card-glare";
+            glare.setAttribute("aria-hidden", "true");
+            card.appendChild(glare);
+        });
+    }
+
+    // --- Hero Title Gleam ---
+    function initHeroGleam() {
+        if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+
+        const heroLayout = document.querySelector(".hero-layout");
+        if (!heroLayout) return;
+
+        heroLayout.addEventListener("mousemove", (e) => {
+            const rect = heroLayout.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            heroLayout.style.setProperty("--gleam-x", `${x}%`);
+            heroLayout.style.setProperty("--gleam-y", `${y}%`);
+        });
+    }
+
+    // --- Section Scroll Enter Effect ---
+    function initSectionEnterFX() {
+        if (prefersReducedMotion) return;
+
+        const sections = document.querySelectorAll(".section-shell");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-entering");
+                    setTimeout(() => entry.target.classList.remove("is-entering"), 600);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        sections.forEach((s) => observer.observe(s));
+    }
+
     async function copyImageToClipboard(src, button, fallbackLink) {
         setCopyButtonState(button, "复制中...");
 
@@ -706,6 +966,15 @@
         initBladeStage();
         initImageLightbox();
         initKeyboard();
+
+        // Advanced Interactions
+        initParticleNetwork();
+        initTypewriter();
+        initMouseTrail();
+        initScrollAccentShift();
+        initCardGlare();
+        initHeroGleam();
+        initSectionEnterFX();
 
         navToggle?.addEventListener("click", toggleMenu);
         mobileMenuLinks.forEach((link) => link.addEventListener("click", closeMenu));
