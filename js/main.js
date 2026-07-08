@@ -1058,6 +1058,15 @@
         }
 
         const live = new Set();
+        let bladeRect = null;
+
+        function getBladeOrigin() {
+            const blade = document.querySelector(".blade-stage");
+            if (blade) {
+                bladeRect = blade.getBoundingClientRect();
+            }
+            return bladeRect;
+        }
 
         function driftWord(item) {
             if (live.size >= MAX_CONCURRENT) return;
@@ -1067,12 +1076,30 @@
                 : Math.random() < 0.3;
             el.className = "inscription-word" + (cyan ? " is-cyan" : "");
             el.textContent = item.text;
-            const top = 10 + Math.random() * 75;
-            const dur = 28 + Math.random() * 14;
-            const opacity = 0.22 + Math.random() * 0.18;
-            el.style.top = top + "vh";
+
+            // Origin near the blade-stage (sword), fallback to upper-right.
+            const rect = getBladeOrigin();
+            let startX, startY;
+            if (rect && rect.width > 0) {
+                startX = rect.left + rect.width * (0.3 + Math.random() * 0.4);
+                startY = rect.top + rect.height * (0.2 + Math.random() * 0.5);
+            } else {
+                startX = window.innerWidth * (0.65 + Math.random() * 0.2);
+                startY = window.innerHeight * (0.15 + Math.random() * 0.3);
+            }
+            el.style.left = startX + "px";
+            el.style.top = startY + "px";
+
+            const dur = 24 + Math.random() * 14;
+            const opacity = 0.45 + Math.random() * 0.25;
+            const dx = 80 + Math.random() * 60;  // drift left 80-140vw
+            const dy = 15 + Math.random() * 30;   // drift up 15-45vh
+            const rot = (Math.random() - 0.5) * 6;
             el.style.setProperty("--idur", dur + "s");
             el.style.setProperty("--iopacity", opacity.toFixed(2));
+            el.style.setProperty("--idx", dx + "vw");
+            el.style.setProperty("--idy", dy + "vh");
+            el.style.setProperty("--irot", rot + "deg");
             layer.appendChild(el);
             live.add(el);
             void el.offsetWidth;
@@ -1151,7 +1178,7 @@
         initActiveNav();
         initMagneticButtons();
         initCardTilt();
-        initCursorAura();
+        // initCursorAura removed — conflicts with sword-qi trail
         initSwordQiTrail();
         initBladeStage();
         initImageLightbox();
@@ -1162,7 +1189,7 @@
         // Advanced Interactions
         initParticleNetwork();
         initTypewriter();
-        initMouseTrail();
+        // initMouseTrail removed — conflicts with sword-qi trail
         initScrollAccentShift();
         initCardGlare();
         initHeroGleam();
