@@ -1035,46 +1035,41 @@
     }
 
     function initInscription() {
-        const form = document.getElementById("inscriptionForm");
-        const textEl = document.getElementById("inscriptionText");
-        const nameEl = document.getElementById("inscriptionName");
-        const counterEl = document.getElementById("inscriptionCounter");
+        const inputEl = document.getElementById("inscriptionInline");
         const hintEl = document.getElementById("inscriptionHint");
-        const submitEl = document.getElementById("inscriptionSubmit");
         const layer = document.getElementById("inscriptionLayer");
-        if (!form || !textEl || !layer) return;
+        if (!inputEl || !layer) return;
 
         const apiBase = "https://baojian-personalweb.vercel.app";
         const MAX = 60;
         const MAX_CONCURRENT = 5;
+        let hintTimer;
 
         function setHint(msg, kind) {
+            clearTimeout(hintTimer);
             hintEl.textContent = msg || "";
-            hintEl.className = "inscription-hint" + (kind ? " is-" + kind : "");
+            hintEl.className = "footprint-hint" + (kind ? " is-" + kind : "");
+            if (msg && kind === "ok") {
+                hintTimer = setTimeout(() => {
+                    hintEl.textContent = "";
+                    hintEl.className = "footprint-hint";
+                }, 2500);
+            }
         }
-
-        textEl.addEventListener("input", () => {
-            counterEl.textContent = `${textEl.value.length} / ${MAX}`;
-        });
 
         const live = new Set();
 
-        function driftWord(item, persist) {
+        function driftWord(item) {
             if (live.size >= MAX_CONCURRENT) return;
             const el = document.createElement("div");
-            const cyan = item.id ? Number("0x" + item.id.slice(-1)) % 3 === 0 : Math.random() < 0.3;
+            const cyan = item.id
+                ? Number("0x" + item.id.slice(-1)) % 3 === 0
+                : Math.random() < 0.3;
             el.className = "inscription-word" + (cyan ? " is-cyan" : "");
-            const textNode = document.createTextNode(item.text);
-            el.appendChild(textNode);
-            if (item.name) {
-                const nameSpan = document.createElement("span");
-                nameSpan.className = "iw-name";
-                nameSpan.textContent = "— " + item.name;
-                el.appendChild(nameSpan);
-            }
-            const top = 8 + Math.random() * 80;
-            const dur = 22 + Math.random() * 12;
-            const opacity = 0.45 + Math.random() * 0.3;
+            el.textContent = item.text;
+            const top = 10 + Math.random() * 75;
+            const dur = 28 + Math.random() * 14;
+            const opacity = 0.22 + Math.random() * 0.18;
             el.style.top = top + "vh";
             el.style.setProperty("--idur", dur + "s");
             el.style.setProperty("--iopacity", opacity.toFixed(2));
@@ -1097,49 +1092,54 @@
                 if (!data || !Array.isArray(data.items)) return;
                 const items = data.items.slice().reverse();
                 items.forEach((it, i) => {
-                    setTimeout(() => driftWord(it, true), 1200 + i * 900);
+                    setTimeout(() => driftWord(it), 1500 + i * 1100);
                 });
             })
             .catch(() => {});
 
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const text = textEl.value.trim();
+        function submit() {
+            const text = inputEl.value.trim();
             if (!text) {
-                setHint("写点什么再题吧。", "error");
+                setHint("写点什么再落墨。", "error");
                 return;
             }
             if (text.length > MAX) {
                 setHint(`最多 ${MAX} 字。`, "error");
                 return;
             }
-            submitEl.disabled = true;
-            setHint("落墨中…");
+            inputEl.disabled = true;
+            setHint("落墨中…", "ok");
             fetch(`${apiBase}/api/inscription`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({ text, name: nameEl.value.trim() }),
+                body: JSON.stringify({ text }),
             })
                 .then((res) => res.json().catch(() => ({})))
                 .then((data) => {
                     if (data.ok) {
-                        textEl.value = "";
-                        counterEl.textContent = `0 / ${MAX}`;
-                        setHint("已题于剑冢。", "ok");
-                        driftWord(data.item, true);
+                        inputEl.value = "";
+                        setHint("已落墨。", "ok");
+                        driftWord(data.item);
                     } else if (data.error === "rate_limited") {
-                        setHint(`稍候再题（${data.wait || 60}s）。`, "error");
+                        setHint(`稍候 ${data.wait || 60}s 再题。`, "error");
                     } else if (data.error === "storage_unavailable") {
-                        setHint("题字暂未开放，稍后再来。", "error");
+                        setHint("题字暂未开放。", "error");
                     } else {
-                        setHint("题字未成功，请重试。", "error");
+                        setHint("题字未成功。", "error");
                     }
                 })
-                .catch(() => setHint("网络异常，题字失败。", "error"))
+                .catch(() => setHint("网络异常。", "error"))
                 .finally(() => {
-                    submitEl.disabled = false;
+                    inputEl.disabled = false;
                 });
+        }
+
+        inputEl.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                submit();
+            }
         });
     }
 

@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=20260708-inscription">
+    <link rel="stylesheet" href="css/style.css?v=20260708-ink-v2">
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -613,41 +613,6 @@
                 </div>
             </div>
         </section>
-
-        <section class="inscription section-shell" id="inscription">
-            <div class="container">
-                <div class="inscription-panel reveal">
-                    <div class="inscription-head">
-                        <span class="section-kicker">04 / Sword Tomb</span>
-                        <h2 class="section-title">剑冢 · 访客题字</h2>
-                        <p>留一句短话，让它随剑气在页面里缓缓飘过。至多六十字，落墨即逝。</p>
-                    </div>
-                    <form class="inscription-form" id="inscriptionForm" autocomplete="off">
-                        <div class="inscription-field">
-                            <textarea
-                                id="inscriptionText"
-                                class="inscription-input"
-                                maxlength="60"
-                                rows="2"
-                                placeholder="写一句给这把剑的话…"
-                                aria-label="题字内容"></textarea>
-                            <span class="inscription-counter" id="inscriptionCounter">0 / 60</span>
-                        </div>
-                        <div class="inscription-row">
-                            <input
-                                id="inscriptionName"
-                                class="inscription-name"
-                                type="text"
-                                maxlength="20"
-                                placeholder="署名（可空）"
-                                aria-label="署名" />
-                            <button type="submit" class="inscription-submit" id="inscriptionSubmit">题字</button>
-                        </div>
-                        <p class="inscription-hint" id="inscriptionHint" aria-live="polite"></p>
-                    </form>
-                </div>
-            </div>
-        </section>
     </main>
 
     <div class="inscription-layer" id="inscriptionLayer" aria-hidden="true"></div>
@@ -655,7 +620,12 @@
     <footer class="footer">
         <div class="container">
             <p>© 2026 Skyler Yang · Built as an AI product workbench.</p>
-            <p class="footprint" id="footprint" aria-live="polite" hidden>已有 <strong id="footprintCount">…</strong> 位访客为此剑驻足</p>
+            <div class="footprint-row" id="footprint" aria-live="polite" hidden>
+                <span class="footprint-text">已有 <strong id="footprintCount">…</strong> 位访客为此剑驻足</span>
+                <span class="footprint-sep" aria-hidden="true">·</span>
+                <input class="footprint-input" id="inscriptionInline" type="text" maxlength="60" placeholder="留一笔…" aria-label="题字" />
+                <span class="footprint-hint" id="inscriptionHint" aria-live="polite"></span>
+            </div>
         </div>
     </footer>
 
@@ -682,6 +652,6 @@
 
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>
-    <script src="js/main.js?v=20260708-inscription"></script>
+    <script src="js/main.js?v=20260708-ink-v2"></script>
 </body>
 </html>

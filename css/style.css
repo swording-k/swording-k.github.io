@@ -1605,26 +1605,17 @@ button.social-link-card {
     font-size: 12px;
 }
 
-.footprint {
+.footprint-row {
     margin-top: 8px;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.04em;
     opacity: 0;
     transition: opacity 0.6s ease;
 }
 
-.footprint.is-ready {
-    opacity: 0.7;
+.footprint-row.is-ready {
+    opacity: 1;
 }
 
-.footprint strong {
-    color: var(--gold);
-    font-weight: 600;
-}
-
-.footprint.is-warming strong {
+.footprint-row.is-warming .footprint-text strong {
     color: var(--text-muted);
     opacity: 0.6;
 }
@@ -2309,148 +2300,66 @@ body {
     .sword-qi { display: none; }
 }
 
-/* ── 剑冢 · 访客题字 ───────────────────────────── */
-.inscription {
-    padding: clamp(4rem, 9vw, 7rem) 0 clamp(3rem, 6vw, 5rem);
-    border-top: 1px solid rgba(199, 165, 109, 0.12);
-}
-
-.inscription-panel {
-    max-width: 720px;
-    margin-inline: auto;
-    text-align: center;
-}
-
-.inscription-head .section-title {
-    margin: 0.4rem 0 0.8rem;
-}
-
-.inscription-head p {
-    color: var(--muted, #9aa3ad);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0 auto;
-    max-width: 36ch;
-}
-
-.inscription-form {
-    margin-top: 2.2rem;
+/* ── Footer 驻足印记 + 题字入口 ─────────────────── */
+.footprint-row {
     display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    text-align: left;
-}
-
-.inscription-field {
-    position: relative;
-}
-
-.inscription-input {
-    width: 100%;
-    resize: none;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(199, 165, 109, 0.22);
-    border-radius: 10px;
-    padding: 0.95rem 1.1rem;
-    color: var(--text, #e8e6e1);
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.6;
-    transition: border-color 0.25s ease, background 0.25s ease;
-}
-
-.inscription-input::placeholder {
-    color: rgba(154, 163, 173, 0.6);
-}
-
-.inscription-input:focus {
-    outline: none;
-    border-color: rgba(199, 165, 109, 0.6);
-    background: rgba(199, 165, 109, 0.05);
-}
-
-.inscription-counter {
-    position: absolute;
-    right: 0.9rem;
-    bottom: 0.55rem;
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 0.72rem;
-    color: rgba(154, 163, 173, 0.6);
-    pointer-events: none;
-}
-
-.inscription-row {
-    display: flex;
-    gap: 0.8rem;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0 0.45em;
+    font-size: 0.8rem;
+    color: rgba(154, 163, 173, 0.65);
+    margin-top: 0.35rem;
+    line-height: 1.6;
 }
 
-.inscription-name {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(199, 165, 109, 0.22);
-    border-radius: 10px;
-    padding: 0.7rem 1rem;
+.footprint-text strong {
+    color: var(--gold, #c7a56d);
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-weight: 500;
+}
+
+.footprint-sep {
+    opacity: 0.35;
+}
+
+.footprint-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(199, 165, 109, 0.18);
+    border-radius: 0;
     color: var(--text, #e8e6e1);
     font-family: inherit;
-    font-size: 0.92rem;
-    transition: border-color 0.25s ease, background 0.25s ease;
+    font-size: 0.8rem;
+    padding: 0.1rem 0.3rem 0.15rem 0;
+    width: 100px;
+    transition: border-color 0.3s ease, width 0.3s ease;
 }
 
-.inscription-name::placeholder {
-    color: rgba(154, 163, 173, 0.6);
+.footprint-input::placeholder {
+    color: rgba(154, 163, 173, 0.4);
+    font-style: italic;
 }
 
-.inscription-name:focus {
+.footprint-input:focus {
     outline: none;
-    border-color: rgba(199, 165, 109, 0.6);
-    background: rgba(199, 165, 109, 0.05);
+    border-bottom-color: rgba(199, 165, 109, 0.45);
+    width: 150px;
 }
 
-.inscription-submit {
-    flex-shrink: 0;
-    padding: 0.7rem 1.8rem;
-    border: 1px solid rgba(199, 165, 109, 0.5);
-    border-radius: 10px;
-    background: rgba(199, 165, 109, 0.12);
-    color: var(--gold, #c7a56d);
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: background 0.25s ease, transform 0.15s ease, opacity 0.2s ease;
+.footprint-hint {
+    font-size: 0.72rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.inscription-submit:hover {
-    background: rgba(199, 165, 109, 0.22);
+.footprint-hint:not(:empty) {
+    opacity: 1;
 }
 
-.inscription-submit:active {
-    transform: scale(0.97);
-}
+.footprint-hint.is-error { color: #e08a7a; }
+.footprint-hint.is-ok { color: #8fd2e3; }
 
-.inscription-submit:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-}
-
-.inscription-hint {
-    margin: 0;
-    min-height: 1.1em;
-    font-size: 0.82rem;
-    color: rgba(154, 163, 173, 0.75);
-}
-
-.inscription-hint.is-error {
-    color: #e08a7a;
-}
-
-.inscription-hint.is-ok {
-    color: #8fd2e3;
-}
-
-/* Drifting inscription layer (fixed, non-interactive) */
+/* Drifting inscription layer (fixed, non-interactive, ink-like) */
 .inscription-layer {
     position: fixed;
     inset: 0;
@@ -2463,30 +2372,24 @@ body {
     position: absolute;
     right: -40vw;
     white-space: nowrap;
-    font-family: var(--font-serif, "Cormorant Garamond", serif);
-    font-size: clamp(1.1rem, 2.4vw, 1.9rem);
-    letter-spacing: 0.04em;
-    color: rgba(199, 165, 109, 0.34);
-    text-shadow: 0 0 12px rgba(199, 165, 109, 0.18);
+    font-family: var(--font-serif, "Cormorant Garamond", "Noto Serif SC", serif);
+    font-size: clamp(0.78rem, 1.3vw, 1rem);
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: rgba(199, 165, 109, 0.2);
+    text-shadow: 0 0 10px rgba(199, 165, 109, 0.1);
     will-change: transform, opacity;
     opacity: 0;
-}
-
-.inscription-word .iw-name {
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 0.62em;
-    color: rgba(143, 210, 227, 0.5);
-    margin-left: 0.5em;
-    letter-spacing: 0.02em;
+    filter: blur(0.5px);
 }
 
 .inscription-word.is-cyan {
-    color: rgba(143, 210, 227, 0.34);
-    text-shadow: 0 0 12px rgba(143, 210, 227, 0.18);
+    color: rgba(143, 210, 227, 0.2);
+    text-shadow: 0 0 10px rgba(143, 210, 227, 0.1);
 }
 
 .inscription-word.is-live {
-    animation: inscription-drift var(--idur, 26s) linear forwards;
+    animation: inscription-drift var(--idur, 32s) linear forwards;
 }
 
 @keyframes inscription-drift {
@@ -2494,11 +2397,11 @@ body {
         transform: translateX(0);
         opacity: 0;
     }
-    12% {
-        opacity: var(--iopacity, 0.7);
+    15% {
+        opacity: var(--iopacity, 0.32);
     }
-    82% {
-        opacity: var(--iopacity, 0.7);
+    78% {
+        opacity: var(--iopacity, 0.32);
     }
     100% {
         transform: translateX(-160vw);
