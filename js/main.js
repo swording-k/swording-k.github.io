@@ -475,6 +475,62 @@
         render();
     }
 
+    function initSwordQiTrail() {
+        if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
+
+        const POOL_MAX = 22;
+        const pool = [];
+        let lastSpawn = 0;
+        let lastX = 0;
+        let lastY = 0;
+        let armed = false;
+
+        function spawn(x, y, angle, speed) {
+            let el = pool.find((node) => !node.classList.contains("is-live"));
+            if (!el) {
+                if (pool.length >= POOL_MAX) return;
+                el = document.createElement("div");
+                el.className = "sword-qi";
+                document.body.appendChild(el);
+                pool.push(el);
+            }
+            const cyan = Math.random() < 0.26;
+            const len = 24 + Math.min(speed * 0.45, 34);
+            el.style.setProperty("--qx", `${x}px`);
+            el.style.setProperty("--qy", `${y}px`);
+            el.style.setProperty("--qrot", `${angle}deg`);
+            el.style.setProperty("--qlen", `${len}px`);
+            el.style.setProperty("--qhue", cyan ? "#8fd2e3" : "#c7a56d");
+            el.classList.remove("is-live");
+            void el.offsetWidth;
+            el.classList.add("is-live");
+        }
+
+        document.addEventListener(
+            "mousemove",
+            (event) => {
+                const now = performance.now();
+                if (!armed) {
+                    armed = true;
+                    lastX = event.clientX;
+                    lastY = event.clientY;
+                    lastSpawn = now;
+                    return;
+                }
+                const dx = event.clientX - lastX;
+                const dy = event.clientY - lastY;
+                const dist = Math.hypot(dx, dy);
+                if (now - lastSpawn < 16 || dist < 3) return;
+                const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+                spawn(event.clientX, event.clientY, angle, dist);
+                lastX = event.clientX;
+                lastY = event.clientY;
+                lastSpawn = now;
+            },
+            { passive: true }
+        );
+    }
+
     function initBladeStage() {
         const stage = document.querySelector(".blade-stage");
         const blade = stage?.querySelector(".blade-object");
@@ -954,6 +1010,30 @@
         });
     }
 
+    function initFootprint() {
+        const el = document.getElementById("footprint");
+        const countEl = document.getElementById("footprintCount");
+        if (!el || !countEl) return;
+
+        const apiBase = "https://baojian-personalweb.vercel.app";
+        fetch(`${apiBase}/api/visit`, { credentials: "include" })
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (!data) return;
+                countEl.textContent = data.count.toLocaleString();
+                if (data.persisted) {
+                    el.classList.add("is-ready");
+                } else {
+                    el.classList.add("is-warming");
+                    countEl.textContent = "准备中";
+                }
+                el.hidden = false;
+            })
+            .catch(() => {
+                el.hidden = true;
+            });
+    }
+
     function init() {
         initScrollProgress();
         initSmoothScroll();
@@ -963,8 +1043,10 @@
         initMagneticButtons();
         initCardTilt();
         initCursorAura();
+        initSwordQiTrail();
         initBladeStage();
         initImageLightbox();
+        initFootprint();
         initKeyboard();
 
         // Advanced Interactions

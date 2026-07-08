@@ -1605,6 +1605,30 @@ button.social-link-card {
     font-size: 12px;
 }
 
+.footprint {
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.footprint.is-ready {
+    opacity: 0.7;
+}
+
+.footprint strong {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.footprint.is-warming strong {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
 .image-lightbox {
     position: fixed;
     inset: 0;
@@ -2240,6 +2264,47 @@ body {
     width: 320px;
     height: 320px;
     background: radial-gradient(circle, rgba(255,255,255,0.14), rgba(121,223,255,0.08) 34%, transparent 68%);
+}
+
+/* Sword-qi slash trail — thin elongated streaks following cursor motion */
+.sword-qi {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--qlen, 28px);
+    height: 1.4px;
+    margin-left: calc(var(--qlen, 28px) / -2);
+    margin-top: -0.7px;
+    transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(0.2);
+    transform-origin: center;
+    background: linear-gradient(90deg, transparent, var(--qhue, #c7a56d) 50%, transparent);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 9998;
+    will-change: transform, opacity;
+    mix-blend-mode: screen;
+}
+
+.sword-qi.is-live {
+    animation: sword-qi-slash 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes sword-qi-slash {
+    0% {
+        opacity: 0;
+        transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(0.2);
+    }
+    18% {
+        opacity: 0.78;
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(1.45);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sword-qi { display: none; }
 }
 
 /* Premium editorial issue layer */
