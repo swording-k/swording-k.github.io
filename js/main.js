@@ -491,6 +491,9 @@
                 if (pool.length >= POOL_MAX) return;
                 el = document.createElement("div");
                 el.className = "sword-qi";
+                el.addEventListener("animationend", () => {
+                    el.classList.remove("is-live");
+                });
                 document.body.appendChild(el);
                 pool.push(el);
             }
@@ -1034,142 +1037,6 @@
             });
     }
 
-    function initInscription() {
-        const inputEl = document.getElementById("inscriptionInline");
-        const hintEl = document.getElementById("inscriptionHint");
-        const layer = document.getElementById("inscriptionLayer");
-        if (!inputEl || !layer) return;
-
-        const apiBase = "https://baojian-personalweb.vercel.app";
-        const MAX = 60;
-        const MAX_CONCURRENT = 5;
-        let hintTimer;
-
-        function setHint(msg, kind) {
-            clearTimeout(hintTimer);
-            hintEl.textContent = msg || "";
-            hintEl.className = "footprint-hint" + (kind ? " is-" + kind : "");
-            if (msg && kind === "ok") {
-                hintTimer = setTimeout(() => {
-                    hintEl.textContent = "";
-                    hintEl.className = "footprint-hint";
-                }, 2500);
-            }
-        }
-
-        const live = new Set();
-        let bladeRect = null;
-
-        function getBladeOrigin() {
-            const blade = document.querySelector(".blade-stage");
-            if (blade) {
-                bladeRect = blade.getBoundingClientRect();
-            }
-            return bladeRect;
-        }
-
-        function driftWord(item) {
-            if (live.size >= MAX_CONCURRENT) return;
-            const el = document.createElement("div");
-            const cyan = item.id
-                ? Number("0x" + item.id.slice(-1)) % 3 === 0
-                : Math.random() < 0.3;
-            el.className = "inscription-word" + (cyan ? " is-cyan" : "");
-            el.textContent = item.text;
-
-            // Origin near the blade-stage (sword), fallback to upper-right.
-            const rect = getBladeOrigin();
-            let startX, startY;
-            if (rect && rect.width > 0) {
-                startX = rect.left + rect.width * (0.3 + Math.random() * 0.4);
-                startY = rect.top + rect.height * (0.2 + Math.random() * 0.5);
-            } else {
-                startX = window.innerWidth * (0.65 + Math.random() * 0.2);
-                startY = window.innerHeight * (0.15 + Math.random() * 0.3);
-            }
-            el.style.left = startX + "px";
-            el.style.top = startY + "px";
-
-            const dur = 24 + Math.random() * 14;
-            const opacity = 0.45 + Math.random() * 0.25;
-            const dx = 80 + Math.random() * 60;  // drift left 80-140vw
-            const dy = 15 + Math.random() * 30;   // drift up 15-45vh
-            const rot = (Math.random() - 0.5) * 6;
-            el.style.setProperty("--idur", dur + "s");
-            el.style.setProperty("--iopacity", opacity.toFixed(2));
-            el.style.setProperty("--idx", dx + "vw");
-            el.style.setProperty("--idy", dy + "vh");
-            el.style.setProperty("--irot", rot + "deg");
-            layer.appendChild(el);
-            live.add(el);
-            void el.offsetWidth;
-            el.classList.add("is-live");
-            const cleanup = () => {
-                el.remove();
-                live.delete(el);
-            };
-            el.addEventListener("animationend", cleanup);
-            setTimeout(cleanup, (dur + 2) * 1000);
-        }
-
-        // Load existing inscriptions and set them drifting.
-        fetch(`${apiBase}/api/inscription`)
-            .then((res) => (res.ok ? res.json() : null))
-            .then((data) => {
-                if (!data || !Array.isArray(data.items)) return;
-                const items = data.items.slice().reverse();
-                items.forEach((it, i) => {
-                    setTimeout(() => driftWord(it), 1500 + i * 1100);
-                });
-            })
-            .catch(() => {});
-
-        function submit() {
-            const text = inputEl.value.trim();
-            if (!text) {
-                setHint("写点什么再落墨。", "error");
-                return;
-            }
-            if (text.length > MAX) {
-                setHint(`最多 ${MAX} 字。`, "error");
-                return;
-            }
-            inputEl.disabled = true;
-            setHint("落墨中…", "ok");
-            fetch(`${apiBase}/api/inscription`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ text }),
-            })
-                .then((res) => res.json().catch(() => ({})))
-                .then((data) => {
-                    if (data.ok) {
-                        inputEl.value = "";
-                        setHint("已落墨。", "ok");
-                        driftWord(data.item);
-                    } else if (data.error === "rate_limited") {
-                        setHint(`稍候 ${data.wait || 60}s 再题。`, "error");
-                    } else if (data.error === "storage_unavailable") {
-                        setHint("题字暂未开放。", "error");
-                    } else {
-                        setHint("题字未成功。", "error");
-                    }
-                })
-                .catch(() => setHint("网络异常。", "error"))
-                .finally(() => {
-                    inputEl.disabled = false;
-                });
-        }
-
-        inputEl.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                submit();
-            }
-        });
-    }
-
     function init() {
         initScrollProgress();
         initSmoothScroll();
@@ -1183,7 +1050,6 @@
         initBladeStage();
         initImageLightbox();
         initFootprint();
-        initInscription();
         initKeyboard();
 
         // Advanced Interactions
