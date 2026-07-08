@@ -2266,46 +2266,250 @@ body {
     background: radial-gradient(circle, rgba(255,255,255,0.14), rgba(121,223,255,0.08) 34%, transparent 68%);
 }
 
-/* Sword-qi slash trail — thin elongated streaks following cursor motion */
+/* Sword-qi slash trail — elongated streaks following cursor motion */
 .sword-qi {
     position: fixed;
     top: 0;
     left: 0;
-    width: var(--qlen, 28px);
-    height: 1.4px;
-    margin-left: calc(var(--qlen, 28px) / -2);
-    margin-top: -0.7px;
-    transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(0.2);
+    width: var(--qlen, 38px);
+    height: 2.6px;
+    margin-left: calc(var(--qlen, 38px) / -2);
+    margin-top: -1.3px;
+    transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(0.25);
     transform-origin: center;
-    background: linear-gradient(90deg, transparent, var(--qhue, #c7a56d) 50%, transparent);
+    background: linear-gradient(90deg, transparent, var(--qhue, #c7a56d) 55%, transparent);
     pointer-events: none;
     opacity: 0;
     z-index: 9998;
     will-change: transform, opacity;
     mix-blend-mode: screen;
+    box-shadow: 0 0 6px 1px var(--qhue, #c7a56d);
+    border-radius: 2px;
 }
 
 .sword-qi.is-live {
-    animation: sword-qi-slash 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: sword-qi-slash 820ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes sword-qi-slash {
     0% {
         opacity: 0;
-        transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(0.2);
+        transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(0.25);
     }
-    18% {
-        opacity: 0.78;
+    16% {
+        opacity: 0.95;
     }
     100% {
         opacity: 0;
-        transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(1.45);
+        transform: translate3d(var(--qx, 0), var(--qy, 0), 0) rotate(var(--qrot, 0deg)) scaleX(1.6);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .sword-qi { display: none; }
 }
+
+/* ── 剑冢 · 访客题字 ───────────────────────────── */
+.inscription {
+    padding: clamp(4rem, 9vw, 7rem) 0 clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid rgba(199, 165, 109, 0.12);
+}
+
+.inscription-panel {
+    max-width: 720px;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.inscription-head .section-title {
+    margin: 0.4rem 0 0.8rem;
+}
+
+.inscription-head p {
+    color: var(--muted, #9aa3ad);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 36ch;
+}
+
+.inscription-form {
+    margin-top: 2.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    text-align: left;
+}
+
+.inscription-field {
+    position: relative;
+}
+
+.inscription-input {
+    width: 100%;
+    resize: none;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(199, 165, 109, 0.22);
+    border-radius: 10px;
+    padding: 0.95rem 1.1rem;
+    color: var(--text, #e8e6e1);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.inscription-input::placeholder {
+    color: rgba(154, 163, 173, 0.6);
+}
+
+.inscription-input:focus {
+    outline: none;
+    border-color: rgba(199, 165, 109, 0.6);
+    background: rgba(199, 165, 109, 0.05);
+}
+
+.inscription-counter {
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.55rem;
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.72rem;
+    color: rgba(154, 163, 173, 0.6);
+    pointer-events: none;
+}
+
+.inscription-row {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.inscription-name {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(199, 165, 109, 0.22);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    color: var(--text, #e8e6e1);
+    font-family: inherit;
+    font-size: 0.92rem;
+    transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.inscription-name::placeholder {
+    color: rgba(154, 163, 173, 0.6);
+}
+
+.inscription-name:focus {
+    outline: none;
+    border-color: rgba(199, 165, 109, 0.6);
+    background: rgba(199, 165, 109, 0.05);
+}
+
+.inscription-submit {
+    flex-shrink: 0;
+    padding: 0.7rem 1.8rem;
+    border: 1px solid rgba(199, 165, 109, 0.5);
+    border-radius: 10px;
+    background: rgba(199, 165, 109, 0.12);
+    color: var(--gold, #c7a56d);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+
+.inscription-submit:hover {
+    background: rgba(199, 165, 109, 0.22);
+}
+
+.inscription-submit:active {
+    transform: scale(0.97);
+}
+
+.inscription-submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.inscription-hint {
+    margin: 0;
+    min-height: 1.1em;
+    font-size: 0.82rem;
+    color: rgba(154, 163, 173, 0.75);
+}
+
+.inscription-hint.is-error {
+    color: #e08a7a;
+}
+
+.inscription-hint.is-ok {
+    color: #8fd2e3;
+}
+
+/* Drifting inscription layer (fixed, non-interactive) */
+.inscription-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9996;
+}
+
+.inscription-word {
+    position: absolute;
+    right: -40vw;
+    white-space: nowrap;
+    font-family: var(--font-serif, "Cormorant Garamond", serif);
+    font-size: clamp(1.1rem, 2.4vw, 1.9rem);
+    letter-spacing: 0.04em;
+    color: rgba(199, 165, 109, 0.34);
+    text-shadow: 0 0 12px rgba(199, 165, 109, 0.18);
+    will-change: transform, opacity;
+    opacity: 0;
+}
+
+.inscription-word .iw-name {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 0.62em;
+    color: rgba(143, 210, 227, 0.5);
+    margin-left: 0.5em;
+    letter-spacing: 0.02em;
+}
+
+.inscription-word.is-cyan {
+    color: rgba(143, 210, 227, 0.34);
+    text-shadow: 0 0 12px rgba(143, 210, 227, 0.18);
+}
+
+.inscription-word.is-live {
+    animation: inscription-drift var(--idur, 26s) linear forwards;
+}
+
+@keyframes inscription-drift {
+    0% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+    12% {
+        opacity: var(--iopacity, 0.7);
+    }
+    82% {
+        opacity: var(--iopacity, 0.7);
+    }
+    100% {
+        transform: translateX(-160vw);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .inscription-word { display: none; }
+}
+
 
 /* Premium editorial issue layer */
 .hero::before {

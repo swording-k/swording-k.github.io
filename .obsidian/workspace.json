@@ -20,8 +20,22 @@
               "icon": "lucide-file",
               "title": "SPEC"
             }
+          },
+          {
+            "id": "68c3268454108a6e",
+            "type": "leaf",
+            "state": {
+              "type": "bases",
+              "state": {
+                "file": "未命名.base",
+                "viewName": "表格"
+              },
+              "icon": "lucide-table",
+              "title": "未命名"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -183,8 +197,14 @@
       "bases:新建数据库": false
     }
   },
-  "active": "bfe94a415212aa16",
+  "active": "68c3268454108a6e",
   "lastOpenFiles": [
+    "未命名.md",
+    "未命名.base",
+    "SPEC.md",
+    "未命名 1",
+    "未命名",
+    "README.md",
     "images/IMG_7140 copy.jpeg",
     "images/IMG_7140.jpeg",
     "image.png",

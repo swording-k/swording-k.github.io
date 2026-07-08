@@ -494,8 +494,8 @@
                 document.body.appendChild(el);
                 pool.push(el);
             }
-            const cyan = Math.random() < 0.26;
-            const len = 24 + Math.min(speed * 0.45, 34);
+            const cyan = Math.random() < 0.3;
+            const len = 32 + Math.min(speed * 0.5, 42);
             el.style.setProperty("--qx", `${x}px`);
             el.style.setProperty("--qy", `${y}px`);
             el.style.setProperty("--qrot", `${angle}deg`);
@@ -520,7 +520,7 @@
                 const dx = event.clientX - lastX;
                 const dy = event.clientY - lastY;
                 const dist = Math.hypot(dx, dy);
-                if (now - lastSpawn < 16 || dist < 3) return;
+                if (now - lastSpawn < 14 || dist < 2) return;
                 const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
                 spawn(event.clientX, event.clientY, angle, dist);
                 lastX = event.clientX;
@@ -1034,6 +1034,115 @@
             });
     }
 
+    function initInscription() {
+        const form = document.getElementById("inscriptionForm");
+        const textEl = document.getElementById("inscriptionText");
+        const nameEl = document.getElementById("inscriptionName");
+        const counterEl = document.getElementById("inscriptionCounter");
+        const hintEl = document.getElementById("inscriptionHint");
+        const submitEl = document.getElementById("inscriptionSubmit");
+        const layer = document.getElementById("inscriptionLayer");
+        if (!form || !textEl || !layer) return;
+
+        const apiBase = "https://baojian-personalweb.vercel.app";
+        const MAX = 60;
+        const MAX_CONCURRENT = 5;
+
+        function setHint(msg, kind) {
+            hintEl.textContent = msg || "";
+            hintEl.className = "inscription-hint" + (kind ? " is-" + kind : "");
+        }
+
+        textEl.addEventListener("input", () => {
+            counterEl.textContent = `${textEl.value.length} / ${MAX}`;
+        });
+
+        const live = new Set();
+
+        function driftWord(item, persist) {
+            if (live.size >= MAX_CONCURRENT) return;
+            const el = document.createElement("div");
+            const cyan = item.id ? Number("0x" + item.id.slice(-1)) % 3 === 0 : Math.random() < 0.3;
+            el.className = "inscription-word" + (cyan ? " is-cyan" : "");
+            const textNode = document.createTextNode(item.text);
+            el.appendChild(textNode);
+            if (item.name) {
+                const nameSpan = document.createElement("span");
+                nameSpan.className = "iw-name";
+                nameSpan.textContent = "— " + item.name;
+                el.appendChild(nameSpan);
+            }
+            const top = 8 + Math.random() * 80;
+            const dur = 22 + Math.random() * 12;
+            const opacity = 0.45 + Math.random() * 0.3;
+            el.style.top = top + "vh";
+            el.style.setProperty("--idur", dur + "s");
+            el.style.setProperty("--iopacity", opacity.toFixed(2));
+            layer.appendChild(el);
+            live.add(el);
+            void el.offsetWidth;
+            el.classList.add("is-live");
+            const cleanup = () => {
+                el.remove();
+                live.delete(el);
+            };
+            el.addEventListener("animationend", cleanup);
+            setTimeout(cleanup, (dur + 2) * 1000);
+        }
+
+        // Load existing inscriptions and set them drifting.
+        fetch(`${apiBase}/api/inscription`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (!data || !Array.isArray(data.items)) return;
+                const items = data.items.slice().reverse();
+                items.forEach((it, i) => {
+                    setTimeout(() => driftWord(it, true), 1200 + i * 900);
+                });
+            })
+            .catch(() => {});
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const text = textEl.value.trim();
+            if (!text) {
+                setHint("写点什么再题吧。", "error");
+                return;
+            }
+            if (text.length > MAX) {
+                setHint(`最多 ${MAX} 字。`, "error");
+                return;
+            }
+            submitEl.disabled = true;
+            setHint("落墨中…");
+            fetch(`${apiBase}/api/inscription`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ text, name: nameEl.value.trim() }),
+            })
+                .then((res) => res.json().catch(() => ({})))
+                .then((data) => {
+                    if (data.ok) {
+                        textEl.value = "";
+                        counterEl.textContent = `0 / ${MAX}`;
+                        setHint("已题于剑冢。", "ok");
+                        driftWord(data.item, true);
+                    } else if (data.error === "rate_limited") {
+                        setHint(`稍候再题（${data.wait || 60}s）。`, "error");
+                    } else if (data.error === "storage_unavailable") {
+                        setHint("题字暂未开放，稍后再来。", "error");
+                    } else {
+                        setHint("题字未成功，请重试。", "error");
+                    }
+                })
+                .catch(() => setHint("网络异常，题字失败。", "error"))
+                .finally(() => {
+                    submitEl.disabled = false;
+                });
+        });
+    }
+
     function init() {
         initScrollProgress();
         initSmoothScroll();
@@ -1047,6 +1156,7 @@
         initBladeStage();
         initImageLightbox();
         initFootprint();
+        initInscription();
         initKeyboard();
 
         // Advanced Interactions
