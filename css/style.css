@@ -3639,13 +3639,75 @@ body::after,
    Advanced Dynamic Interactions
    ============================================= */
 
-/* --- Particle Network Canvas --- */
-.particle-canvas {
+/* --- Sword Aura Mist --- */
+.sword-aura-mist {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.48;
+    overflow: hidden;
+    opacity: 0.58;
+    filter: saturate(0.9);
+}
+
+.sword-aura-mist__veil {
+    position: absolute;
+    inset: auto;
+    display: block;
+    border-radius: 999px;
+    opacity: 0;
+    mix-blend-mode: screen;
+    filter: blur(48px);
+    will-change: transform, opacity;
+}
+
+.sword-aura-mist__veil--gold {
+    width: 62vw;
+    height: 16rem;
+    left: -12vw;
+    top: 14vh;
+    background:
+        linear-gradient(92deg, transparent 0%, rgba(199, 165, 109, 0.04) 18%, rgba(231, 191, 120, 0.11) 52%, rgba(199, 165, 109, 0.03) 78%, transparent 100%);
+    transform: rotate(-10deg);
+    animation: sword-aura-drift 28s ease-in-out infinite alternate;
+}
+
+.sword-aura-mist__veil--cyan {
+    width: 48vw;
+    height: 13rem;
+    right: -10vw;
+    top: 38vh;
+    background:
+        linear-gradient(96deg, transparent 0%, rgba(143, 210, 227, 0.015) 18%, rgba(143, 210, 227, 0.055) 54%, rgba(143, 210, 227, 0.015) 86%, transparent 100%);
+    transform: rotate(-14deg);
+    animation: sword-aura-drift 34s ease-in-out infinite alternate-reverse;
+    animation-delay: -8s;
+}
+
+.sword-aura-mist__veil--smoke {
+    width: 72vw;
+    height: 18rem;
+    left: 10vw;
+    bottom: 10vh;
+    background:
+        linear-gradient(90deg, transparent 0%, rgba(255, 248, 236, 0.018) 24%, rgba(199, 165, 109, 0.038) 48%, rgba(255, 248, 236, 0.012) 70%, transparent 100%);
+    transform: rotate(-6deg);
+    animation: sword-aura-drift 42s ease-in-out infinite alternate;
+    animation-delay: -15s;
+}
+
+@keyframes sword-aura-drift {
+    0% {
+        opacity: 0.16;
+        transform: translate3d(-2vw, -1vh, 0) rotate(-10deg) scaleX(0.96);
+    }
+    50% {
+        opacity: 0.28;
+    }
+    100% {
+        opacity: 0.12;
+        transform: translate3d(3vw, 2vh, 0) rotate(-5deg) scaleX(1.04);
+    }
 }
 
 /* --- Typewriter Cursor --- */
@@ -3804,8 +3866,8 @@ body::after,
 
 /* --- Mobile: reduce effects --- */
 @media (max-width: 760px) {
-    .particle-canvas {
-        opacity: 0.28;
+    .sword-aura-mist {
+        opacity: 0.34;
     }
     
     .mouse-trail {
@@ -3818,7 +3880,7 @@ body::after,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .particle-canvas,
+    .sword-aura-mist,
     .mouse-trail,
     .typewriter-cursor,
     .card-glare {

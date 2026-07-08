@@ -684,126 +684,29 @@
        Advanced Dynamic Interactions
        ============================================= */
 
-    // --- Particle Network ---
-    function initParticleNetwork() {
+    // --- Sword Aura Mist ---
+    function initSwordAuraMist() {
         if (prefersReducedMotion) return;
 
-        const canvas = document.createElement("canvas");
-        canvas.className = "particle-canvas";
-        canvas.setAttribute("aria-hidden", "true");
-        document.body.prepend(canvas);
-        const ctx = canvas.getContext("2d");
+        if (document.querySelector(".sword-aura-mist")) return;
 
-        const particles = [];
-        const PARTICLE_COUNT = 48;
-        const CONNECTION_DIST = 140;
-        const MOUSE_RADIUS = 180;
+        const layer = document.createElement("div");
+        layer.className = "sword-aura-mist";
+        layer.setAttribute("aria-hidden", "true");
 
-        let mouseX = -200;
-        let mouseY = -200;
-        let width, height;
+        const veils = [
+            "sword-aura-mist__veil sword-aura-mist__veil--gold",
+            "sword-aura-mist__veil sword-aura-mist__veil--cyan",
+            "sword-aura-mist__veil sword-aura-mist__veil--smoke"
+        ];
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener("resize", resize);
-
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.45,
-                vy: (Math.random() - 0.5) * 0.45,
-                radius: Math.random() * 1.6 + 0.6,
-                baseAlpha: Math.random() * 0.35 + 0.15
-            });
-        }
-
-        document.addEventListener("mousemove", (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+        veils.forEach((className) => {
+            const veil = document.createElement("span");
+            veil.className = className;
+            layer.appendChild(veil);
         });
 
-        document.addEventListener("mouseleave", () => {
-            mouseX = -200;
-            mouseY = -200;
-        });
-
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-
-            particles.forEach((p) => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < -20) p.x = width + 20;
-                if (p.x > width + 20) p.x = -20;
-                if (p.y < -20) p.y = height + 20;
-                if (p.y > height + 20) p.y = -20;
-
-                // Mouse interaction
-                const dx = mouseX - p.x;
-                const dy = mouseY - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < MOUSE_RADIUS) {
-                    const force = (1 - dist / MOUSE_RADIUS) * 0.5;
-                    p.vx -= (dx / dist) * force * 0.08;
-                    p.vy -= (dy / dist) * force * 0.08;
-                }
-
-                // Speed damping
-                p.vx *= 0.998;
-                p.vy *= 0.998;
-            });
-
-            // Draw connections
-            ctx.strokeStyle = "rgba(199, 165, 109, 0.08)";
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < CONNECTION_DIST) {
-                        const alpha = (1 - dist / CONNECTION_DIST) * 0.5;
-                        ctx.strokeStyle = `rgba(199, 165, 109, ${alpha})`;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            // Draw particles
-            particles.forEach((p) => {
-                const dx = mouseX - p.x;
-                const dy = mouseY - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const glowAlpha = dist < MOUSE_RADIUS
-                    ? p.baseAlpha + (1 - dist / MOUSE_RADIUS) * 0.4
-                    : p.baseAlpha;
-
-                ctx.fillStyle = `rgba(199, 165, 109, ${glowAlpha})`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Glow halo
-                if (dist < MOUSE_RADIUS * 1.5) {
-                    ctx.fillStyle = `rgba(143, 210, 227, ${glowAlpha * 0.3})`;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius * 3, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            });
-
-            requestAnimationFrame(draw);
-        }
-
-        draw();
+        document.body.prepend(layer);
     }
 
     // --- Typewriter Effect ---
@@ -1053,7 +956,7 @@
         initKeyboard();
 
         // Advanced Interactions
-        initParticleNetwork();
+        initSwordAuraMist();
         initTypewriter();
         // initMouseTrail removed — conflicts with sword-qi trail
         initScrollAccentShift();
