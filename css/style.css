@@ -682,6 +682,10 @@ ul {
     font-size: 12px;
 }
 
+/* 关键修复：.console-row 的 display:grid 会盖掉浏览器默认的 [hidden]{display:none}，
+   这里显式补一条，保证 now 行在无状态时正确隐藏 */
+.console-row[hidden] { display: none; }
+
 .console-row span {
     color: var(--text-muted);
 }

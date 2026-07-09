@@ -986,29 +986,37 @@
     }
 
     function init() {
-        initScrollProgress();
-        initSmoothScroll();
-        const gsapReady = initGsapMotion();
-        if (!gsapReady) initReveal();
-        initActiveNav();
-        initMagneticButtons();
-        initCardTilt();
-        // initCursorAura removed — conflicts with sword-qi trail
-        initSwordQiTrail();
-        initBladeStage();
-        initImageLightbox();
+        // 优先保证「活数据」功能（访客数 + 站长状态）一定跑起来，
+        // 它们不依赖动画库，放在最前避免被后面的初始化异常阻断
         initFootprint();
         initOwnerStatus();
-        initKeyboard();
 
-        // Advanced Interactions
-        initSwordAuraMist();
-        initTypewriter();
-        // initMouseTrail removed — conflicts with sword-qi trail
-        initScrollAccentShift();
-        initCardGlare();
-        initHeroGleam();
-        initSectionEnterFX();
+        // 视觉 / 动画增强：用 try 包一层，单点失败只降级该项，不拖垮整页
+        try {
+            initScrollProgress();
+            initSmoothScroll();
+            const gsapReady = initGsapMotion();
+            if (!gsapReady) initReveal();
+            initActiveNav();
+            initMagneticButtons();
+            initCardTilt();
+            // initCursorAura removed — conflicts with sword-qi trail
+            initSwordQiTrail();
+            initBladeStage();
+            initImageLightbox();
+            initKeyboard();
+
+            // Advanced Interactions
+            initSwordAuraMist();
+            initTypewriter();
+            // initMouseTrail removed — conflicts with sword-qi trail
+            initScrollAccentShift();
+            initCardGlare();
+            initHeroGleam();
+            initSectionEnterFX();
+        } catch (e) {
+            console.warn("[init] 非核心初始化异常，已降级：", e);
+        }
 
         navToggle?.addEventListener("click", toggleMenu);
         mobileMenuLinks.forEach((link) => link.addEventListener("click", closeMenu));
