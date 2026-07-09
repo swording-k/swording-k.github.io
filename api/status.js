@@ -59,22 +59,27 @@ module.exports = async (req, res) => {
         } catch (e) {
             return res.status(400).json({ ok: false, error: "bad_json" });
         }
-        const raw = typeof body.text === "string" ? body.text.trim() : "";
-        if (raw.length > 40) {
-            return res.status(400).json({ ok: false, error: "too_long", max: 40 });
-        }
-        try {
-            const auth = { Authorization: `Bearer ${kvToken}`, "Content-Type": "application/json" };
-            const ts = Date.now();
-            await fetch(`${kvUrl}/set/owner_status/${encodeURIComponent(raw)}`, {
-                method: "POST",
-                headers: auth,
-            });
-            await fetch(`${kvUrl}/set/owner_status_ts/${ts}`, {
-                method: "POST",
-                headers: auth,
-            });
-            return res.status(200).json({ ok: true, text: raw, updatedAt: ts });
+            const raw = typeof body.text === "string" ? body.text.trim() : "";
+            if (raw.length > 40) {
+                return res.status(400).json({ ok: false, error: "too_long", max: 40 });
+            }
+            try {
+                const auth = { Authorization: `Bearer ${kvToken}`, "Content-Type": "application/json" };
+                const ts = Date.now();
+                if (raw === "") {
+                    await fetch(`${kvUrl}/del/owner_status`, { method: "POST", headers: auth });
+                    await fetch(`${kvUrl}/del/owner_status_ts`, { method: "POST", headers: auth });
+                    return res.status(200).json({ ok: true, text: "", updatedAt: null });
+                }
+                await fetch(`${kvUrl}/set/owner_status/${encodeURIComponent(raw)}`, {
+                    method: "POST",
+                    headers: auth,
+                });
+                await fetch(`${kvUrl}/set/owner_status_ts/${ts}`, {
+                    method: "POST",
+                    headers: auth,
+                });
+                return res.status(200).json({ ok: true, text: raw, updatedAt: ts });
         } catch (e) {
             return res.status(500).json({ ok: false, error: "storage_failed" });
         }
