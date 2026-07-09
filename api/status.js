@@ -66,15 +66,13 @@ module.exports = async (req, res) => {
         try {
             const auth = { Authorization: `Bearer ${kvToken}`, "Content-Type": "application/json" };
             const ts = Date.now();
-            await fetch(`${kvUrl}/set/owner_status`, {
+            await fetch(`${kvUrl}/set/owner_status/${encodeURIComponent(raw)}`, {
                 method: "POST",
                 headers: auth,
-                body: JSON.stringify({ value: raw }),
             });
-            await fetch(`${kvUrl}/set/owner_status_ts`, {
+            await fetch(`${kvUrl}/set/owner_status_ts/${ts}`, {
                 method: "POST",
                 headers: auth,
-                body: JSON.stringify({ value: String(ts) }),
             });
             return res.status(200).json({ ok: true, text: raw, updatedAt: ts });
         } catch (e) {
