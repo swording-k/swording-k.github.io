@@ -219,3 +219,40 @@
   （`baojian-personalweb.vercel.app`），仅当 hostname 以 github.io 结尾时生效，Vercel 站点不受影响
 - 之后分析（Vercel Analytics）、后端、前端统一收口到 Vercel
 - 长期方案：购买自定义域名指向 Vercel，彻底弃用 GitHub Pages 短链接
+
+### 7.5 当前实施状态（2026-07-09 更新）
+
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| 剑气拖尾 | ✅ 保留（用户已自行调优） | 纯前端，桌面鼠标端，`initSwordQiTrail` |
+| 驻足印记 | ✅ 上线 | `/api/visit` + KV 计数 + cookie 去重，footer 展示 |
+| 剑冢题字 | ❌ 已删 | 飘字审美不过关，用户手动删除（commit ef12c18） |
+| 访客星图 | ❌ 砍掉 | 无地理意义 |
+| 背景剑气雾 | ✅ 上线 | 用户用 sword-aura-mist 替换原粒子网络（commit a198cde） |
+| **站长此刻状态** | 🆕 实施中 | hero 控制台 `now` 行，`/api/status` 读写 KV，站长用 token 更新 |
+
+### 7.6 站长此刻状态（2026-07-09 新增）
+
+**目标**：hero 控制台首行 `now` 展示站长实时状态（"正在长城证券实习"），让网站有"活"的呼吸感，不依赖访客输入。
+
+**后端** `/api/status.js`：
+- GET 公开，返回 `{ ok, text, updatedAt, persisted }`，读 KV `owner_status` + `owner_status_ts`，`Cache-Control: max-age=30`
+- POST 鉴权（`x-status-token` header === `OWNER_STATUS_TOKEN` env），写 KV，长度 ≤40，空串清空
+- 复用 `KV_REST_API_URL` / `KV_REST_API_TOKEN`，CORS 白名单同 visit.js
+
+**前端**：
+- hero `.console-body` 首行 `now`，青色 `var(--cyan)` 高亮，时间用 mono 灰小字（"· 3h"）
+- `initOwnerStatus()`：首次拉取 + 每 60s 轮询刷新
+- KV 无数据 / 失败时 `hidden` 静默隐藏
+
+**站长更新方式**（curl）：
+```bash
+curl -X POST https://baojian-personalweb.vercel.app/api/status \
+  -H "x-status-token: $OWNER_STATUS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"text":"正在长城证券实习"}'
+```
+清空：`-d '{"text":""}'`
+
+**前置依赖**：用户需在 Vercel 项目 Settings → Environment Variables 添加 `OWNER_STATUS_TOKEN`（自定义值）。
+
