@@ -940,6 +940,51 @@
             });
     }
 
+    function initOwnerStatus() {
+        const row = document.getElementById("ownerStatusRow");
+        const textEl = document.getElementById("ownerStatusText");
+        const timeEl = document.getElementById("ownerStatusTime");
+        if (!row || !textEl) return;
+
+        const apiBase = "https://baojian-personalweb.vercel.app";
+
+        function fmtRelative(ts) {
+            if (!ts) return "";
+            const diff = Date.now() - ts;
+            const m = Math.floor(diff / 60000);
+            if (m < 1) return "刚刚";
+            if (m < 60) return m + "min";
+            const h = Math.floor(m / 60);
+            if (h < 24) return h + "h";
+            const d = Math.floor(h / 24);
+            if (d < 7) return d + "d";
+            return "";
+        }
+
+        function pull() {
+            fetch(`${apiBase}/api/status`)
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data) => {
+                    if (!data || !data.text) {
+                        row.hidden = true;
+                        return;
+                    }
+                    textEl.textContent = data.text;
+                    const rel = fmtRelative(data.updatedAt);
+                    if (timeEl) {
+                        timeEl.textContent = rel ? "· " + rel : "";
+                    }
+                    row.hidden = false;
+                })
+                .catch(() => {
+                    row.hidden = true;
+                });
+        }
+
+        pull();
+        setInterval(pull, 60000);
+    }
+
     function init() {
         initScrollProgress();
         initSmoothScroll();
@@ -953,6 +998,7 @@
         initBladeStage();
         initImageLightbox();
         initFootprint();
+        initOwnerStatus();
         initKeyboard();
 
         // Advanced Interactions

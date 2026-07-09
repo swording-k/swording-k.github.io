@@ -719,6 +719,25 @@ ul {
     color: var(--cyan);
 }
 
+/* now 行 — 站长此刻状态 */
+.console-row-now {
+    grid-template-columns: 96px 1fr auto;
+    align-items: baseline;
+}
+
+.console-row-now strong {
+    color: var(--cyan);
+    font-weight: 500;
+}
+
+.now-time {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    opacity: 0.65;
+}
+
 .console-card {
     position: relative;
     margin: 0 18px 18px;
