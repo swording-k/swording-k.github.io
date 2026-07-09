@@ -44,7 +44,10 @@ module.exports = async (req, res) => {
     // POST — authed, update status
     if (req.method === "POST") {
         if (!ownerToken) {
-            return res.status(503).json({ ok: false, error: "owner_token_not_configured" });
+            const keys = Object.keys(process.env)
+                .filter((k) => /TOKEN|KV|URL|OWNER|STATUS/i.test(k))
+                .map((k) => `${k}=${process.env[k] ? "SET(" + process.env[k].length + ")" : "EMPTY"}`);
+            return res.status(503).json({ ok: false, error: "owner_token_not_configured", envKeys: keys });
         }
         const sent = req.headers["x-status-token"];
         if (!sent || sent !== ownerToken) {
