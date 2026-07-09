@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
             const text = jText.result || null;
             const updatedAt = jTs.result ? Number(jTs.result) : null;
             res.setHeader("Cache-Control", "public, max-age=30");
-            return res.status(200).json({ ok: true, text, updatedAt, persisted: true });
+            return res.status(200).json({ ok: true, text, updatedAt, persisted: true, _debug: { hasToken: Boolean(process.env.OWNER_STATUS_TOKEN), kvUrl: Boolean(process.env.KV_REST_API_URL), tokenLen: (process.env.OWNER_STATUS_TOKEN || "").length } });
         } catch (e) {
             return res.status(200).json({ ok: true, text: null, updatedAt: null, persisted: false });
         }
