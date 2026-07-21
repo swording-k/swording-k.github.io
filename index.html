@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=20260709-clean">
+    <link rel="stylesheet" href="css/style.css?v=20260721-projects">
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -264,11 +264,13 @@
 
                 <div class="project-ledger reveal" aria-label="作品索引">
                     <span><strong>01</strong>FitGenius</span>
-                    <span><strong>02</strong>最后的书店</span>
-                    <span><strong>03</strong>电竞天赋检测站</span>
-                    <span><strong>04</strong>Codex Pets</span>
-                    <span><strong>05</strong>个人博客</span>
-                    <span><strong>06</strong>AI Job Notes</span>
+                    <span><strong>02</strong>Atoll · 开源贡献</span>
+                    <span><strong>03</strong>Codex Theme Creator</span>
+                    <span><strong>04</strong>最后的书店</span>
+                    <span><strong>05</strong>电竞天赋检测站</span>
+                    <span><strong>06</strong>Codex Pets</span>
+                    <span><strong>07</strong>个人博客</span>
+                    <span><strong>08</strong>AI Job Notes</span>
                 </div>
 
                 <div class="featured-project reveal">
@@ -319,40 +321,76 @@
 
                 <div class="showcase-rail">
                     <div class="projects-grid">
-                        <article class="project-card bookstore-card reveal">
+                        <article class="project-card atoll-card reveal">
                             <span class="project-number" aria-hidden="true">02</span>
-                            <div class="project-media">
-                                <img src="images/last-bookstore-poster.png" alt="最后的书店游戏海报">
+                            <div class="project-card-head">
+                                <div class="text-icon">岛</div>
+                                <div>
+                                    <span class="project-label">开源贡献 · macOS 灵动岛</span>
+                                    <h3>Atoll</h3>
+                                </div>
                             </div>
-                            <div class="bookstore-copy">
-                                <div class="project-card-head">
-                                    <div class="text-icon">书</div>
-                                    <div>
-                                        <span class="project-label">腾讯云 AI 黑客松 · 叙事游戏</span>
-                                        <h3>最后的书店</h3>
-                                    </div>
+                            <p>以 Contributor / Collaborator 身份参与 Atoll（macOS 灵动岛开源项目，3.2k★）。已合并多个 PR 并提交产品提案，后续将成为项目 collaborator。</p>
+                            <div class="project-copy-stack">
+                                <p><strong>我的贡献：</strong>修复非英语环境下统计弹窗本地化问题（PR #544）、修复全天事件下日历自动滚动失效（PR #566），并提交 AI coding agent 管理中心产品提案（Issue #539）。</p>
+                            </div>
+                            <div class="project-notes">
+                                <span>3.2k Stars</span>
+                                <span>已合并 PR</span>
+                                <span>Collaborator</span>
+                            </div>
+                            <div class="project-actions compact">
+                                <a class="button button-primary magnetic" href="https://github.com/Ebullioscopic/Atoll" target="_blank" rel="noreferrer">查看仓库</a>
+                                <a class="button button-ghost magnetic" href="https://github.com/Ebullioscopic/Atoll/pull/544" target="_blank" rel="noreferrer">我的 PR</a>
+                            </div>
+                        </article>
+
+                        <article class="project-card codetheme-card reveal">
+                            <span class="project-number" aria-hidden="true">03</span>
+                            <div class="project-card-head">
+                                <div class="text-icon">主</div>
+                                <div>
+                                    <span class="project-label">macOS · Codex Desktop 主题</span>
+                                    <h3>Codex Theme Creator</h3>
                                 </div>
-                                <p>一款 AI 加持的治愈向叙事 Web 游戏。大断联后的第 7 年，玩家经营小镇上最后一家书店，通过倾听来客故事、推荐合适书籍，影响希望值、声誉和 4 种结局。新增「书中剧场」与「自由书库」，让游戏从叙事扩展为可探索的阅读入口。</p>
-                                <div class="project-copy-stack">
-                                    <p><strong>玩法闭环：</strong>7 天循环，6 位 NPC、24 本书、3 槽 localStorage 存档、4 种结局；一周目约 25 分钟，浏览器打开即玩。</p>
-                                    <p><strong>AI 集成：</strong>NPC 写实立绘（呼吸动画 + 淡入效果）、自由对话、书籍 AI 导读、每日店主日记；书中剧场 v4.0 支持左立绘 + 右对话的视觉小说体验，自由书库与我的书店扩展阅读入口。</p>
-                                    <p><strong>工程取舍：</strong>纯 HTML / CSS / 原生 JS 零构建；GitHub Pages 静态托管 + Vercel Serverless 代理 AI 请求，API Key 安全不暴露；所有 AI 调用有 timeout 与本地 fallback，断网也能完整游玩。</p>
+                            </div>
+                            <p>让 Codex Desktop 用上你自己的主题。你只要说出想要的感觉，或给 Codex 一张参考图，它就会按主题格式完成创作；配套 App 可预览、微调、切换、导出与分享 .ctheme 主题包。</p>
+                            <div class="project-copy-stack">
+                                <p><strong>核心能力：</strong>一句话 / 参考图生成完整可校验主题包（背景资产 + 配色 + 界面风格 + 元数据），本地运行时注入 Codex 渲染界面，不修改应用本体。</p>
+                            </div>
+                            <div class="project-notes">
+                                <span>macOS Beta</span>
+                                <span>主题导入导出</span>
+                                <span>Swift</span>
+                            </div>
+                            <div class="project-actions compact">
+                                <a class="button button-primary magnetic" href="https://github.com/swording-k/codex-theme-creator" target="_blank" rel="noreferrer">打开仓库</a>
+                            </div>
+                        </article>
+
+                        <article class="project-card lastbook-card reveal">
+                            <span class="project-number" aria-hidden="true">04</span>
+                            <div class="project-card-head">
+                                <div class="text-icon">书</div>
+                                <div>
+                                    <span class="project-label">腾讯云 AI 黑客松 · 叙事游戏</span>
+                                    <h3>最后的书店</h3>
                                 </div>
-                                <div class="project-notes">
-                                    <span>AI CAN DO IT</span>
-                                    <span>双模式架构</span>
-                                    <span>书中剧场 VN</span>
-                                    <span>Vercel AI 代理</span>
-                                </div>
-                                <div class="project-actions compact">
-                                    <a class="button button-primary magnetic" href="https://swording-k.github.io/the-last-bookstore/" target="_blank" rel="noreferrer">立即体验</a>
-                                    <a class="button button-ghost magnetic" href="https://github.com/swording-k/the-last-bookstore" target="_blank" rel="noreferrer">代码仓库</a>
-                                </div>
+                            </div>
+                            <p>一款 AI 加持的治愈向叙事 Web 游戏，曾参加腾讯云 AI 黑客松。玩家经营末世小镇上最后一家书店，通过倾听来客故事、推荐书籍，影响希望值与多种结局。属于探索性作品，产品尚未跑通。</p>
+                            <div class="project-notes">
+                                <span>AI 叙事</span>
+                                <span>浏览器即玩</span>
+                                <span>黑客松作品</span>
+                            </div>
+                            <div class="project-actions compact">
+                                <a class="button button-primary magnetic" href="https://swording-k.github.io/the-last-bookstore/" target="_blank" rel="noreferrer">立即体验</a>
+                                <a class="button button-ghost magnetic" href="https://github.com/swording-k/the-last-bookstore" target="_blank" rel="noreferrer">代码仓库</a>
                             </div>
                         </article>
 
                         <article class="project-card esports-card reveal">
-                            <span class="project-number" aria-hidden="true">03</span>
+                            <span class="project-number" aria-hidden="true">05</span>
                             <div class="project-card-head">
                                 <img src="images/esports-talent-icon.png" alt="电竞天赋检测站图标">
                                 <div>
@@ -382,7 +420,7 @@
                         </article>
 
                         <article class="project-card pet-card reveal">
-                            <span class="project-number" aria-hidden="true">04</span>
+                            <span class="project-number" aria-hidden="true">06</span>
                             <div class="project-card-head">
                                 <img src="images/codex-buddy-frame.png" alt="Codex Buddy 健身小人桌宠形象">
                                 <div>
@@ -408,7 +446,7 @@
                         </article>
 
                         <article class="project-card blog-card reveal">
-                            <span class="project-number" aria-hidden="true">05</span>
+                            <span class="project-number" aria-hidden="true">07</span>
                             <div class="project-card-head">
                                 <img src="images/blog-project-icon.svg" alt="个人博客项目图标">
                                 <div>
@@ -436,7 +474,7 @@
                         </article>
 
                         <article class="project-card notes-card reveal">
-                            <span class="project-number" aria-hidden="true">06</span>
+                            <span class="project-number" aria-hidden="true">08</span>
                             <div class="project-card-head">
                                 <img src="images/ai-job-notes-icon.svg" alt="AI Job Notes 求职笔记图标">
                                 <div>
@@ -647,6 +685,6 @@
 
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>
-    <script src="js/main.js?v=20260709-clean"></script>
+    <script src="js/main.js?v=20260721-projects"></script>
 </body>
 </html>
