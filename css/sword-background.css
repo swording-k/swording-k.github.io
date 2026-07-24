@@ -91,6 +91,7 @@
 
 /* 三剑武器库：只通过合成层属性完成弧形换位。 */
 .weapon-armory {
+    --armory-drag: 0px;
     position: absolute;
     inset: 0 0 68px;
     z-index: 2;
@@ -99,6 +100,12 @@
     transform-style: preserve-3d;
     touch-action: pan-y;
     outline: none;
+    transform: translate3d(var(--armory-drag), 0, 0);
+    will-change: transform;
+}
+
+.weapon-armory.is-dragging .armory-weapon {
+    transition: none;
 }
 
 .weapon-armory:focus-visible {

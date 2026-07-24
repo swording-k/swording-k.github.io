@@ -35,3 +35,15 @@ test("armory CSS defines center and side display slots", async () => {
     assert.match(css, /\.weapon-armory/);
     assert.match(css, /\.armory-readout/);
 });
+
+test("armory controller supports drag, click, keyboard, and persistence", async () => {
+    const js = await load("../js/main.js");
+
+    assert.match(js, /import\(["']\.\/weapon-armory-state\.mjs["']\)/);
+    assert.match(js, /setPointerCapture/);
+    assert.match(js, /ArrowLeft/);
+    assert.match(js, /ArrowRight/);
+    assert.match(js, /baojian:selected-weapon/);
+    assert.match(js, /new CustomEvent\(["']weaponchange["']/);
+    assert.match(js, /initWeaponArmory\(\)/);
+});

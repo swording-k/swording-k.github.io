@@ -843,6 +843,150 @@
         sections.forEach((s) => observer.observe(s));
     }
 
+    // --- Three-Weapon Hero Armory ---
+    async function initWeaponArmory() {
+        const armory = document.querySelector(".weapon-armory");
+        const options = [...document.querySelectorAll(".armory-weapon")];
+        const eyebrow = document.getElementById("armoryEyebrow");
+        const name = document.getElementById("armoryName");
+        const description = document.getElementById("armoryDescription");
+        if (!armory || options.length !== 3 || !eyebrow || !name || !description) return;
+
+        try {
+            const [stateModule, dataModule] = await Promise.all([
+                import("./weapon-armory-state.mjs"),
+                import("./weapon-armory-data.mjs")
+            ]);
+            const { resolveDrag, resolveStoredWeapon, stepWeapon, STORAGE_KEY } = stateModule;
+            const { WEAPONS, getWeapon } = dataModule;
+            const storageKey = STORAGE_KEY || "baojian:selected-weapon";
+            let selectedId;
+
+            try {
+                selectedId = resolveStoredWeapon(window.localStorage.getItem(storageKey));
+            } catch (_) {
+                selectedId = resolveStoredWeapon(null);
+            }
+
+            function persistSelection() {
+                try {
+                    window.localStorage.setItem(storageKey, selectedId);
+                } catch (_) {
+                    // Private browsing and locked-down storage keep the in-memory selection.
+                }
+            }
+
+            function renderSelection({ persist = true, announce = true } = {}) {
+                const selectedIndex = WEAPONS.findIndex((weapon) => weapon.id === selectedId);
+                const selectedWeapon = getWeapon(selectedId);
+
+                options.forEach((option) => {
+                    const optionIndex = WEAPONS.findIndex((weapon) => weapon.id === option.dataset.weaponId);
+                    const slot = optionIndex === selectedIndex
+                        ? "center"
+                        : optionIndex === ((selectedIndex + 1) % WEAPONS.length)
+                            ? "right"
+                            : "left";
+                    option.dataset.slot = slot;
+                    option.setAttribute("aria-selected", String(slot === "center"));
+                });
+
+                eyebrow.textContent = selectedWeapon.eyebrow;
+                name.textContent = selectedWeapon.name;
+                description.textContent = selectedWeapon.description;
+                document.documentElement.dataset.selectedWeapon = selectedWeapon.id;
+                if (persist) persistSelection();
+                if (announce) {
+                    window.dispatchEvent(new CustomEvent("weaponchange", {
+                        detail: { weapon: selectedWeapon }
+                    }));
+                }
+            }
+
+            function selectWeapon(nextId) {
+                const resolved = resolveStoredWeapon(nextId);
+                if (resolved === selectedId) return;
+                selectedId = resolved;
+                renderSelection();
+            }
+
+            let dragging = false;
+            let startX = 0;
+            let startTime = 0;
+            let dragDistance = 0;
+            let lastDragAt = 0;
+
+            armory.addEventListener("pointerdown", (event) => {
+                if (event.button !== undefined && event.button !== 0) return;
+                dragging = true;
+                startX = event.clientX;
+                startTime = performance.now();
+                dragDistance = 0;
+                armory.classList.add("is-dragging");
+                armory.setPointerCapture?.(event.pointerId);
+            });
+
+            armory.addEventListener("pointermove", (event) => {
+                if (!dragging) return;
+                dragDistance = event.clientX - startX;
+                armory.style.setProperty("--armory-drag", `${dragDistance * 0.42}px`);
+                if (Math.abs(dragDistance) > 5) event.preventDefault();
+            });
+
+            function settleDrag(event) {
+                if (!dragging) return;
+                dragging = false;
+                armory.classList.remove("is-dragging");
+                if (event?.pointerId !== undefined) armory.releasePointerCapture?.(event.pointerId);
+                const elapsed = Math.max(performance.now() - startTime, 1);
+                const direction = resolveDrag({
+                    distance: dragDistance,
+                    width: armory.getBoundingClientRect().width,
+                    velocity: dragDistance / elapsed
+                });
+                if (direction !== 0) {
+                    selectedId = stepWeapon(selectedId, direction);
+                    renderSelection();
+                    lastDragAt = Date.now();
+                }
+
+                if (window.gsap && !prefersReducedMotion) {
+                    window.gsap.to(armory, {
+                        "--armory-drag": "0px",
+                        duration: 0.42,
+                        ease: "power3.out",
+                        overwrite: "auto"
+                    });
+                } else {
+                    armory.style.setProperty("--armory-drag", "0px");
+                }
+                dragDistance = 0;
+            }
+
+            armory.addEventListener("pointerup", settleDrag);
+            armory.addEventListener("pointercancel", settleDrag);
+            armory.addEventListener("lostpointercapture", settleDrag);
+
+            options.forEach((option) => {
+                option.addEventListener("click", () => {
+                    if (Date.now() - lastDragAt < 260) return;
+                    selectWeapon(option.dataset.weaponId);
+                });
+            });
+
+            armory.addEventListener("keydown", (event) => {
+                if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                event.preventDefault();
+                selectedId = stepWeapon(selectedId, event.key === "ArrowRight" ? 1 : -1);
+                renderSelection();
+            });
+
+            renderSelection({ persist: false });
+        } catch (error) {
+            console.warn("[weapon-armory] 武器库模块加载失败，已保留默认狼首长剑：", error);
+        }
+    }
+
     // --- Global Sword Cinematic Background ---
     async function initGlobalSwordCinematic() {
         if (prefersReducedMotion || !hasGsap) return;
@@ -1211,6 +1355,7 @@
             initCardGlare();
             initHeroGleam();
             initSectionEnterFX();
+            initWeaponArmory();
             initGlobalSwordCinematic();
         } catch (e) {
             console.warn("[init] 非核心初始化异常，已降级：", e);
