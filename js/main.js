@@ -843,6 +843,94 @@
         sections.forEach((s) => observer.observe(s));
     }
 
+    // --- Global Sword Cinematic Background ---
+    function initGlobalSwordCinematic() {
+        if (prefersReducedMotion || !hasGsap) return;
+
+        const stage = document.querySelector(".global-sword-stage");
+        const rig = stage?.querySelector(".sword-rig");
+        const parallax = stage?.querySelector(".sword-parallax");
+        if (!stage || !rig) return;
+
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+
+        const keyframes = Object.freeze([
+            { progress: 0, xPercent: -8, yPercent: 35, scale: 1.45, rotation: -1.5 },
+            { progress: 0.25, xPercent: 5, yPercent: 15, scale: 1.6, rotation: 0.8 },
+            { progress: 0.5, xPercent: -4, yPercent: -2, scale: 1.75, rotation: -0.5 },
+            { progress: 0.75, xPercent: 6, yPercent: -18, scale: 1.8, rotation: 0.4 },
+            { progress: 1, xPercent: 0, yPercent: -32, scale: 1.6, rotation: 0 }
+        ]);
+
+        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+        function interpolate(progress) {
+            const clamped = clamp(progress, 0, 1);
+            const upperIndex = keyframes.findIndex((k) => k.progress >= clamped);
+            const lowerIndex = upperIndex <= 0 ? 0 : upperIndex - 1;
+            const upper = keyframes[upperIndex];
+            const lower = keyframes[lowerIndex];
+            if (upper === lower) return upper;
+            const t = (clamped - lower.progress) / (upper.progress - lower.progress);
+            return Object.fromEntries(
+                Object.keys(lower).map((key) => [
+                    key,
+                    key === "progress" ? clamped : lower[key] + (upper[key] - lower[key]) * t
+                ])
+            );
+        }
+
+        function applyCamera(progress) {
+            const cam = interpolate(progress);
+            gsap.set(rig, {
+                xPercent: cam.xPercent,
+                yPercent: cam.yPercent,
+                scale: cam.scale,
+                rotation: cam.rotation,
+                force3D: true
+            });
+        }
+
+        applyCamera(0);
+
+        const cameraState = { progress: 0 };
+        gsap.to(cameraState, {
+            progress: 1,
+            ease: "none",
+            onUpdate: () => applyCamera(cameraState.progress),
+            scrollTrigger: {
+                trigger: document.body,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.8,
+                invalidateOnRefresh: true
+            }
+        });
+
+        let pointerTween;
+        const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+
+        function handlePointer(event) {
+            if (!isFinePointer || !parallax) return;
+            const x = (event.clientX / window.innerWidth) - 0.5;
+            const y = (event.clientY / window.innerHeight) - 0.5;
+            pointerTween?.kill();
+            pointerTween = gsap.to(parallax, {
+                x: x * 14,
+                y: y * 10,
+                rotationY: x * 1.8,
+                rotationX: y * -1.2,
+                transformPerspective: 1000,
+                duration: 0.8,
+                ease: "power3.out",
+                overwrite: true
+            });
+        }
+
+        window.addEventListener("pointermove", handlePointer, { passive: true });
+    }
+
     async function copyImageToClipboard(src, button, fallbackLink) {
         setCopyButtonState(button, "复制中...");
 
@@ -1014,6 +1102,7 @@
             initCardGlare();
             initHeroGleam();
             initSectionEnterFX();
+            initGlobalSwordCinematic();
         } catch (e) {
             console.warn("[init] 非核心初始化异常，已降级：", e);
         }
