@@ -12,6 +12,8 @@ test("hero exposes a semantic three-weapon armory", async () => {
     assert.equal((html.match(/role="option"/g) ?? []).length, 3);
     assert.equal((html.match(/aria-selected="true"/g) ?? []).length, 1);
     assert.match(html, /class="armory-readout"[^>]+aria-live="polite"/);
+    assert.match(html, /aria-label="长爪"/);
+    assert.doesNotMatch(html, /狼首长剑/);
 });
 
 test("armory includes the three approved weapon assets", async () => {
@@ -46,4 +48,12 @@ test("armory controller supports drag, click, keyboard, and persistence", async 
     assert.match(js, /baojian:selected-weapon/);
     assert.match(js, /new CustomEvent\(["']weaponchange["']/);
     assert.match(js, /initWeaponArmory\(\)/);
+});
+
+test("armory preserves vertical touch scrolling and reduces motion on request", async () => {
+    const css = await load("../css/sword-background.css");
+
+    assert.match(css, /touch-action:\s*pan-y/);
+    assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.weapon-armory/);
+    assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.armory-weapon/);
 });

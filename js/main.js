@@ -994,18 +994,30 @@
         const stage = document.querySelector(".global-sword-stage");
         const camera = stage?.querySelector(".sword-camera");
         const sword = stage?.querySelector('[data-sword-role="background"]');
-        const showcaseSword = document.querySelector('[data-sword-role="showcase"]');
+        const ghost = stage?.querySelector(".sword-ghost");
+        const armory = document.querySelector(".weapon-armory");
         const hero = document.getElementById("hero");
         const about = document.getElementById("about");
         const contact = document.getElementById("contact");
         const heroArtifact = document.querySelector(".hero-artifact");
-        if (!stage || !camera || !sword || !showcaseSword || !hero || !about || !contact || !heroArtifact) return;
+        if (!stage || !camera || !sword || !ghost || !armory || !hero || !about || !contact || !heroArtifact) return;
+
+        let pendingWeapon = null;
+        let applyWeaponSelection = null;
+        const handleWeaponChange = (event) => {
+            if (!event.detail?.weapon) return;
+            pendingWeapon = event.detail.weapon;
+            applyWeaponSelection?.(pendingWeapon);
+        };
+        window.addEventListener("weaponchange", handleWeaponChange);
 
         try {
             const {
+                interpolateCameraStops,
                 interpolateHandoffCamera,
                 interpolateIntegrationCamera
             } = await import("./sword-integration-camera.mjs");
+            const { getWeapon } = await import("./weapon-armory-data.mjs");
             const gsap = window.gsap;
             const ScrollTrigger = window.ScrollTrigger;
             gsap.registerPlugin(ScrollTrigger);
@@ -1013,6 +1025,18 @@
             const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
             const lerp = (from, to, progress) => from + ((to - from) * progress);
             const sectionSelectors = ["#about", "#projects", ".life-section", "#contact"];
+            let selectedWeapon = pendingWeapon || getWeapon(
+                document.documentElement.dataset.selectedWeapon
+                    || armory.querySelector('[data-slot="center"]')?.dataset.weaponId
+            );
+
+            applyWeaponSelection = (weapon) => {
+                selectedWeapon = getWeapon(weapon?.id);
+                sword.src = selectedWeapon.image;
+                sword.dataset.weaponId = selectedWeapon.id;
+                ghost.style.backgroundImage = `url("${selectedWeapon.image}")`;
+            };
+            applyWeaponSelection(selectedWeapon);
 
             function buildSwordSectionStops() {
                 const sections = sectionSelectors
@@ -1049,7 +1073,7 @@
             );
 
             const applyStoryCamera = (progress, motionScale, xBias) => {
-                const cam = interpolateIntegrationCamera(progress);
+                const cam = interpolateCameraStops(selectedWeapon.cameraStops, progress);
                 gsap.set(sword, {
                     xPercent: (cam.xPercent * motionScale) + xBias,
                     yPercent: cam.yPercent * motionScale,
@@ -1071,7 +1095,6 @@
                 const startPose = isMobile
                     ? { xPercent: 48, yPercent: -23, scale: 0.22, rotation: 0 }
                     : { xPercent: 37, yPercent: -29, scale: 0.27, rotation: 0 };
-                const firstCamera = interpolateIntegrationCamera(0);
                 const handoffState = { progress: 0 };
                 const storyState = { progress: 0 };
                 let sectionStops = buildSwordSectionStops();
@@ -1088,9 +1111,10 @@
                     const progress = clamp(handoffState.progress, 0, 1);
                     const backgroundPresence = clamp((progress - 0.08) / 0.56, 0, 1);
                     const showcasePresence = 1 - clamp((progress - 0.12) / 0.5, 0, 1);
+                    const firstCamera = interpolateCameraStops(selectedWeapon.cameraStops, 0);
                     document.documentElement.style.setProperty("--sword-handoff", progress.toFixed(4));
                     gsap.set(stage, { opacity: backgroundPresence });
-                    gsap.set(showcaseSword, { opacity: showcasePresence });
+                    gsap.set(armory, { opacity: showcasePresence });
                     gsap.set(heroChrome, { opacity: 1 - clamp(progress / 0.82, 0, 1) });
                     const handoffPose = isMobile
                         ? {
@@ -1100,7 +1124,7 @@
                             rotation: lerp(startPose.rotation, firstCamera.rotation * motionScale, progress),
                             opacity: firstCamera.opacity
                         }
-                        : interpolateHandoffCamera(progress);
+                        : interpolateHandoffCamera(progress, selectedWeapon.cameraStops);
                     gsap.set(sword, {
                         xPercent: handoffPose.xPercent,
                         yPercent: handoffPose.yPercent,
@@ -1175,7 +1199,7 @@
                     storyTween.kill();
                     pointerTween?.kill();
                     window.removeEventListener("pointermove", handlePointer);
-                    gsap.set([...heroChrome, showcaseSword, stage, sword, camera], { clearProps: "all" });
+                    gsap.set([...heroChrome, armory, stage, sword, camera], { clearProps: "all" });
                     document.documentElement.style.removeProperty("--sword-handoff");
                 };
             });

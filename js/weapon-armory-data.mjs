@@ -18,9 +18,9 @@ export const DEFAULT_WEAPON_ID = "wolf-longsword";
 export const WEAPONS = Object.freeze([
     Object.freeze({
         id: DEFAULT_WEAPON_ID,
-        name: "狼首长剑",
-        eyebrow: "THE NORTH / 01",
-        description: "冷灰钢与旧皮革，一把经历过风雪的守誓之剑。",
+        name: "长爪",
+        eyebrow: "LONGCLAW · THE NORTH / 01",
+        description: "《权力的游戏》中琼恩·雪诺的佩剑，原属莫尔蒙家族。冷灰钢与旧皮革，一把经历过风霜的守誓之剑。",
         image: "images/longclaw-screen-used-weathered-v2-transparent.png",
         showcase: Object.freeze({ scale: 1, rotation: 0, yPercent: 0 }),
         cameraStops: freezeStops([
@@ -35,7 +35,7 @@ export const WEAPONS = Object.freeze([
         id: "goujian",
         name: "越王勾践剑",
         eyebrow: "YUE · 496 BC / 02",
-        description: "黑色菱纹与青铜锋芒，穿过两千年的王者之剑。",
+        description: "湖北省博物馆镇馆之宝，春秋晚期越王勾践自作用剑。黑色菱纹历经两千五百年仍寒光凛凛。",
         image: "images/goujian-armory-transparent.webp",
         showcase: Object.freeze({ scale: 0.94, rotation: -1.2, yPercent: 1 }),
         cameraStops: freezeStops([
@@ -50,7 +50,7 @@ export const WEAPONS = Object.freeze([
         id: "wado-ichimonji",
         name: "和道一文字",
         eyebrow: "SHIMOTSUKI / 03",
-        description: "白柄、黑鞘与一线冷光，克制而坚定。",
+        description: "《海贼王》中索隆从古伊娜处继承的名刀，大快刀二十一工之一。白柄、黑鞘与一线冷光，克制而坚定。",
         image: "images/wado-ichimonji-armory-transparent.webp",
         showcase: Object.freeze({ scale: 0.9, rotation: 1.4, yPercent: 0 }),
         cameraStops: freezeStops([

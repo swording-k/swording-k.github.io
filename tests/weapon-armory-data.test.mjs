@@ -39,3 +39,20 @@ test("unknown weapon IDs fall back to the wolf longsword", () => {
     assert.equal(getWeapon("invalid").id, DEFAULT_WEAPON_ID);
     assert.equal(getWeapon().id, DEFAULT_WEAPON_ID);
 });
+
+test("weapon copy uses canonical names and explains each origin", () => {
+    const longclaw = getWeapon("wolf-longsword");
+    const goujian = getWeapon("goujian");
+    const wado = getWeapon("wado-ichimonji");
+
+    assert.equal(longclaw.name, "长爪");
+    assert.match(longclaw.description, /《权力的游戏》/);
+    assert.match(longclaw.description, /琼恩·雪诺/);
+    assert.match(longclaw.description, /守誓之剑/);
+    assert.equal(goujian.name, "越王勾践剑");
+    assert.match(goujian.description, /湖北省博物馆/);
+    assert.match(goujian.description, /寒光/);
+    assert.equal(wado.name, "和道一文字");
+    assert.match(wado.description, /索隆/);
+    assert.match(wado.description, /古伊娜/);
+});

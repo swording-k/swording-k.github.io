@@ -25,8 +25,8 @@ test("showcase and background use the same transparent sword asset", async () =>
 
     assert.match(html, new RegExp(`data-sword-role="background"[^>]+src="${asset.replaceAll(".", "\\.")}"`));
     assert.match(html, new RegExp(`data-sword-role="showcase"[^>]+src="${asset.replaceAll(".", "\\.")}"`));
-    assert.match(html, /css\/sword-background\.css\?v=20260724-shared-sword-v2/);
-    assert.match(html, /js\/main\.js\?v=20260724-shared-sword-v2/);
+    assert.match(html, /css\/sword-background\.css\?v=20260724-three-armory-v1/);
+    assert.match(html, /js\/main\.js\?v=20260724-three-armory-v1/);
 });
 
 test("hero showcase hands off to the cinematic background with linear scroll motion", async () => {
@@ -39,6 +39,16 @@ test("hero showcase hands off to the cinematic background with linear scroll mot
     assert.match(js, /trigger:\s*hero/);
     assert.match(js, /ease:\s*["']none["']/);
     assert.match(js, /--sword-handoff/);
+});
+
+test("selected armory weapon controls the cinematic asset and camera stops", async () => {
+    const js = await load("../js/main.js");
+
+    assert.match(js, /import\(["']\.\/weapon-armory-data\.mjs["']\)/);
+    assert.match(js, /addEventListener\(["']weaponchange["']/);
+    assert.match(js, /selectedWeapon\.image/);
+    assert.match(js, /selectedWeapon\.cameraStops/);
+    assert.match(js, /interpolateCameraStops/);
 });
 
 test("sword camera is section-aware and has mobile and reduced-motion fallbacks", async () => {

@@ -3,9 +3,26 @@ import assert from "node:assert/strict";
 
 import {
     integrationCameraStops,
+    interpolateCameraStops,
     interpolateHandoffCamera,
     interpolateIntegrationCamera,
 } from "../js/sword-integration-camera.mjs";
+
+test("generic camera interpolator follows supplied weapon stops", () => {
+    const customStops = [
+        { progress: 0, camera: { xPercent: 0, yPercent: 10, scale: 1, rotation: 0, opacity: 1 } },
+        { progress: 1, camera: { xPercent: 20, yPercent: -30, scale: 0.8, rotation: 2, opacity: 0.6 } },
+    ];
+    assert.deepEqual(interpolateCameraStops(customStops, -1), customStops[0].camera);
+    assert.deepEqual(interpolateCameraStops(customStops, 2), customStops[1].camera);
+    assert.deepEqual(interpolateCameraStops(customStops, 0.5), {
+        xPercent: 10,
+        yPercent: -10,
+        scale: 0.9,
+        rotation: 1,
+        opacity: 0.8,
+    });
+});
 
 test("integration camera stops cover the full story in order", () => {
     assert.equal(integrationCameraStops.length, 5);
