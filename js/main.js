@@ -855,17 +855,19 @@
         const gsap = window.gsap;
         const ScrollTrigger = window.ScrollTrigger;
 
-        const keyframes = Object.freeze([
-            { progress: 0, xPercent: -8, yPercent: 35, scale: 1.45, rotation: -1.5 },
-            { progress: 0.25, xPercent: 5, yPercent: 15, scale: 1.6, rotation: 0.8 },
-            { progress: 0.5, xPercent: -4, yPercent: -2, scale: 1.75, rotation: -0.5 },
-            { progress: 0.75, xPercent: 6, yPercent: -18, scale: 1.8, rotation: 0.4 },
-            { progress: 1, xPercent: 0, yPercent: -32, scale: 1.6, rotation: 0 }
+        // 镜头关键帧：progress 0（页顶）= 剑柄/护手区；progress 1（页底）= 剑尖。
+        // 剑身容器 300vh，±40% translate 正好让镜头从剑柄扫到剑尖。
+        const desktopKeyframes = Object.freeze([
+            { progress: 0,    xPercent: -16, yPercent:  40, scale: 2.40, rotation: -1.6 },
+            { progress: 0.22, xPercent:   8, yPercent:  20, scale: 2.55, rotation:  0.9 },
+            { progress: 0.45, xPercent:  -6, yPercent:   4, scale: 2.70, rotation: -0.7 },
+            { progress: 0.70, xPercent:  10, yPercent: -18, scale: 2.55, rotation:  0.8 },
+            { progress: 1,    xPercent:   0, yPercent: -40, scale: 2.35, rotation:  0.0 }
         ]);
 
         const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
-        function interpolate(progress) {
+        function interpolateCamera(progress, keyframes) {
             const clamped = clamp(progress, 0, 1);
             const upperIndex = keyframes.findIndex((k) => k.progress >= clamped);
             const lowerIndex = upperIndex <= 0 ? 0 : upperIndex - 1;
@@ -874,61 +876,79 @@
             if (upper === lower) return upper;
             const t = (clamped - lower.progress) / (upper.progress - lower.progress);
             return Object.fromEntries(
-                Object.keys(lower).map((key) => [
+                Object.keys(lower.camera || lower).map((key) => [
                     key,
                     key === "progress" ? clamped : lower[key] + (upper[key] - lower[key]) * t
                 ])
             );
         }
 
-        function applyCamera(progress) {
-            const cam = interpolate(progress);
+        function applyCamera(progress, keyframes, motionScale = 1) {
+            const cam = interpolateCamera(progress, keyframes);
             gsap.set(rig, {
-                xPercent: cam.xPercent,
-                yPercent: cam.yPercent,
-                scale: cam.scale,
-                rotation: cam.rotation,
+                xPercent: cam.xPercent * motionScale,
+                yPercent: cam.yPercent * motionScale,
+                scale: 1 + ((cam.scale - 1) * motionScale),
+                rotation: cam.rotation * motionScale,
                 force3D: true
             });
         }
 
-        applyCamera(0);
+        const mm = gsap.matchMedia();
+        mm.add({
+            desktop: "(min-width: 761px)",
+            mobile: "(max-width: 760px)"
+        }, (context) => {
+            const isMobile = context.conditions.mobile;
+            const motionScale = isMobile ? 0.78 : 1;
+            const keyframes = desktopKeyframes;
 
-        const cameraState = { progress: 0 };
-        gsap.to(cameraState, {
-            progress: 1,
-            ease: "none",
-            onUpdate: () => applyCamera(cameraState.progress),
-            scrollTrigger: {
-                trigger: document.body,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 0.8,
-                invalidateOnRefresh: true
-            }
-        });
+            applyCamera(0, keyframes, motionScale);
 
-        let pointerTween;
-        const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-
-        function handlePointer(event) {
-            if (!isFinePointer || !parallax) return;
-            const x = (event.clientX / window.innerWidth) - 0.5;
-            const y = (event.clientY / window.innerHeight) - 0.5;
-            pointerTween?.kill();
-            pointerTween = gsap.to(parallax, {
-                x: x * 14,
-                y: y * 10,
-                rotationY: x * 1.8,
-                rotationX: y * -1.2,
-                transformPerspective: 1000,
-                duration: 0.8,
-                ease: "power3.out",
-                overwrite: true
+            const cameraState = { progress: 0 };
+            const cameraTween = gsap.to(cameraState, {
+                progress: 1,
+                ease: "none",
+                onUpdate: () => applyCamera(cameraState.progress, keyframes, motionScale),
+                scrollTrigger: {
+                    trigger: document.body,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 0.85,
+                    invalidateOnRefresh: true
+                }
             });
-        }
 
-        window.addEventListener("pointermove", handlePointer, { passive: true });
+            let pointerTween;
+            const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+
+            function handlePointer(event) {
+                if (!isFinePointer || !parallax) return;
+                const x = (event.clientX / window.innerWidth) - 0.5;
+                const y = (event.clientY / window.innerHeight) - 0.5;
+                pointerTween?.kill();
+                pointerTween = gsap.to(parallax, {
+                    x: x * 18,
+                    y: y * 12,
+                    rotationY: x * 2.0,
+                    rotationX: y * -1.4,
+                    transformPerspective: 1100,
+                    duration: 0.78,
+                    ease: "power3.out",
+                    overwrite: true
+                });
+            }
+
+            if (!isMobile) {
+                window.addEventListener("pointermove", handlePointer, { passive: true });
+            }
+
+            return () => {
+                cameraTween.kill();
+                pointerTween?.kill();
+                window.removeEventListener("pointermove", handlePointer);
+            };
+        });
     }
 
     async function copyImageToClipboard(src, button, fallbackLink) {
