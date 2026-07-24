@@ -123,13 +123,26 @@
                 </div>
 
                 <aside class="hero-stage hero-console hero-artifact reveal" aria-label="锟铻宝剑个人符号与能力摘要">
-                    <div class="blade-stage" aria-hidden="true">
+                    <div class="blade-stage">
                         <div class="blade-aura"></div>
                         <div class="blade-orbit"></div>
-                        <div class="blade-object">
-                            <img class="kunwu-sword-photo" data-sword-role="showcase" src="images/longclaw-screen-used-weathered-v2-transparent.png" alt="">
+                        <div class="weapon-armory" role="listbox" tabindex="0" aria-label="选择个人藏剑">
+                            <button class="armory-weapon" type="button" role="option" aria-label="和道一文字" aria-selected="false" data-weapon-id="wado-ichimonji" data-slot="left">
+                                <img src="images/wado-ichimonji-armory-transparent.webp" alt="" draggable="false" decoding="async">
+                            </button>
+                            <button class="armory-weapon" type="button" role="option" aria-label="狼首长剑" aria-selected="true" data-weapon-id="wolf-longsword" data-slot="center">
+                                <img class="kunwu-sword-photo" data-sword-role="showcase" src="images/longclaw-screen-used-weathered-v2-transparent.png" alt="" draggable="false" decoding="async">
+                            </button>
+                            <button class="armory-weapon" type="button" role="option" aria-label="越王勾践剑" aria-selected="false" data-weapon-id="goujian" data-slot="right">
+                                <img src="images/goujian-armory-transparent.webp" alt="" draggable="false" decoding="async">
+                            </button>
                         </div>
-                        <div class="blade-hint">move to inspect</div>
+                        <div class="armory-readout" aria-live="polite">
+                            <span id="armoryEyebrow">THE NORTH / 01</span>
+                            <strong id="armoryName">狼首长剑</strong>
+                            <p id="armoryDescription">冷灰钢与旧皮革，一把经历过风雪的守誓之剑。</p>
+                        </div>
+                        <div class="blade-hint">drag · click · ← →</div>
                     </div>
                     <div class="console-topbar artifact-label">
                         <strong>kunwu.blade</strong>
