@@ -25,14 +25,16 @@ test("showcase and background use the same transparent sword asset", async () =>
 
     assert.match(html, new RegExp(`data-sword-role="background"[^>]+src="${asset.replaceAll(".", "\\.")}"`));
     assert.match(html, new RegExp(`data-sword-role="showcase"[^>]+src="${asset.replaceAll(".", "\\.")}"`));
-    assert.match(html, /css\/sword-background\.css\?v=20260724-shared-sword/);
-    assert.match(html, /js\/main\.js\?v=20260724-shared-sword/);
+    assert.match(html, /css\/sword-background\.css\?v=20260724-shared-sword-v2/);
+    assert.match(html, /js\/main\.js\?v=20260724-shared-sword-v2/);
 });
 
 test("hero showcase hands off to the cinematic background with linear scroll motion", async () => {
     const js = await load("../js/main.js");
 
     assert.match(js, /import\(["']\.\/sword-integration-camera\.mjs["']\)/);
+    assert.match(js, /interpolateHandoffCamera/);
+    assert.match(js, /const handoffPose = isMobile/);
     assert.match(js, /id:\s*["']sword-handoff["']/);
     assert.match(js, /trigger:\s*hero/);
     assert.match(js, /ease:\s*["']none["']/);
@@ -53,4 +55,12 @@ test("sword camera is section-aware and has mobile and reduced-motion fallbacks"
     assert.match(css, /--sword-handoff/);
     assert.match(css, /@media \(max-width: 760px\)/);
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+});
+
+test("desktop project glass preserves sword detail instead of blurring it away", async () => {
+    const css = await load("../css/sword-background.css");
+
+    assert.match(css, /body:has\(\.global-sword-stage\) \.projects :is\(\.featured-project, \.showcase-rail, \.project-card\)/);
+    assert.match(css, /backdrop-filter:\s*blur\(2px\)/);
+    assert.match(css, /rgba\(7, 9, 11, 0\.34\)/);
 });

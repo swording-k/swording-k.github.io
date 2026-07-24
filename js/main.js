@@ -858,7 +858,10 @@
         if (!stage || !camera || !sword || !showcaseSword || !hero || !about || !contact || !heroArtifact) return;
 
         try {
-            const { interpolateIntegrationCamera } = await import("./sword-integration-camera.mjs");
+            const {
+                interpolateHandoffCamera,
+                interpolateIntegrationCamera
+            } = await import("./sword-integration-camera.mjs");
             const gsap = window.gsap;
             const ScrollTrigger = window.ScrollTrigger;
             gsap.registerPlugin(ScrollTrigger);
@@ -945,12 +948,21 @@
                     gsap.set(stage, { opacity: backgroundPresence });
                     gsap.set(showcaseSword, { opacity: showcasePresence });
                     gsap.set(heroChrome, { opacity: 1 - clamp(progress / 0.82, 0, 1) });
+                    const handoffPose = isMobile
+                        ? {
+                            xPercent: lerp(startPose.xPercent, (firstCamera.xPercent * motionScale) + xBias, progress),
+                            yPercent: lerp(startPose.yPercent, firstCamera.yPercent * motionScale, progress),
+                            scale: lerp(startPose.scale, 1 + ((firstCamera.scale - 1) * motionScale), progress),
+                            rotation: lerp(startPose.rotation, firstCamera.rotation * motionScale, progress),
+                            opacity: firstCamera.opacity
+                        }
+                        : interpolateHandoffCamera(progress);
                     gsap.set(sword, {
-                        xPercent: lerp(startPose.xPercent, (firstCamera.xPercent * motionScale) + xBias, progress),
-                        yPercent: lerp(startPose.yPercent, firstCamera.yPercent * motionScale, progress),
-                        scale: lerp(startPose.scale, 1 + ((firstCamera.scale - 1) * motionScale), progress),
-                        rotation: lerp(startPose.rotation, firstCamera.rotation * motionScale, progress),
-                        opacity: backgroundPresence * firstCamera.opacity,
+                        xPercent: handoffPose.xPercent,
+                        yPercent: handoffPose.yPercent,
+                        scale: handoffPose.scale,
+                        rotation: handoffPose.rotation,
+                        opacity: backgroundPresence * Math.max(handoffPose.opacity, firstCamera.opacity * 0.72),
                         force3D: true
                     });
                 };

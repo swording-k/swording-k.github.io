@@ -197,6 +197,17 @@ body:has(.global-sword-stage) .footer {
     .cinematic-sword { height: 150vh; }
 }
 
+/* 桌面项目区保留玻璃层次，但不再把经过其后的剑纹抹成一团光。 */
+@media (min-width: 761px) {
+    body:has(.global-sword-stage) .projects :is(.featured-project, .showcase-rail, .project-card) {
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+            rgba(7, 9, 11, 0.34) !important;
+        backdrop-filter: blur(2px) !important;
+        -webkit-backdrop-filter: blur(2px) !important;
+    }
+}
+
 /* 减少动效偏好：保留静态背景，关闭动画与微视差 */
 @media (prefers-reduced-motion: reduce) {
     :root { --sword-handoff: 1; }
