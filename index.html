@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=20260721-icons">
-    <link rel="stylesheet" href="css/sword-background.css?v=20260724d">
+    <link rel="stylesheet" href="css/sword-background.css?v=20260724-shared-sword">
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -25,7 +25,7 @@
             <div class="sword-ghost"></div>
         </div>
         <div class="sword-camera">
-            <img class="cinematic-sword" src="images/kunwu-heaven-pillar-transparent.png?v=3" alt="" width="824" height="1908" decoding="async">
+            <img class="cinematic-sword" data-sword-role="background" src="images/longclaw-screen-used-weathered-v2-transparent.png" alt="" width="853" height="1844" decoding="async">
         </div>
         <div class="blade-sheen" aria-hidden="true"></div>
         <div class="sword-atmosphere" aria-hidden="true">
@@ -127,7 +127,7 @@
                         <div class="blade-aura"></div>
                         <div class="blade-orbit"></div>
                         <div class="blade-object">
-                            <img class="kunwu-sword-photo" src="images/kunwu-blade-real.png" alt="">
+                            <img class="kunwu-sword-photo" data-sword-role="showcase" src="images/longclaw-screen-used-weathered-v2-transparent.png" alt="">
                         </div>
                         <div class="blade-hint">move to inspect</div>
                     </div>
@@ -709,6 +709,6 @@
 
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>
-    <script src="js/main.js?v=20260724d-sword"></script>
+    <script src="js/main.js?v=20260724-shared-sword"></script>
 </body>
 </html>

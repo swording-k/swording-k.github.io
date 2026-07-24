@@ -1,11 +1,14 @@
 /* =========================================================
-   Global Sword Cinematic Background — v3
+   Shared Sword Cinematic Background — v4
    ---------------------------------------------------------
-   透明底「昆吾天罡剑」作全站固定背景。主剑高 210vh，滚动时
-   镜头从剑柄（图上方）沿剑身扫到剑尖（图下方）；另配一道极淡的
-   全剑虚影作「地图」，保证任何时候都能一眼认出这是一把剑。
+   首页展台和全站背景使用同一透明狼首剑。Hero 滚动时由展品
+   交接成固定巨剑，随后镜头从剑柄沿剑身扫到剑尖。
    所有装饰层 aria-hidden、pointer-events:none。
    ========================================================= */
+
+:root {
+    --sword-handoff: 0;
+}
 
 /* 舞台：固定铺满视口，置于内容之后 */
 .global-sword-stage {
@@ -15,6 +18,8 @@
     overflow: hidden;
     pointer-events: none;
     background: var(--bg, #050608);
+    opacity: 0;
+    will-change: opacity;
 }
 
 .global-sword-stage,
@@ -35,9 +40,9 @@
 }
 
 .sword-ghost {
-    width: 40.5vh;
+    width: 43.5vh;
     height: 94vh;
-    background-image: url('../images/kunwu-heaven-pillar-transparent.png?v=3');
+    background-image: url('../images/longclaw-screen-used-weathered-v2-transparent.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -58,16 +63,30 @@
 }
 
 .cinematic-sword {
-    height: 210vh;
+    height: 220vh;
     width: auto;
     max-width: none;
     display: block;
     object-fit: contain;
     transform-origin: 50% 50%;
-    filter: saturate(0.95) contrast(1.08) brightness(0.78);
+    filter: saturate(0.82) contrast(1.1) brightness(0.86);
     user-select: none;
     -webkit-user-drag: none;
     will-change: transform;
+}
+
+.hero-artifact [data-sword-role="showcase"],
+.hero-artifact .console-topbar,
+.hero-artifact .console-body,
+.hero-artifact .stage-caption,
+.hero-artifact .blade-aura,
+.hero-artifact .blade-orbit,
+.hero-artifact .blade-hint {
+    will-change: transform, opacity;
+}
+
+.hero-artifact [data-sword-role="showcase"] {
+    transform-origin: 50% 50%;
 }
 
 /* 刃面呼吸扫光：让金属有生命，但始终克制 */
@@ -146,24 +165,22 @@ body:has(.global-sword-stage) .footer {
 
 /* 大屏：主剑再大一点，虚影略收 */
 @media (min-width: 1600px) {
-    .cinematic-sword { height: 232vh; }
+    .cinematic-sword { height: 238vh; }
     .sword-ghost { width: 40.5vh; height: 92vh; opacity: 0.09; }
 }
 
 /* 平板：适度缩小 */
 @media (max-width: 1024px) {
-    .cinematic-sword { height: 184vh; }
+    .cinematic-sword { height: 190vh; }
     .sword-ghost { opacity: 0.08; }
     .sword-halo { opacity: 0.6; }
 }
 
 /* 移动端：降低存在感与运动幅度 */
 @media (max-width: 760px) {
-    .global-sword-stage { opacity: 0.5; }
-
     .cinematic-sword {
-        height: 156vh;
-        filter: saturate(0.85) contrast(1.04) brightness(0.68);
+        height: 164vh;
+        filter: saturate(0.78) contrast(1.06) brightness(0.72);
     }
 
     .sword-ghost { opacity: 0.06; }
@@ -177,13 +194,13 @@ body:has(.global-sword-stage) .footer {
 }
 
 @media (max-width: 480px) {
-    .global-sword-stage { opacity: 0.4; }
-    .cinematic-sword { height: 142vh; }
+    .cinematic-sword { height: 150vh; }
 }
 
 /* 减少动效偏好：保留静态背景，关闭动画与微视差 */
 @media (prefers-reduced-motion: reduce) {
-    .global-sword-stage { opacity: 0.3; }
+    :root { --sword-handoff: 1; }
+    .global-sword-stage { opacity: 0.28; }
 
     .blade-sheen,
     .sword-mist { animation: none; }

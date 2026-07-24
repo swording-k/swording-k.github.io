@@ -844,111 +844,188 @@
     }
 
     // --- Global Sword Cinematic Background ---
-    function initGlobalSwordCinematic() {
+    async function initGlobalSwordCinematic() {
         if (prefersReducedMotion || !hasGsap) return;
 
         const stage = document.querySelector(".global-sword-stage");
-        const sword = stage?.querySelector(".cinematic-sword");
-        if (!stage || !sword) return;
+        const camera = stage?.querySelector(".sword-camera");
+        const sword = stage?.querySelector('[data-sword-role="background"]');
+        const showcaseSword = document.querySelector('[data-sword-role="showcase"]');
+        const hero = document.getElementById("hero");
+        const about = document.getElementById("about");
+        const contact = document.getElementById("contact");
+        const heroArtifact = document.querySelector(".hero-artifact");
+        if (!stage || !camera || !sword || !showcaseSword || !hero || !about || !contact || !heroArtifact) return;
 
-        const gsap = window.gsap;
-        const ScrollTrigger = window.ScrollTrigger;
+        try {
+            const { interpolateIntegrationCamera } = await import("./sword-integration-camera.mjs");
+            const gsap = window.gsap;
+            const ScrollTrigger = window.ScrollTrigger;
+            gsap.registerPlugin(ScrollTrigger);
 
-        // 镜头关键帧：progress 0（页顶）= 剑柄（图上方）；progress 1（页底）= 剑尖（图下方）。
-        // 剑图实测朝向为「剑柄在上、剑尖朝下」，故 yPercent 正 = 把剑柄送入视野。
-        // 主剑高 210vh，±30% 平移即可让镜头从剑柄扫到剑尖；另有一道极淡全剑虚影作「地图」，
-        // 保证任何时候都能一眼认出这是一把剑，而不是被放大到只剩一个局部。
-        const desktopKeyframes = Object.freeze([
-            { progress: 0,    xPercent:  -8, yPercent:  30, scale: 1.02, rotation: -1.0 },
-            { progress: 0.25, xPercent:   6, yPercent:  15, scale: 1.05, rotation:  0.5 },
-            { progress: 0.50, xPercent:  -3, yPercent:   0, scale: 1.08, rotation: -0.3 },
-            { progress: 0.75, xPercent:   6, yPercent: -15, scale: 1.05, rotation:  0.4 },
-            { progress: 1,    xPercent:   0, yPercent: -30, scale: 1.02, rotation:  0.0 }
-        ]);
+            const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+            const lerp = (from, to, progress) => from + ((to - from) * progress);
+            const sectionSelectors = ["#about", "#projects", ".life-section", "#contact"];
 
-        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+            function buildSwordSectionStops() {
+                const sections = sectionSelectors
+                    .map((selector) => document.querySelector(selector))
+                    .filter(Boolean)
+                    .sort((a, b) => a.offsetTop - b.offsetTop);
+                const startY = sections[0]?.offsetTop ?? about.offsetTop;
+                const endY = Math.max(contact.offsetTop + contact.offsetHeight - window.innerHeight, startY + 1);
+                const range = endY - startY;
+                const cameraProgress = [0, 0.34, 0.72, 0.88];
+                const stops = sections.map((section, index) => ({
+                    scrollProgress: clamp((section.offsetTop - startY) / range, 0, 1),
+                    cameraProgress: cameraProgress[index]
+                }));
+                stops.push({ scrollProgress: 1, cameraProgress: 1 });
+                return stops;
+            }
 
-        function interpolateCamera(progress, keyframes) {
-            const clamped = clamp(progress, 0, 1);
-            const upperIndex = keyframes.findIndex((k) => k.progress >= clamped);
-            const lowerIndex = upperIndex <= 0 ? 0 : upperIndex - 1;
-            const upper = keyframes[upperIndex];
-            const lower = keyframes[lowerIndex];
-            if (upper === lower) return upper;
-            const t = (clamped - lower.progress) / (upper.progress - lower.progress);
-            return Object.fromEntries(
-                Object.keys(lower).map((key) => [
-                    key,
-                    key === "progress" ? clamped : lower[key] + (upper[key] - lower[key]) * t
-                ])
+            function mapSwordSectionProgress(progress, stops) {
+                const clamped = clamp(progress, 0, 1);
+                const upperIndex = stops.findIndex((stop) => stop.scrollProgress >= clamped);
+                if (upperIndex <= 0) return stops[0].cameraProgress;
+                const lower = stops[upperIndex - 1];
+                const upper = stops[upperIndex];
+                const span = Math.max(upper.scrollProgress - lower.scrollProgress, 0.0001);
+                return lerp(
+                    lower.cameraProgress,
+                    upper.cameraProgress,
+                    (clamped - lower.scrollProgress) / span
+                );
+            }
+            const heroChrome = heroArtifact.querySelectorAll(
+                ".console-topbar, .console-body, .stage-caption, .blade-aura, .blade-orbit, .blade-hint"
             );
-        }
 
-        function applyCamera(progress, keyframes, motionScale = 1) {
-            const cam = interpolateCamera(progress, keyframes);
-            gsap.set(sword, {
-                xPercent: cam.xPercent * motionScale,
-                yPercent: cam.yPercent * motionScale,
-                scale: 1 + ((cam.scale - 1) * motionScale),
-                rotation: cam.rotation * motionScale,
-                force3D: true
-            });
-        }
-
-        const mm = gsap.matchMedia();
-        mm.add({
-            desktop: "(min-width: 761px)",
-            mobile: "(max-width: 760px)"
-        }, (context) => {
-            const isMobile = context.conditions.mobile;
-            const motionScale = isMobile ? 0.72 : 1;
-            const keyframes = desktopKeyframes;
-
-            applyCamera(0, keyframes, motionScale);
-
-            const cameraState = { progress: 0 };
-            gsap.to(cameraState, {
-                progress: 1,
-                ease: "none",
-                onUpdate: () => applyCamera(cameraState.progress, keyframes, motionScale),
-                scrollTrigger: {
-                    trigger: document.body,
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: 0.85,
-                    invalidateOnRefresh: true
-                }
-            });
-
-            let pointerTween;
-            const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-
-            function handlePointer(event) {
-                if (!isFinePointer) return;
-                const x = (event.clientX / window.innerWidth) - 0.5;
-                const y = (event.clientY / window.innerHeight) - 0.5;
-                pointerTween?.kill();
-                pointerTween = gsap.to(sword, {
-                    x: x * 14,
-                    y: y * 10,
-                    rotationY: x * 1.8,
-                    rotationX: y * -1.2,
-                    transformPerspective: 1100,
-                    duration: 0.78,
-                    ease: "power3.out",
-                    overwrite: "auto"
+            const applyStoryCamera = (progress, motionScale, xBias) => {
+                const cam = interpolateIntegrationCamera(progress);
+                gsap.set(sword, {
+                    xPercent: (cam.xPercent * motionScale) + xBias,
+                    yPercent: cam.yPercent * motionScale,
+                    scale: 1 + ((cam.scale - 1) * motionScale),
+                    rotation: cam.rotation * motionScale,
+                    opacity: cam.opacity,
+                    force3D: true
                 });
-            }
-
-            if (!isMobile) {
-                window.addEventListener("pointermove", handlePointer, { passive: true });
-            }
-
-            return () => {
-                pointerTween?.kill();
-                window.removeEventListener("pointermove", handlePointer);
             };
-        });
+
+            const mm = gsap.matchMedia();
+            mm.add({
+                desktop: "(min-width: 761px)",
+                mobile: "(max-width: 760px)"
+            }, (context) => {
+                const isMobile = context.conditions.mobile;
+                const motionScale = isMobile ? 0.72 : 1;
+                const xBias = isMobile ? 8 : 0;
+                const startPose = isMobile
+                    ? { xPercent: 48, yPercent: -23, scale: 0.22, rotation: 0 }
+                    : { xPercent: 37, yPercent: -29, scale: 0.27, rotation: 0 };
+                const firstCamera = interpolateIntegrationCamera(0);
+                const handoffState = { progress: 0 };
+                const storyState = { progress: 0 };
+                let sectionStops = buildSwordSectionStops();
+                const storyStart = sectionSelectors
+                    .map((selector) => document.querySelector(selector))
+                    .filter(Boolean)
+                    .sort((a, b) => a.offsetTop - b.offsetTop)[0] || about;
+
+                document.documentElement.style.setProperty("--sword-handoff", "0");
+                gsap.set(stage, { opacity: 0 });
+                gsap.set(sword, { ...startPose, opacity: 0, force3D: true });
+
+                const updateHandoff = () => {
+                    const progress = clamp(handoffState.progress, 0, 1);
+                    const backgroundPresence = clamp((progress - 0.08) / 0.56, 0, 1);
+                    const showcasePresence = 1 - clamp((progress - 0.12) / 0.5, 0, 1);
+                    document.documentElement.style.setProperty("--sword-handoff", progress.toFixed(4));
+                    gsap.set(stage, { opacity: backgroundPresence });
+                    gsap.set(showcaseSword, { opacity: showcasePresence });
+                    gsap.set(heroChrome, { opacity: 1 - clamp(progress / 0.82, 0, 1) });
+                    gsap.set(sword, {
+                        xPercent: lerp(startPose.xPercent, (firstCamera.xPercent * motionScale) + xBias, progress),
+                        yPercent: lerp(startPose.yPercent, firstCamera.yPercent * motionScale, progress),
+                        scale: lerp(startPose.scale, 1 + ((firstCamera.scale - 1) * motionScale), progress),
+                        rotation: lerp(startPose.rotation, firstCamera.rotation * motionScale, progress),
+                        opacity: backgroundPresence * firstCamera.opacity,
+                        force3D: true
+                    });
+                };
+
+                const handoffTween = gsap.to(handoffState, {
+                    progress: 1,
+                    ease: "none",
+                    onUpdate: updateHandoff,
+                    scrollTrigger: {
+                        id: "sword-handoff",
+                        trigger: hero,
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: 0.72,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                const storyTween = gsap.to(storyState, {
+                    progress: 1,
+                    ease: "none",
+                    onUpdate: () => applyStoryCamera(
+                        mapSwordSectionProgress(storyState.progress, sectionStops),
+                        motionScale,
+                        xBias
+                    ),
+                    scrollTrigger: {
+                        id: "sword-story-camera",
+                        trigger: storyStart,
+                        start: "top top",
+                        endTrigger: contact,
+                        end: "bottom bottom",
+                        scrub: 0.9,
+                        onRefresh: () => {
+                            sectionStops = buildSwordSectionStops();
+                        },
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                let pointerTween;
+                const handlePointer = (event) => {
+                    const x = (event.clientX / window.innerWidth) - 0.5;
+                    const y = (event.clientY / window.innerHeight) - 0.5;
+                    pointerTween?.kill();
+                    pointerTween = gsap.to(camera, {
+                        x: x * 14,
+                        y: y * 10,
+                        rotationY: x * 1.8,
+                        rotationX: y * -1.2,
+                        transformPerspective: 1100,
+                        duration: 0.78,
+                        ease: "power3.out",
+                        overwrite: "auto"
+                    });
+                };
+
+                if (!isMobile && window.matchMedia("(pointer: fine)").matches) {
+                    window.addEventListener("pointermove", handlePointer, { passive: true });
+                }
+
+                updateHandoff();
+
+                return () => {
+                    handoffTween.kill();
+                    storyTween.kill();
+                    pointerTween?.kill();
+                    window.removeEventListener("pointermove", handlePointer);
+                    gsap.set([...heroChrome, showcaseSword, stage, sword, camera], { clearProps: "all" });
+                    document.documentElement.style.removeProperty("--sword-handoff");
+                };
+            });
+        } catch (error) {
+            console.warn("[sword-cinematic] 镜头模块加载失败，已保留静态展台：", error);
+        }
     }
 
     async function copyImageToClipboard(src, button, fallbackLink) {
