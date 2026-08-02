@@ -48,6 +48,8 @@ test("weapon copy uses canonical names and explains each origin", () => {
     assert.equal(longclaw.name, "长爪");
     assert.match(longclaw.description, /《权力的游戏》/);
     assert.match(longclaw.description, /琼恩·雪诺/);
+    assert.match(longclaw.description, /瓦利利亚钢/);
+    assert.doesNotMatch(longclaw.description, /莫尔蒙家族/);
     assert.match(longclaw.description, /守誓之剑/);
     assert.equal(goujian.name, "越王勾践剑");
     assert.match(goujian.description, /湖北省博物馆/);

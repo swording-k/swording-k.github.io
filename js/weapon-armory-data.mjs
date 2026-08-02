@@ -20,7 +20,7 @@ export const WEAPONS = Object.freeze([
         id: DEFAULT_WEAPON_ID,
         name: "长爪",
         eyebrow: "LONGCLAW · THE NORTH / 01",
-        description: "《权力的游戏》中琼恩·雪诺的佩剑，原属莫尔蒙家族。冷灰钢与旧皮革，一把经历过风霜的守誓之剑。",
+        description: "《权力的游戏》中琼恩·雪诺使用的瓦利利亚钢佩剑。冷灰钢与旧皮革，一把经历过风霜的守誓之剑。",
         image: "images/longclaw-screen-used-weathered-v2-transparent.png",
         showcase: Object.freeze({ scale: 1, rotation: 0, yPercent: 0 }),
         cameraStops: freezeStops([

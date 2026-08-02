@@ -13,6 +13,8 @@ test("hero exposes a semantic three-weapon armory", async () => {
     assert.equal((html.match(/aria-selected="true"/g) ?? []).length, 1);
     assert.match(html, /class="armory-readout"[^>]+aria-live="polite"/);
     assert.match(html, /aria-label="长爪"/);
+    assert.match(html, /琼恩·雪诺使用的瓦利利亚钢佩剑/);
+    assert.doesNotMatch(html, /莫尔蒙家族/);
     assert.doesNotMatch(html, /狼首长剑/);
 });
 
