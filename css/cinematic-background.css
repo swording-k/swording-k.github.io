@@ -1,0 +1,25 @@
+/* Optional background-only mode. The accepted portfolio UI remains unchanged. */
+html.cinematic-background body {
+    background-color: #050506;
+    background-image:
+        linear-gradient(90deg, rgba(5, 5, 5, .91) 0%, rgba(5, 5, 5, .72) 42%, rgba(5, 5, 5, .34) 72%, rgba(5, 5, 5, .62) 100%),
+        linear-gradient(180deg, rgba(5, 5, 5, .18) 0%, rgba(5, 5, 5, .08) 45%, rgba(5, 5, 5, .72) 100%),
+        url('../assets/cinematic/longclaw-hall-v1.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+@media (max-width: 760px) {
+    html.cinematic-background body {
+        background-position: 62% center;
+        background-attachment: scroll;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.cinematic-background body {
+        background-attachment: scroll;
+    }
+}

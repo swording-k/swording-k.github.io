@@ -11,7 +11,7 @@ test("portfolio content and primary actions remain intact", async () => {
         assert.match(html, new RegExp(`id=["']${id}["']`));
     }
 
-    assert.equal((html.match(/<article class="project-card\b/g) ?? []).length, 7);
+    assert.equal((html.match(/<article class="project-card\b/g) ?? []).length, 8);
     assert.equal((html.match(/<div class="featured-project\b/g) ?? []).length, 1);
     assert.match(html, /href="tel:15193342670"/);
     assert.match(html, /href="mailto:swordingk@gmail\.com"/);

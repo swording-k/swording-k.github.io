@@ -15,6 +15,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=20260721-icons">
     <link rel="stylesheet" href="css/sword-background.css?v=20260724-three-armory-v1">
+    <script>
+        const visualMode = new URLSearchParams(location.search);
+        if (visualMode.get('cinematic') === '1') {
+            document.documentElement.classList.add('cinematic-background');
+            const stylesheet = document.createElement('link');
+            stylesheet.rel = 'stylesheet';
+            stylesheet.href = 'css/cinematic-background.css?v=20260919';
+            document.head.append(stylesheet);
+        }
+    </script>
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
