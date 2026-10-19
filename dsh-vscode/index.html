@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeepSeek Harness for VS Code</title>
+<meta name="description" content="在 VS Code 里使用 DeepSeek Harness：侧边栏启动器、编辑器右侧对话、原生右上角入口。非官方社区扩展。">
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#141924; --panel-2:#1b2231; --line:#26303f;
+    --fg:#e7ecf3; --muted:#93a1b5; --accent:#4d6bfe; --accent-2:#7aa2ff;
+    --ok:#3ddc97; --radius:14px;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f7f9fc; --panel:#ffffff; --panel-2:#f0f4fa; --line:#dde5ef; --fg:#111826; --muted:#5b6b80; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+  header{padding:64px 0 40px;text-align:center}
+  .logo{width:72px;height:72px;margin:0 auto 18px;display:block}
+  h1{font-size:clamp(28px,5vw,44px);line-height:1.2;margin:0 0 12px;letter-spacing:-.02em}
+  .tag{color:var(--muted);font-size:17px;margin:0 auto;max-width:620px}
+  .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0 0}
+  .badge{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:var(--panel)}
+  .badge b{color:var(--fg);font-weight:600}
+  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:32px 0 0}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;padding:13px 22px;font-size:15px;font-weight:600;
+    border:1px solid transparent;cursor:pointer;transition:transform .12s ease,opacity .12s ease}
+  .btn:hover{transform:translateY(-1px);text-decoration:none}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 24px rgba(77,107,254,.32)}
+  .btn-ghost{background:var(--panel);color:var(--fg);border-color:var(--line)}
+  section{padding:34px 0;border-top:1px solid var(--line)}
+  h2{font-size:21px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+  .card h3{margin:0 0 6px;font-size:15px}
+  .card p{margin:0;color:var(--muted);font-size:14px}
+  ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:14px}
+  ol.steps li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 18px 16px 58px;position:relative}
+  ol.steps li::before{content:counter(s);position:absolute;left:16px;top:15px;width:26px;height:26px;border-radius:8px;
+    background:var(--panel-2);border:1px solid var(--line);color:var(--accent-2);font-weight:700;font-size:13px;
+    display:grid;place-items:center}
+  ol.steps b{display:block;margin-bottom:2px}
+  ol.steps span{color:var(--muted);font-size:14px}
+  pre{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;
+    font-size:13px;line-height:1.6;margin:10px 0 0;
+    font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+  code{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;font-size:.92em}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px}
+  td code{color:var(--accent-2)}
+  .note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:10px;padding:14px 16px;color:var(--muted);font-size:14px}
+  .note b{color:var(--fg)}
+  footer{padding:36px 0 64px;color:var(--muted);font-size:13px;text-align:center;border-top:1px solid var(--line)}
+  .kbd{display:inline-block;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;
+    padding:1px 7px;font-size:12px;font-family:ui-monospace,Menlo,monospace}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <svg class="logo" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#4d6bfe" d="M48.8354 10.0479C48.3232 9.79199 48.1025 10.2798 47.8032 10.5278C47.7007 10.6079 47.6143 10.7119 47.5273 10.8076C46.7793 11.624 45.9048 12.1597 44.7622 12.0957C43.0923 12 41.666 12.5356 40.4058 13.8398C40.1377 12.2319 39.2476 11.272 37.8926 10.6558C37.1836 10.3359 36.4668 10.0156 35.9702 9.31982C35.6235 8.82373 35.5293 8.27197 35.356 7.72754C35.2456 7.3999 35.1353 7.06396 34.7651 7.00781C34.3633 6.94385 34.2056 7.2876 34.0479 7.57568C33.418 8.75195 33.1733 10.0479 33.1973 11.3599C33.2524 14.312 34.4736 16.6641 36.8999 18.3359C37.1758 18.5278 37.2466 18.7197 37.1597 19C36.9946 19.5757 36.7974 20.1357 36.624 20.7119C36.5137 21.0801 36.3486 21.1597 35.9624 21C34.6309 20.4321 33.481 19.5918 32.4644 18.5757C30.7393 16.8721 29.1792 14.9917 27.2334 13.52C26.7764 13.1758 26.3193 12.856 25.8467 12.5518C23.8618 10.584 26.1069 8.96777 26.627 8.77588C27.1704 8.57568 26.8159 7.8877 25.0591 7.896C23.3022 7.90381 21.6953 8.50391 19.647 9.30371C19.3477 9.42383 19.0322 9.51172 18.7095 9.58398C16.8501 9.22363 14.9199 9.14355 12.9033 9.37598C9.10596 9.80762 6.07275 11.6396 3.84326 14.7681C1.16455 18.5278 0.53418 22.7998 1.30664 27.2559C2.11768 31.9521 4.46582 35.8398 8.07373 38.8799C11.8159 42.0322 16.1255 43.5762 21.041 43.2803C24.0269 43.104 27.3516 42.6963 31.1016 39.4561C32.0469 39.936 33.0396 40.1279 34.686 40.272C35.9546 40.3921 37.1758 40.208 38.1211 40.0078C39.6021 39.688 39.4995 38.2881 38.9639 38.0322C34.623 35.9678 35.5762 36.8081 34.71 36.1279C36.9155 33.4639 40.2402 30.6958 41.54 21.728C41.6426 21.0161 41.5557 20.5679 41.54 19.9917C41.5322 19.6396 41.6108 19.5039 42.0049 19.4639C43.0923 19.3359 44.1479 19.0317 45.1167 18.4878C47.9292 16.9199 49.064 14.3438 49.3315 11.2559C49.3711 10.7837 49.3237 10.2959 48.8354 10.0479ZM24.3262 37.8398C20.1196 34.4639 18.0791 33.3521 17.2358 33.3999C16.4482 33.4482 16.5898 34.3682 16.7632 34.9678C16.9443 35.5601 17.1812 35.9683 17.5117 36.4878C17.7402 36.832 17.8979 37.3442 17.2832 37.728C15.9282 38.584 13.5728 37.4399 13.4624 37.3838C10.7207 35.7358 8.42822 33.5601 6.81348 30.584C5.25342 27.7197 4.34766 24.6479 4.19775 21.3677C4.1582 20.5757 4.38672 20.2959 5.15869 20.1519C6.17529 19.96 7.22314 19.9199 8.23926 20.0718C12.5327 20.7119 16.1885 22.6719 19.2529 25.7759C21.002 27.5439 22.3252 29.6558 23.6885 31.7202C25.1377 33.9121 26.6978 36 28.6831 37.7119C29.3843 38.312 29.9434 38.7681 30.479 39.104C28.8643 39.2881 26.1699 39.3281 24.3262 37.8398ZM26.3433 24.6001C26.3433 24.248 26.6191 23.9678 26.9658 23.9678C27.0444 23.9678 27.1152 23.9839 27.1782 24.0078C27.2651 24.04 27.3438 24.0879 27.4067 24.1602C27.5171 24.272 27.5801 24.4321 27.5801 24.6001C27.5801 24.9521 27.3042 25.2319 26.9575 25.2319C26.6108 25.2319 26.3433 24.9521 26.3433 24.6001ZM32.6064 27.8799C32.2046 28.0479 31.8027 28.1919 31.4165 28.208C30.8179 28.2397 30.1641 27.9922 29.8096 27.688C29.2583 27.2158 28.8643 26.9521 28.6987 26.1279C28.6279 25.7759 28.6675 25.2319 28.7305 24.9199C28.8721 24.248 28.7144 23.8159 28.2495 23.4238C27.8716 23.104 27.3911 23.0161 26.8633 23.0161C26.666 23.0161 26.4849 22.9277 26.3511 22.856C26.1304 22.7441 25.9492 22.4639 26.1226 22.1201C26.1777 22.0078 26.4458 21.7358 26.5088 21.688C27.2256 21.272 28.0527 21.4077 28.8169 21.7197C29.5259 22.0161 30.0615 22.5601 30.834 23.3281C31.6216 24.2559 31.7632 24.5117 32.2124 25.208C32.5669 25.752 32.8901 26.312 33.1104 26.9521C33.2446 27.3521 33.0713 27.6802 32.6064 27.8799Z"/>
+  </svg>
+  <h1>DeepSeek Harness for VS Code</h1>
+  <p class="tag">在编辑器里直接用 DeepSeek Harness：左侧启动器列出当前项目的对话，一点就在编辑器右侧打开完整界面，自动对齐你的工作区。</p>
+  <div class="badges">
+    <span class="badge">版本 <b>0.6.0</b></span>
+    <span class="badge">协议 <b>MIT</b></span>
+    <span class="badge">要求 <b>VS Code ≥ 1.94</b></span>
+    <span class="badge">非官方社区扩展</span>
+  </div>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://github.com/swording-k/dsh-vscode/releases/latest">⬇ 下载扩展（.vsix）</a>
+    <a class="btn btn-ghost" href="https://github.com/swording-k/dsh-vscode">查看源码 →</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2>它能做什么</h2>
+  <p class="sub">把 DeepSeek Harness 放进 VS Code，而不是让你在浏览器和编辑器之间来回切。</p>
+  <div class="grid">
+    <div class="card"><h3>🗂 侧边栏启动器</h3><p>显示当前文件夹的对话列表，一键新建或继续。</p></div>
+    <div class="card"><h3>➡️ 对话开在右侧</h3><p>点开即用，和你的代码并排，左边看文件右边聊。</p></div>
+    <div class="card"><h3>🎯 自动对齐工作区</h3><p>打开哪个项目，对话就绑定哪个目录，agent 读写的是同一批文件。</p></div>
+    <div class="card"><h3>🧭 四个入口</h3><p>活动栏、右侧栏、编辑器右上角、状态栏都能进。</p></div>
+    <div class="card"><h3>🌗 主题跟随</h3><p>自动同步 VS Code 深浅色，不用手动调。</p></div>
+    <div class="card"><h3>⚙️ 服务自动启动</h3><p>检测到 dsh 没跑就自动拉起，不用先开终端。</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>安装 · 三步</h2>
+  <p class="sub">全程约 3 分钟。前提：Node.js ≥ 22、已安装或即将安装 DeepSeek Harness。</p>
+  <ol class="steps">
+    <li><b>安装 DeepSeek Harness</b><span>打开终端运行下面这条，会装 600 多个依赖包，耐心等 1–3 分钟。</span>
+      <pre>npm install -g @deepseek-ai/dsh</pre>
+      <span>装完用 <code>dsh --version</code> 验证。</span></li>
+    <li><b>安装本扩展</b><span>去 <a href="https://github.com/swording-k/dsh-vscode/releases/latest">Releases</a> 下载 <code>dsh-vscode-0.6.0.vsix</code>，
+      然后在 VS Code 按 <span class="kbd">Cmd</span>+<span class="kbd">Shift</span>+<span class="kbd">P</span>，
+      输入 <code>Install from VSIX</code> → 选中下载的文件。</span>
+      <span>装完执行一次 <code>Developer: Reload Window</code> 让扩展生效。</span></li>
+    <li><b>打开你的项目，点鲸鱼图标</b><span>左侧活动栏会出现 DeepSeek Harness 图标。点它 → 看到当前文件夹 → 点"＋ 新建对话"。</span>
+      <span>完整界面会在编辑器右侧打开，直接可以对话。</span></li>
+  </ol>
+</section>
+
+<section>
+  <h2>配置 API</h2>
+  <p class="sub">扩展本身不需要密钥，密钥是 DeepSeek Harness 用的。</p>
+  <div class="note">
+    <b>方式一（推荐）：</b>第一次打开界面时，进 <b>设置 → 账户 / Account</b>，填入你的 API Key，界面会记住。<br>
+    <b>方式二：</b>在终端里设置环境变量，再重启 VS Code：
+    <pre>export DEEPSEEK_API_KEY=sk-你的密钥</pre>
+  </div>
+</section>
+
+<section>
+  <h2>设置项</h2>
+  <p class="sub">VS Code 设置里搜 <code>dshHarness</code> 就能找到。</p>
+  <table>
+    <tr><th>设置</th><th>默认</th><th>说明</th></tr>
+    <tr><td><code>dshHarness.repoPath</code></td><td>空</td><td>可选：指向一份 deepseek-harness 源码目录（留空则用 PATH 里的 <code>dsh</code>）</td></tr>
+    <tr><td><code>dshHarness.command</code></td><td><code>dsh</code></td><td>启动服务的可执行文件</td></tr>
+    <tr><td><code>dshHarness.port</code></td><td><code>3080</code></td><td>本地服务端口</td></tr>
+    <tr><td><code>dshHarness.autoStart</code></td><td><code>true</code></td><td>服务没跑时自动启动</td></tr>
+    <tr><td><code>dshHarness.syncTheme</code></td><td><code>true</code></td><td>让界面跟随 VS Code 深浅色</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>常见问题</h2>
+  <div class="grid">
+    <div class="card"><h3>提示找不到 dsh？</h3><p>说明还没装或不在 PATH。重跑第 1 步，或把 <code>dshHarness.repoPath</code> 指向你的源码目录。</p></div>
+    <div class="card"><h3>端口被占用？</h3><p>把 <code>dshHarness.port</code> 改成别的，比如 3081。</p></div>
+    <div class="card"><h3>图标找不到？</h3><p>命令面板执行 <code>View: Reset View Locations</code>，再重载窗口。</p></div>
+    <div class="card"><h3>打开后没落到对应对话？</h3><p>官方 npm 版 dsh 缺少会话定位支持；扩展会自动装配套插件，重载界面即可。</p></div>
+  </div>
+</section>
+
+</div>
+
+<footer class="wrap">
+  <p>非官方社区扩展，与 DeepSeek 官方无隶属关系。DeepSeek Harness 本体是 MIT 协议的开源项目。</p>
+  <p><a href="https://github.com/swording-k/dsh-vscode">GitHub</a> ·
+     <a href="https://github.com/swording-k/dsh-vscode/releases">Releases</a> ·
+     <a href="https://github.com/swording-k/dsh-vscode/issues">问题反馈</a></p>
+</footer>
+
+</body>
+</html>
