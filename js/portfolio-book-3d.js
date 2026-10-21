@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
-import { sheetStrip } from './book-surface.mjs';
+import { sheetStrip } from './book-surface.mjs?v=3';
+import { paintBookPage } from './book-page-art.js?v=1';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
 
 // Real geometry, lighting and two independently typeset paper faces.
@@ -16,9 +17,19 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(35,1,.1,50), book=new THREE.Group();
   scene.add(book,new THREE.HemisphereLight(0xf4f7ff,0x30362b,1.5));
   const lamp=new THREE.DirectionalLight(0xfff5e5,2.3);lamp.position.set(-3,1,7);lamp.castShadow=true;
-  lamp.shadow.mapSize.set(1024,1024);lamp.shadow.camera.left=-5;lamp.shadow.camera.right=5;lamp.shadow.camera.top=5;lamp.shadow.camera.bottom=-5;lamp.shadow.normalBias=.025;lamp.shadow.bias=-.0003;lamp.shadow.radius=4;scene.add(lamp);
+  lamp.shadow.mapSize.set(2048,2048);lamp.shadow.camera.left=-4;lamp.shadow.camera.right=4;lamp.shadow.camera.top=4;lamp.shadow.camera.bottom=-4;lamp.shadow.normalBias=.015;lamp.shadow.bias=-.0003;lamp.shadow.radius=4;scene.add(lamp);
   const fill=new THREE.DirectionalLight(0xbad5f0,.7);fill.position.set(4,-2,4);scene.add(fill);
-  const leather=new THREE.MeshStandardMaterial({color:0x19201a,roughness:.82,metalness:.07});
+  const grainCanvas=document.createElement('canvas');grainCanvas.width=grainCanvas.height=256;
+  const grainContext=grainCanvas.getContext('2d'),grainData=grainContext.createImageData(256,256);
+  let seed=173;
+  for(let i=0;i<grainData.data.length;i+=4) {
+    seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+    const value=100+(seed>>>27)*2;
+    grainData.data.set([value,value,value,255],i);
+  }
+  grainContext.putImageData(grainData,0,0);
+  const grain=new THREE.CanvasTexture(grainCanvas);grain.wrapS=grain.wrapT=THREE.RepeatWrapping;grain.repeat.set(5,5);
+  const leather=new THREE.MeshStandardMaterial({color:0x263129,roughness:.82,metalness:.07,bumpMap:grain,bumpScale:.012});
   const brass=new THREE.MeshStandardMaterial({color:0xa08046,roughness:.36,metalness:.75});
   const paper=new THREE.MeshStandardMaterial({color:0xbeb49b,roughness:1});
   function box(w,h,d,x,z,mat) {
@@ -34,20 +45,25 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   for(const side of [-1,1]) {
     for(let i=0;i<8;i++) {
       const edge=new THREE.Mesh(new THREE.BoxGeometry(W,.009,.003),new THREE.MeshStandardMaterial({color:i%2?0xb1a487:0xd8ccb1,roughness:1}));
-      edge.position.set(side*W/2,-H/2-.002,-.14+i*.017);edges.add(edge);
+      edge.position.set(side*W/2,-H/2-.002,-.14+i*.017);edge.userData.side=side;edges.add(edge);
     }
     for(const y of [-1,1]) {
       const metal=new THREE.Mesh(new THREE.BoxGeometry(.22,.22,.018),brass);
-      metal.position.set(side*(W-.06),y*(H/2-.03),-.13);book.add(metal);
+      metal.position.set(side*(W-.06),y*(H/2-.03),-.13);metal.userData.side=side;edges.add(metal);
     }
   }
-  const table=new THREE.Mesh(new THREE.PlaneGeometry(30,20),new THREE.MeshBasicMaterial({color:0x111611}));
+  const table=new THREE.Mesh(new THREE.PlaneGeometry(30,20),new THREE.MeshStandardMaterial({color:0x293029,roughness:.96,bumpMap:grain,bumpScale:.016}));
   table.position.z=-.25;scene.add(table);
   const shadow=new THREE.Mesh(new THREE.PlaneGeometry(30,20),new THREE.ShadowMaterial({color:0x000000,opacity:.6}));
   shadow.position.z=-.249;shadow.receiveShadow=true;scene.add(shadow);
   const mats=[0,1].map(()=>new THREE.MeshStandardMaterial({color:0xffffff,roughness:.94}));
-  const left=new THREE.Mesh(new THREE.PlaneGeometry(W,H),mats[0]);left.position.set(-W/2,0,.006);left.receiveShadow=true;book.add(left);
-  const right=new THREE.Mesh(new THREE.PlaneGeometry(W,H),mats[1]);right.position.set(W/2,0,.009);right.receiveShadow=true;book.add(right);
+  function restingPaper() {
+    const g=new THREE.PlaneGeometry(W,H,36,12),p=g.attributes.position;
+    for(let i=0;i<p.count;i++)p.setZ(i,.025*Math.sin(Math.PI*(p.getX(i)/W+.5)));
+    g.computeVertexNormals();return g;
+  }
+  const left=new THREE.Mesh(restingPaper(),mats[0]);left.position.set(-W/2,0,.006);left.receiveShadow=true;book.add(left);
+  const right=new THREE.Mesh(restingPaper(),mats[1]);right.position.set(W/2,0,.009);right.receiveShadow=true;book.add(right);
   const geom=new THREE.PlaneGeometry(W,H,36,12);geom.translate(W/2,0,0);
   const backGeom=geom.clone(), uv=backGeom.attributes.uv;
   for(let i=0;i<uv.count;i++)uv.setX(i,1-uv.getX(i));
@@ -59,56 +75,25 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   const textures=new Map(),targetRotation={x:0,y:0};
   function draw(){if(!disposed)renderer.render(scene,camera);}
   function requestDraw(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;draw();});}
-  function wrap(ctx,value,x,y,maxWidth,lineHeight,maxLines=99) {
-    let line='',lines=0;
-    for(const char of value.match(/[A-Za-z0-9]+|[^A-Za-z0-9]/g)||[]) {
-      if(ctx.measureText(line+char).width>maxWidth&&line) {
-        if(++lines>=maxLines){ctx.fillText(line.replace(/.$/,'')+'…',x,y);return y+lineHeight;}
-        ctx.fillText(line,x,y);y+=lineHeight;line='';
+  const images=new Map();
+  function loadImage(src) {
+    if(!src)return null;
+    if(images.has(src))return images.get(src).complete&&images.get(src).naturalWidth?images.get(src):null;
+    const img=new Image();images.set(src,img);
+    img.onload=()=>{
+      if(disposed)return;
+      for(const [index,texture] of textures) {
+        paintBookPage(texture.image.getContext('2d'),index,count,chapters,loadImage);
+        texture.needsUpdate=true;
       }
-      line+=char;
-    }
-    if(line)ctx.fillText(line,x,y);return y+lineHeight;
+      requestDraw();
+    };
+    img.src=src;return null;
   }
   function makeTexture(index) {
     if(textures.has(index))return textures.get(index);
-    const canvas=document.createElement('canvas');canvas.width=768;canvas.height=1056;
-    const ctx=canvas.getContext('2d');ctx.fillStyle='#e7dcc1';ctx.fillRect(0,0,768,1056);
-    const cover=index===0||index===count-1;
-    if(cover) {
-      ctx.fillStyle='#18221b';ctx.fillRect(0,0,768,1056);
-      ctx.strokeStyle='#9f834c';ctx.lineWidth=3;ctx.strokeRect(32,32,704,992);ctx.lineWidth=1;ctx.strokeRect(44,44,680,968);
-      ctx.textAlign='center';ctx.fillStyle='#b9a274';ctx.font='23px sans-serif';ctx.fillText('杨锟  /  Killian Yang',384,157);
-      ctx.font='64px "Songti SC",serif';ctx.fillText(index===0?'作品之书':'未完，待续',384,570);
-      ctx.font='25px sans-serif';ctx.fillText('从 AI 创意，到产品落地。',384,640);
-      ctx.fillStyle='#baa06b';ctx.fillRect(381,280,6,180);ctx.fillRect(342,320,84,7);ctx.beginPath();ctx.moveTo(381,460);ctx.lineTo(387,460);ctx.lineTo(384,479);ctx.fill();
-      ctx.font='20px sans-serif';ctx.fillText('AI Product Builder',384,920);
-    } else {
-      const ch=chapters[Math.floor((index-1)/2)],face=index%2===1;
-      ctx.strokeStyle='#a9936450';ctx.lineWidth=1;ctx.strokeRect(22,22,724,1012);
-      ctx.fillStyle='#837454';ctx.font='18px sans-serif';ctx.fillText(face?'杨锟 / 作品集':ch.title,62,78);
-      ctx.beginPath();ctx.moveTo(62,110);ctx.lineTo(706,110);ctx.stroke();
-      ctx.fillText(String(index).padStart(2,'0'),face?62:675,1004);
-      if(face) {
-        ctx.textAlign='center';ctx.fillStyle='#86734e';ctx.font='20px sans-serif';wrap(ctx,ch.label,384,510,620,32,2);
-        ctx.fillStyle='#2d3025';ctx.font='64px "Cormorant Garamond","Songti SC",Georgia,serif';
-        const titleEnd=wrap(ctx,ch.title,384,598,615,76,3);
-        ctx.fillStyle='#807154';ctx.font='20px sans-serif';wrap(ctx,ch.notes.replace(/(Launched|Built with|Role)/g,' $1 · '),384,titleEnd+35,610,34,3);
-        ctx.font='22px sans-serif';ctx.fillStyle='#745a2e';ctx.fillText('完整项目与细节  ↗',384,930);
-        const img=new Image();img.onload=()=>{
-          const s=Math.min(250/img.naturalWidth,250/img.naturalHeight),w=img.naturalWidth*s,h=img.naturalHeight*s;
-          ctx.drawImage(img,384-w/2,300-h/2,w,h);texture.needsUpdate=true;requestDraw();
-        };img.src=ch.icon.getAttribute('src');
-      } else {
-        ctx.fillStyle='#3c382c';ctx.font='40px "Songti SC",serif';ctx.fillText('关于这个作品',62,195);
-        ctx.font='31px sans-serif';ctx.fillStyle='#3d392d';
-        const end=wrap(ctx,ch.intro,62,269,642,51,10);
-        ctx.fillStyle='#7b6948';ctx.font='21px sans-serif';
-        const first=ch.article.querySelector('.project-copy-stack p')?.textContent.trim()||'';
-        if(end<740)wrap(ctx,first,62,end+32,642,36,Math.floor((805-end)/36));
-        ctx.font='23px sans-serif';ctx.fillStyle='#745a2e';ctx.fillText('展开完整介绍与产品入口  ↗',62,930);
-      }
-    }
+    const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=1408;
+    paintBookPage(canvas.getContext('2d'),index,count,chapters,loadImage);
     const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());
     textures.set(index,texture);return texture;
   }
@@ -118,19 +103,19 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
     left.visible=leftBase.visible=leftStack.visible=!portrait&&!closed;
     right.visible=true;rightBase.visible=rightStack.visible=true;
     edges.visible=!closed;spine.visible=!closed;
+    edges.children.forEach(m=>{m.visible=!portrait||m.userData.side===1;});
     if(!portrait&&!closed){mats[0].map=makeTexture(start);mats[0].needsUpdate=true;}
     mats[1].map=makeTexture(closed?page:portrait?page:Math.min(count-1,start+1));mats[1].needsUpdate=true;
     const held=new Set([start,start+1,page,animation?.frontIndex,animation?.backIndex]);
     for(const [i,t] of textures)if(textures.size>8&&!held.has(i)){t.dispose();textures.delete(i);}
   }
   function bend(p) {
-    frameCamera(Math.sin(Math.PI*p));
     for(let row=0;row<=12;row++) {
       const strip=sheetStrip(p,W,36,row/12);
       for(let col=0;col<=36;col++) {
         const i=row*37+col,pt=strip[col];
-        geom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,.016+pt.z);
-        backGeom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,.016+pt.z);
+        geom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,.04+pt.z);
+        backGeom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,.04+pt.z);
       }
     }
     for(const g of [geom,backGeom]){g.attributes.position.needsUpdate=true;g.computeVertexNormals();}
@@ -164,14 +149,17 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   }
   function next(animate){turn(adjacentPage(current,count,portrait,1),animate);}
   function prev(animate){turn(adjacentPage(current,count,portrait,-1),animate);}
-  function frameCamera(lift=0) {
+  function frameCamera() {
     const center=portrait?W/2:0;
-    camera.position.set(center+.12,portrait?-1.8:-2.4,(portrait?6.1:6.4)+lift*3.1);
-    camera.lookAt(center,.02,lift*.35);camera.updateProjectionMatrix();
+    // A longer lens on narrow screens keeps the raised sheet inside the frame
+    // without a conspicuous mid-turn zoom-out.
+    camera.fov=portrait?15:35;
+    camera.position.set(center+.12,portrait?-3:-2.7,portrait?18:7.9);
+    camera.lookAt(center,portrait?.22:.02,.42);camera.updateProjectionMatrix();
   }
   function resize() {
     const width=host.clientWidth;portrait=width<620;
-    const height=Math.max(390,Math.min(520,width*(portrait?1.35:.66)));
+    const height=portrait?Math.max(440,Math.min(600,width*1.6)):Math.max(390,Math.min(580,width*.66));
     renderer.setSize(width,height,false);camera.aspect=width/height;
     frameCamera();
     book.rotation.z=portrait?-.015:-.045;staticPages();draw();
@@ -223,6 +211,12 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
     getCurrentPageIndex:()=>current,getOrientation:()=>portrait?'portrait':'landscape',
     turnToPage:p=>turn(p,false),flip:p=>turn(p,true),
     flipNext:()=>next(true),flipPrev:()=>prev(true),turnToNextPage:()=>next(false),turnToPrevPage:()=>prev(false),update:resize,
-    dispose(){disposed=true;observer.disconnect();if(raf)cancelAnimationFrame(raf);renderer.dispose();textures.forEach(t=>t.dispose());}
+    dispose(){
+      disposed=true;observer.disconnect();if(raf)cancelAnimationFrame(raf);
+      textures.forEach(t=>t.dispose());grain.dispose();
+      const geometries=new Set(),materials=new Set();
+      scene.traverse(m=>{if(m.geometry)geometries.add(m.geometry);if(m.material)materials.add(m.material);});
+      geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());renderer.dispose();
+    }
   };
 }

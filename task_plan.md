@@ -15,5 +15,11 @@ index.html adds book controller and stylesheet. js/portfolio-book.js builds cove
 ## Acceptance
 10 original project articles remain readable; FitGenius1.6/Atoll5k retained. Chapter selection updates page + active index; first/last navigation bounded. Links in pages do not trigger unwanted flips. No body horizontal overflow at 390/853/1440. Reduced motion uses instantaneous page selection, not 0ms engine duration.
 
-## Remaining visual gap
-This is a functional true-3D prototype, not a video-level visual recreation. Project spreads remain icon/text-led; table material and cross-page art direction are simpler than the reference. Camera pulls back visibly during the turn to contain the raised paper. Do not describe the current state as user-approved or merged.
+## Second visual pass
+- [x] Use real product captures for FitGenius, Atoll, WorkIsland and Theme Creator; reuse existing bookstore/pets art.
+- [x] Bound paper lift and remove mid-turn camera retreat; keep a longer lens for mobile.
+- [x] Add leather grain, warmer paper, physical edge visibility and gently curved resting pages.
+- [x] Verify final desktop/mobile held-turn framing, detail entry and original list.
+- [x] Save final revision on this branch only; no push/merge/deployment.
+
+The reference remains an art-direction reference, not a claimed pixel-identical reproduction. Do not describe the current state as user-approved, published or merged.

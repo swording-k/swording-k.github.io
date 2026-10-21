@@ -11,7 +11,12 @@ test("portfolio content and primary actions remain intact", async () => {
         assert.match(html, new RegExp(`id=["']${id}["']`));
     }
 
-    assert.equal((html.match(/<article class="project-card\b/g) ?? []).length, 8);
+    // Production already has nine cards; allow future projects without weakening
+    // preservation of the original named entries.
+    assert.ok((html.match(/<article class="project-card\b/g) ?? []).length >= 9);
+    for (const card of ["atoll", "workisland", "memelab", "codetheme", "lastbook", "esports", "pet", "blog", "notes"]) {
+        assert.match(html, new RegExp(`<article class="project-card ${card}-card\\b`));
+    }
     assert.equal((html.match(/<div class="featured-project\b/g) ?? []).length, 1);
     assert.match(html, /href="tel:15193342670"/);
     assert.match(html, /href="mailto:swordingk@gmail\.com"/);
