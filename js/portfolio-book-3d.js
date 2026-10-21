@@ -1,12 +1,14 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip } from './book-surface.mjs?v=3';
-import { paintBookPage, createCrispPage } from './book-page-art.js?v=2';
+import { paintBookPage, createCrispPage } from './book-page-art.js?v=4';
 import { pageMatrix } from './book-projection.mjs';
+import { dragBookView } from './book-view-state.mjs';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
 
 // Real geometry, lighting and two independently typeset paper faces.
 export async function createBookScene(host, chapters, {initialPage=1,onPage,readChapter}) {
   const W=2.65,H=3.65, count=chapters.length*2+2;
+  await document.fonts.load('40px "Songti SC"');
   host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','作品之书，方向键翻页');
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
   const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
@@ -16,8 +18,8 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
   renderer.domElement.className='epic-webgl';renderer.domElement.setAttribute('aria-label','立体作品册，拖动纸页左右翻阅');
   renderer.domElement.setAttribute('role','img');host.append(renderer.domElement);
-  const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(35,1,.1,50), book=new THREE.Group();
-  scene.add(book,new THREE.HemisphereLight(0xf4f7ff,0x30362b,1.5));
+  const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(35,1,.1,50), book=new THREE.Group(),pivot=new THREE.Group();
+  pivot.add(book);scene.add(pivot,new THREE.HemisphereLight(0xf4f7ff,0x30362b,1.5));
   const lamp=new THREE.DirectionalLight(0xfff5e5,2.3);lamp.position.set(-3,1,7);lamp.castShadow=true;
   lamp.shadow.mapSize.set(2048,2048);lamp.shadow.camera.left=-4;lamp.shadow.camera.right=4;lamp.shadow.camera.top=4;lamp.shadow.camera.bottom=-4;lamp.shadow.normalBias=.015;lamp.shadow.bias=-.0003;lamp.shadow.radius=4;scene.add(lamp);
   const fill=new THREE.DirectionalLight(0xbad5f0,.7);fill.position.set(4,-2,4);scene.add(fill);
@@ -32,16 +34,43 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   grainContext.putImageData(grainData,0,0);
   const grain=new THREE.CanvasTexture(grainCanvas);grain.wrapS=grain.wrapT=THREE.RepeatWrapping;grain.repeat.set(5,5);
   const leather=new THREE.MeshStandardMaterial({color:0x26211b,roughness:.82,metalness:.07,bumpMap:grain,bumpScale:.012});
-  const brass=new THREE.MeshStandardMaterial({color:0xa08046,roughness:.36,metalness:.75});
+  const brass=new THREE.MeshStandardMaterial({color:0x887249,roughness:.55,metalness:.65});
   const paper=new THREE.MeshStandardMaterial({color:0xbeb49b,roughness:1});
   function box(w,h,d,x,z,mat) {
-    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,0,z);m.castShadow=true;m.receiveShadow=true;book.add(m);return m;
+    let geometry;
+    if(mat===leather&&w>1) {
+      const r=.065,s=new THREE.Shape();
+      s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);
+      s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);
+      s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);
+      geometry=new THREE.ExtrudeGeometry(s,{depth:d-.024,bevelEnabled:true,bevelThickness:.012,bevelSize:.012,bevelSegments:3,steps:1});
+      geometry.translate(0,0,-d/2+.012);
+    } else geometry=new THREE.BoxGeometry(w,h,d);
+    const m=new THREE.Mesh(geometry,mat);m.position.set(x,0,z);m.castShadow=true;m.receiveShadow=true;book.add(m);return m;
   }
   const leftBase=box(W+.12,H+.14,.075,-W/2,-.185,leather);
   const rightBase=box(W+.12,H+.14,.075,W/2,-.185,leather);
   const leftStack=box(W-.03,H-.035,.145,-W/2,-.075,paper);
   const rightStack=box(W-.03,H-.035,.145,W/2,-.075,paper);
   const spine=box(.12,H+.1,.2,0,-.1,leather);
+  const frontBoard=box(W+.12,H+.14,.07,W/2,.045,leather);frontBoard.visible=false;
+  const bindingMaterial=new THREE.MeshStandardMaterial({color:0x30251c,roughness:.85,bumpMap:grain,bumpScale:.015});
+  const backBindings=[-1,1].map(side=>{
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(W,H),bindingMaterial);m.position.set(side*W/2,0,-.23);m.rotation.y=Math.PI;book.add(m);return m;
+  });
+  let bindingMap=null;
+  const coverCorners=new THREE.Group();book.add(coverCorners);
+  for(const x of [.03,W-.03])for(const y of [-H/2,H/2]) {
+    for(const [w,h] of [[.24,.055],[.055,.24]]) {
+      const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.025),brass);
+      m.position.set(x+(w>.1?(x<W/2?.09:-.09):0),y+(h>.1?(y<0?.09:-.09):0),.1);
+      m.castShadow=true;coverCorners.add(m);
+    }
+  }
+  for(const y of [-1.2,-.65,.65,1.2]) {
+    const rib=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,H*.035,12),leather);
+    rib.rotation.z=Math.PI/2;rib.position.set(.02,y,.045);coverCorners.add(rib);
+  }
   // Fine physical page edges and metal corners, not a flat shadow illustration.
   const edges=new THREE.Group();book.add(edges);
   for(const side of [-1,1]) {
@@ -72,17 +101,21 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   const front=new THREE.Mesh(geom,frontMat),back=new THREE.Mesh(backGeom,backMat);
   for(const m of [front,back]){m.castShadow=true;m.receiveShadow=true;m.visible=false;m.frustumCulled=false;book.add(m);}
   let current=initialPage, animation=null, raf=0, portrait=false, drag=null, disposed=false,queuedTarget=null;
-  const textures=new Map(),targetRotation={x:0,y:0};
+  const textures=new Map();
+  let view={yaw:0,pitch:0,x:0,y:0},viewMode='rotate';
   const crisp=document.createElement('div');crisp.className='epic-crisp-layer';host.append(crisp);
   const crispSlots=[null,null];
   function draw(){if(!disposed){renderer.render(scene,camera);positionCrispPages();}}
   function positionCrispPages() {
     crisp.hidden=!!animation;
     if(animation)return;
+    if(current===0||current===count-1){crisp.hidden=true;return;}
     book.updateMatrixWorld(true);
     for(const [slot,mesh] of [left,right].entries()) {
       const index=mesh.material.map?.userData.pageIndex;
-      if(!mesh.visible||index===undefined){if(crispSlots[slot])crispSlots[slot].hidden=true;continue;}
+      const normal=new THREE.Vector3(0,0,1).transformDirection(mesh.matrixWorld);
+      const towardCamera=camera.position.clone().sub(mesh.getWorldPosition(new THREE.Vector3())).normalize();
+      if(!mesh.visible||index===undefined||normal.dot(towardCamera)<.08){if(crispSlots[slot])crispSlots[slot].hidden=true;continue;}
       let el=crispSlots[slot];
       if(!el||el.dataset.page!==String(index)) {
         const next=createCrispPage(index,count,chapters);next.dataset.page=index;
@@ -114,6 +147,10 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
     const img=new Image();images.set(src,img);
     img.onload=()=>{
       if(disposed)return;
+      if(src.includes('leather-binding')) {
+        bindingMap=new THREE.Texture(img);bindingMap.colorSpace=THREE.SRGBColorSpace;bindingMap.needsUpdate=true;
+        bindingMaterial.map=bindingMap;bindingMaterial.color.set(0xffffff);bindingMaterial.needsUpdate=true;
+      }
       for(const [index,texture] of textures) {
         paintBookPage(texture.image.getContext('2d'),index,count,chapters,loadImage);
         texture.needsUpdate=true;
@@ -132,10 +169,15 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   }
   function staticPages(page=current) {
     const closed=page===0||page===count-1;
+    tools.querySelector('[data-view="cover"]').textContent=closed?'阅读':'封面';
     const start=page===0?0:page%2===0?page-1:page;
     left.visible=leftBase.visible=leftStack.visible=!portrait&&!closed;
     right.visible=true;rightBase.visible=rightStack.visible=true;
     edges.visible=!closed;spine.visible=!closed;
+    frontBoard.visible=coverCorners.visible=closed;right.position.z=closed?.09:.009;
+    backBindings[0].visible=!portrait&&!closed;
+    mats[1].bumpMap=closed?grain:null;mats[1].bumpScale=.025;mats[1].roughness=closed?.8:.94;
+    const center=portrait||closed?W/2:0;book.position.x=-center;pivot.position.set(center+view.x,view.y,0);
     edges.children.forEach(m=>{m.visible=!portrait||m.userData.side===1;});
     if(!portrait&&!closed){mats[0].map=makeTexture(start);mats[0].needsUpdate=true;}
     mats[1].map=makeTexture(closed?page:portrait?page:Math.min(count-1,start+1));mats[1].needsUpdate=true;
@@ -188,15 +230,15 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   function next(animate){turn(adjacentPage(current,count,portrait,1),animate);}
   function prev(animate){turn(adjacentPage(current,count,portrait,-1),animate);}
   function frameCamera() {
-    const center=portrait?W/2:0;
+    const closed=current===0||current===count-1,center=portrait||closed?W/2:0;
     camera.fov=15;
     const halfAngle=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
-    const distance=Math.max((portrait?2.95:5.65)/(2*halfAngle*camera.aspect),4.4/(2*halfAngle));
+    const distance=Math.max((portrait||closed?2.95:5.65)/(2*halfAngle*camera.aspect),4.4/(2*halfAngle));
     camera.position.set(center+.1,-distance*.18,distance);
     camera.lookAt(center,.18,.25);camera.updateProjectionMatrix();
   }
   function resize() {
-    const width=host.clientWidth;portrait=width<620;
+    const width=host.clientWidth;if(width<1)return;portrait=width<620;
     const height=portrait?Math.max(440,Math.min(650,width*1.6)):Math.max(490,Math.min(740,width*.82));
     renderer.setSize(width,height,false);camera.aspect=width/height;
     frameCamera();
@@ -204,45 +246,40 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   }
   const observer=new ResizeObserver(resize);observer.observe(host);
   const canvas=renderer.domElement;
-  canvas.addEventListener('pointerdown',e=>{if(animation)return;drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+  const tools=document.createElement('div');tools.className='epic-model-tools';
+  tools.innerHTML='<span class="epic-model-hint">拖动旋转 · 页边翻页</span><div><button type="button" data-view="rotate" aria-pressed="true">旋转</button><button type="button" data-view="pan" aria-pressed="false">移动</button><button type="button" data-view="cover">封面</button><button type="button" data-view="reset">复位</button></div>';
+  host.before(tools);
+  function applyView() {
+    pivot.rotation.set(view.pitch,view.yaw,0);
+    const center=portrait||current===0||current===count-1?W/2:0;
+    pivot.position.set(center+view.x,view.y,0);
+    host.dataset.bookYaw=view.yaw.toFixed(3);host.dataset.bookPitch=view.pitch.toFixed(3);
+    requestDraw();
+  }
+  tools.addEventListener('click',e=>{
+    const mode=e.target.closest('[data-view]')?.dataset.view;if(!mode)return;
+    if(mode==='reset'||mode==='cover') {
+      view={yaw:0,pitch:0,x:0,y:0};applyView();
+      if(mode==='cover')turn(current===0||current===count-1?1:0,false);
+    } else {
+      viewMode=mode;tools.querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===mode)));
+      tools.querySelector('.epic-model-hint').textContent=mode==='pan'?'拖动移动 · 页边翻页':'拖动旋转 · 页边翻页';
+    }
+  });
+  canvas.addEventListener('contextmenu',e=>e.preventDefault());
+  canvas.addEventListener('pointerdown',e=>{
+    if(animation)return;
+    drag={x:e.clientX,y:e.clientY,start:{...view},mode:e.shiftKey||e.button===2?'pan':viewMode};canvas.setPointerCapture(e.pointerId);
+  });
   canvas.addEventListener('pointermove',e=>{
     if(drag){
-      if(reduced.matches)return;
       const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-      if(!animation&&Math.abs(dx)>9&&Math.abs(dx)>Math.abs(dy)){
-        drag.reverse=dx>0;drag.reverse?prev(true):next(true);
-        if(animation){animation.dragging=true;drag.active=true;}
-      }
-      if(drag.active&&animation){
-        const fraction=Math.max(0,Math.min(1,(drag.reverse?dx:-dx)/(canvas.clientWidth*.55)));
-        animation.progress=drag.reverse?1-fraction:fraction;bend(animation.progress);requestDraw();
-      }
+      view=dragBookView(drag.start,dx,dy,canvas.clientWidth,canvas.clientHeight,drag.mode);applyView();
       return;
     }
-    if(!reduced.matches&&e.pointerType==='mouse') {
-      const r=canvas.getBoundingClientRect();targetRotation.x=(e.clientY-r.top-r.height/2)/r.height*.025;targetRotation.y=(e.clientX-r.left-r.width/2)/r.width*.025;
-      book.rotation.x=targetRotation.x;book.rotation.y=targetRotation.y;requestDraw();
-    }
   });
-  canvas.addEventListener('pointerleave',()=>{if(!drag){book.rotation.x=book.rotation.y=0;requestDraw();}});
-  canvas.addEventListener('pointerup',e=>{
-    if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-    if(drag.active&&animation){
-      const fraction=drag.reverse?1-animation.progress:animation.progress;
-      animation.from=animation.progress;animation.to=fraction>.18?(drag.reverse?0:1):(drag.reverse?1:0);
-      if(fraction<=.18)animation.target=current;
-      animation.dragging=false;animation.duration=550;animation.started=performance.now();drag=null;
-      if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);return;
-    }
-    drag=null;
-    if(Math.abs(dx)>35&&Math.abs(dx)>Math.abs(dy)){dx<0?next(true):prev(true);return;}
-    const r=canvas.getBoundingClientRect();
-    if(e.clientY-r.top>r.height*.7&&e.clientY-r.top<r.height*.87&&current>0&&current<count-1) readChapter(Math.max(0,Math.floor((current-1)/2)),canvas);
-  });
-  canvas.addEventListener('pointercancel',()=>{
-    if(animation?.dragging){animation.target=current;animation.from=animation.progress;animation.to=animation.reverse?1:0;animation.dragging=false;animation.started=performance.now();animation.duration=350;if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);}
-    drag=null;
-  });
+  canvas.addEventListener('pointerup',()=>{drag=null;});
+  canvas.addEventListener('pointercancel',()=>{drag=null;});
   canvas.addEventListener('webglcontextlost',()=>{host.classList.remove('epic-3d-active');});
   resize();
   return {
@@ -251,7 +288,7 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
     flipNext:()=>next(true),flipPrev:()=>prev(true),turnToNextPage:()=>next(false),turnToPrevPage:()=>prev(false),update:resize,
     dispose(){
       disposed=true;observer.disconnect();if(raf)cancelAnimationFrame(raf);
-      textures.forEach(t=>t.dispose());grain.dispose();crisp.remove();
+      textures.forEach(t=>t.dispose());grain.dispose();bindingMap?.dispose();crisp.remove();tools.remove();
       const geometries=new Set(),materials=new Set();
       scene.traverse(m=>{if(m.geometry)geometries.add(m.geometry);if(m.material)materials.add(m.material);});
       geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());renderer.dispose();

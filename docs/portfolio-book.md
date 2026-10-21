@@ -1,5 +1,14 @@
 # 三维作品册
 
+## Current polish, 2026-10-22
+The user accepted the readability direction and requested realistic binding, whole-object manipulation and removal of a font jump. These are now implemented. Dragging the canvas rotates the entire model through unrestricted yaw/pitch; the Move mode or Shift/right drag pans within bounds; Reset restores its pose. Page edges still turn pages, so manipulation and reading do not compete for the same drag. Camera framing remains fixed during interaction. The persistent view pivot rotates around the visible book center (spread or single/closed book), and back-facing pages suppress the projected HTML ink.
+
+Cover mode uses the new generated leather albedo (docs/book-cover-asset.md), native beveled leather boards, aged brass L guards, spine ribs and a textured underside. The cover does not get covered by a flat HTML card. Its title/author are rendered with actual typesetting, not generated lettering. This is a material-and-geometry improvement, not a claim of photogrammetric accuracy or an imported GLB.
+
+The cause of the font jump was the Canvas text helper overriding headings/body with the sans stack, while resting HTML headings used Songti. Canvas and all resting page text now share the same Songti stack and regular weight; the title, running label, intro, notes, link captions and folio positions were also aligned. A regression test records the actual paint function's font selections. Minor browser-specific text antialiasing may still differ between a curved texture and native HTML, but the blackface-to-serif replacement is removed.
+
+Actual browser checks: rotate the closed model to yaw3.147/pitch0.492; rotate an open spread to the rear and observe zero visible HTML page layers; pan then reset to yaw/pitch0; read→page-edge next with Songti visible mid-turn; cover/read labels follow page state.390px body equals viewport width; no observed console errors. Captures: .book-qa/cover-v3.png, cover-mobile-v3.png, font-turn-v3.png. Full suite36/36 passes. This supersedes the previous browser-tool blocker below. No merge/push/publication.
+
 ## Scope and content
 Only #projects is enhanced. HTML article text, project icons and product links remain the source of truth; adding a project article automatically adds a directory entry and two book pages. Outside this section the production layout and three swords are unchanged. Full text is available from the explicit detail button and original list mode, including when the 3D view is inappropriate for reading.
 

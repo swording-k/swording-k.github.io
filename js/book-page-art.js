@@ -1,7 +1,7 @@
 // Canvas is only the ink on the physical paper, never a substitute for geometry.
 const PW=768, PH=1056;
 const serif='"Songti SC", "Noto Serif CJK SC", Georgia, serif';
-const sans='-apple-system, "PingFang SC", sans-serif';
+const sans=serif;
 const visuals=[
   [/fit\s?genius/i,'images/book/fitgenius-promo.webp','产品界面'],
   [/atoll/i,'images/book/atoll-stats.webp','产品界面','images/book/atoll-media.webp'],
@@ -44,66 +44,64 @@ export function paintBookPage(ctx,index,count,chapters,load) {
   gutter.addColorStop(0,'#00000035');gutter.addColorStop(1,'#00000000');
   ctx.fillStyle=gutter;ctx.fillRect(face?PW-58:0,0,58,PH);
   if(cover) {
-    ctx.strokeStyle='#a98d57';ctx.lineWidth=2;ctx.strokeRect(38,38,692,980);ctx.lineWidth=.7;ctx.strokeRect(48,48,672,960);
-    ctx.textAlign='center';ctx.fillStyle='#b9a274';ctx.font=`20px ${sans}`;ctx.fillText('杨锟  /  Killian Yang',384,147);
-    ctx.font=`69px ${serif}`;ctx.fillStyle='#dfd2af';ctx.fillText(index===0?'作品之书':'未完，待续',384,592);
-    ctx.font=`24px ${sans}`;ctx.fillStyle='#b9a274';ctx.fillText('从 AI 创意，到产品落地。',384,653);
-    ctx.fillStyle='#baa06b';ctx.fillRect(382,286,4,173);ctx.fillRect(347,327,74,5);
-    ctx.beginPath();ctx.moveTo(382,459);ctx.lineTo(386,459);ctx.lineTo(384,478);ctx.fill();
-    ctx.font=`18px ${sans}`;ctx.fillText('AI PRODUCT BUILDER',384,925);
+    const binding=load('images/book/leather-binding-v1.webp');
+    if(binding)ctx.drawImage(binding,0,0,PW,PH);
+    else {
+    ctx.fillStyle='#291f18';ctx.fillRect(0,0,PW,PH);
+    let seed=723;
+    for(let i=0;i<28000;i++) {
+      seed=(Math.imul(seed,1664525)+1013904223)>>>0;const x=(seed&1023)/1024*PW;
+      seed=(Math.imul(seed,1664525)+1013904223)>>>0;const y=(seed&2047)/2048*PH;
+      ctx.fillStyle=i%3?'#08050325':'#c9a67b12';ctx.fillRect(x,y,i%5===0?3:1,1);
+    }
+    ctx.fillStyle='#17110d';ctx.fillRect(0,0,65,PH);
+    for(const y of [150,315,740,905]) {ctx.fillStyle='#38291e';ctx.fillRect(0,y,65,15);ctx.fillStyle='#0d0907';ctx.fillRect(0,y+15,65,4);}
+    ctx.strokeStyle='#110c08';ctx.lineWidth=9;ctx.strokeRect(92,55,619,946);
+    ctx.strokeStyle='#755a3833';ctx.lineWidth=2;ctx.strokeRect(99,62,605,932);
+    ctx.fillStyle='#756344';ctx.fillRect(402,266,5,175);ctx.fillRect(371,304,67,5);
+    ctx.beginPath();ctx.moveTo(402,441);ctx.lineTo(407,441);ctx.lineTo(404,458);ctx.fill();
+    }
+    const center=binding?420:405;
+    ctx.textAlign='center';ctx.fillStyle='#a58c61';ctx.font=`66px ${serif}`;
+    ctx.shadowColor='#090603';ctx.shadowOffsetY=3;ctx.fillText(index===0?'作品之书':'未完，待续',center,600);ctx.shadowOffsetY=0;
+    ctx.font=`29px ${serif}`;ctx.fillStyle='#a18a65';ctx.fillText('杨锟',center,826);
+    ctx.font=`21px ${serif}`;ctx.fillStyle='#786244';ctx.fillText('Killian Yang  ·  2026',center,874);
     ctx.restore();return;
   }
   const ch=chapters[Math.floor((index-1)/2)],spec=visuals.find(v=>v[0].test(ch.title));
   const ink=face?'#d8caab':'#30372f',muted=face?'#a3977d':'#7c7057';
-  ctx.fillStyle=muted;ctx.font=`17px ${sans}`;
-  ctx.fillText(face?'SELECTED WORKS  /  杨锟':'项目手记  /  '+String(ch.index+1).padStart(2,'0'),54,72);
-  rule(ctx,54,96,660,face?'#b9a27455':'#86765366');
+  ctx.fillStyle=muted;ctx.font=`25px ${sans}`;
+  ctx.fillText(face?'杨锟 / 作品之书':'项目手记',58,75);
   if(face) {
-    ctx.fillStyle=ink;ctx.font=`52px ${serif}`;
-    // Fit long English titles to two deliberate lines, never shrink the entire spread.
-    const title=ch.title;
-    if(ctx.measureText(title).width<=650)ctx.fillText(title,54,177);
-    else {
-      const words=title.split(' ');let a='';
-      while(words.length&&ctx.measureText(a+words[0]+' ').width<640)a+=words.shift()+' ';
-      ctx.fillText(a.trim()||title.slice(0,12),54,168);
-      ctx.fillText(words.join(' ')||title.slice(12),54,226);
-    }
-    ctx.fillStyle=muted;text(ctx,ch.label,56,276,650,19,30,2);
+    ctx.fillStyle=ink;text(ctx,ch.title,54,178,660,54,66,2);
+    ctx.fillStyle=muted;text(ctx,ch.label,54,290,660,25,36,2);
     if(spec) {
       const img=load(spec[1]);
       const tall=img&&img.naturalHeight/img.naturalWidth>1.15;
-      ctx.fillStyle='#0c1311';ctx.fillRect(38,326,690,490);
       image(ctx,img,tall?98:48,338,tall?570:670,466);
       if(spec[3]) {
         ctx.fillStyle='#080d0b';ctx.fillRect(64,728,640,111);
         image(ctx,load(spec[3]),74,733,620,98);
       }
-      ctx.fillStyle=muted;ctx.font=`16px ${sans}`;ctx.fillText(spec[2],56,865);
     } else {
       // No invented screenshots for projects without a captured interface.
       image(ctx,load(ch.icon.getAttribute('src')),205,380,358,358);
-      ctx.fillStyle=muted;ctx.font=`18px ${sans}`;ctx.fillText('独立作品 · '+String(ch.index+1).padStart(2,'0'),56,865);
     }
-    rule(ctx,54,840,660,'#b9a27455');
     const notes=ch.notes.replace(/(Launched|Built with|Role)/g,' · $1: ').replace(/^ · /,'');
     ctx.fillStyle=ink;text(ctx,notes,56,874,620,24,34,2);
     ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,972);
   } else {
-    ctx.fillStyle=muted;ctx.font=`18px ${sans}`;ctx.fillText('从想法，到可以使用的作品',58,163);
     ctx.fillStyle=ink;
     text(ctx,ch.title,58,229,648,54,66,2);
-    rule(ctx,58,320,72,'#8b7043');
     ctx.fillStyle='#353c33';
     text(ctx,ch.intro,58,390,644,40,62,8);
-    rule(ctx,58,900,650,'#86765355');
     ctx.fillStyle='#745b32';ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,952);
     let linkX=58+ctx.measureText('完整介绍 ↗').width+32;
     for(const a of ch.links.slice(0,2)) {
       const label=a.textContent.trim();ctx.fillText(label,linkX,952);linkX+=ctx.measureText(label).width+32;
     }
   }
-  ctx.fillStyle=muted;ctx.font=`17px ${sans}`;ctx.fillText(String(index).padStart(2,'0'),face?54:678,1010);
+  ctx.fillStyle=muted;ctx.font=`24px ${sans}`;ctx.textAlign='right';ctx.fillText(String(index).padStart(2,'0'),710,1026);
   ctx.restore();
 }
 

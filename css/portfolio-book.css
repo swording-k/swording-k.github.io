@@ -34,6 +34,12 @@
 .epic-3d-active { padding:0; }
 .epic-webgl { display:block;width:100%;height:auto;touch-action:pan-y;cursor:grab;border-radius:4px; }
 .epic-webgl:active { cursor:grabbing; }
+.epic-spatial .epic-webgl { touch-action:none; }
+.epic-model-tools { display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 4px 10px;color:#aa9a7e;font-size:12px; }
+.epic-model-tools>div { display:flex;gap:4px; }
+.epic-model-tools button { color:#b9aa8c;border:0;background:transparent;padding:8px 10px;font-size:12px; }
+.epic-model-tools button[aria-pressed=true] { color:#f0dbb4;background:#b9a2751a; }
+.epic-crisp-page,.epic-crisp-page :is(h4,p,a,button,span) { font-family:'Songti SC','Noto Serif CJK SC',Georgia,serif!important;font-weight:400!important; }
 .epic-spatial .epic-book-controls { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
 .epic-spatial :is(.epic-live-actions,.epic-chapter-controls) { display:none; }
 .epic-crisp-layer { position:absolute;inset:0;pointer-events:none;overflow:hidden; }

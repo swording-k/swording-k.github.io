@@ -4,7 +4,13 @@
 - [x] Diagnose undersized canvas text and intentional instant catalog path.
 - [x] Implement sharp native resting pages, transparent stage, animated catalog and paper-edge controls.
 - [x] Apply code review fixes for notes consistency and keyboard focus.
-- [ ] Actual desktop/mobile visual and interaction acceptance — browser tools currently time out; do not publish.
+- [x] Actual desktop/mobile visual and interaction checks — browser connection recovered; captures and limits recorded in progress.md. Do not publish without user approval.
+
+## Binding and model polish
+- [x] Realistic leather binding artwork on beveled physical cover geometry.
+- [x] Whole-book rotation, pan and reset; back-facing HTML culled.
+- [x] Shared Songti rendering across static/turning pages with font regression coverage.
+- [x] Independent code review fix for Cover/Read state,36 tests and actual mobile/desktop interaction checks.
 
 - [x] Inspect actual supplied 21.87s video: tabletop book, curved paper turn, complete project spreads.
 - [x] Research StPageFlip vs turn.js. Initial engine rejected by user as too flat; removed from build.
