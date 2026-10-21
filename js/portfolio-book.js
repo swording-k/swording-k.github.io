@@ -23,6 +23,7 @@ function initBook() {
   shell.innerHTML=`<div class="epic-library-top"><div><h3>作品之书</h3><p>翻过一页，走进一个作品。</p></div><div class="epic-view-tools"><button type="button" class="epic-catalog-toggle" aria-expanded="false">目录</button><button type="button" class="epic-list-toggle" aria-pressed="false">列表阅读</button></div></div><div class="epic-library-layout"><aside class="epic-catalog" aria-label="作品之书目录"><label class="epic-search-label">查找作品<input type="search" placeholder="搜索项目名称" aria-label="搜索项目名称"></label><nav class="epic-chapters"></nav><p class="epic-no-results" hidden>没有匹配的作品</p><p class="epic-catalog-note">目录可以直接跳转，<br>不必从第一页开始。</p></aside><div class="epic-desk"><div class="epic-book-wrap"><div class="epic-book" aria-label="可翻阅的项目作品册"></div></div><div class="epic-book-controls"><button type="button" data-book-action="prev" aria-label="上一页">←</button><div><output class="epic-page-status" aria-live="polite"></output><span>拖动页角 · 点击箭头翻页</span></div><button type="button" data-book-action="next" aria-label="下一页">→</button></div><div class="epic-chapter-controls"><button type="button" data-book-action="previous-chapter">上一作品</button><button type="button" data-book-action="cover">查看封面</button><button type="button" data-book-action="next-chapter">下一作品</button></div></div></div>`;
   section.querySelector('.section-header').after(shell);
   const bookEl=shell.querySelector('.epic-book'), nav=shell.querySelector('.epic-chapters');
+  const returnCover=make('button','epic-return-cover','返回封面');returnCover.type='button';returnCover.dataset.bookAction='cover';nav.before(returnCover);
   const pageNodes=[];
   function page(cls) {
     const p=make('section','epic-paper '+cls);
@@ -118,7 +119,7 @@ function initBook() {
     if(chapter){go(chapterPage(Number(chapter.dataset.chapter),chapters.length),true);shell.classList.remove('epic-catalog-open');shell.querySelector('.epic-catalog-toggle').setAttribute('aria-expanded','false');return;}
     const read=e.target.closest('[data-read]');if(read){readChapter(Number(read.dataset.read),read);return;}
     const action=e.target.closest('[data-book-action]')?.dataset.bookAction;
-    if(action==='cover') go(0,true);
+    if(action==='cover') {shell.classList.remove('epic-catalog-open');shell.querySelector('.epic-catalog-toggle').setAttribute('aria-expanded','false');go(0,true);}
     if(action==='open') go(1,true);
     if(action==='next'||action==='prev'){
       const direction=action==='next'?'Next':'Prev';
@@ -154,7 +155,7 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=13');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=15');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();

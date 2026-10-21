@@ -19,6 +19,9 @@
 - [x] Capture desktop/mobile and save independent branch, no publication.
 
 ## Design contract
+
+Latest interaction pass: paper owns read-mode drags; outside owns rotation. Physical hinge closes the binding for both return-cover actions. Shared ivory paper art documented in docs/book-paper-asset.md. Actual held-turn/hinge and cancellation/reduced-motion checks completed;37 tests pass. No merge or publication.
+
 Original black/gold site is authority. Do not import rejected editorial CSS. Original project articles remain the content source. A dark hardcover and warm paper create the epic book; no invented swords or marketing claims. Real subdivided paper geometry handles curl; application handles catalog and accessible reading. Bounded stage rather than long pinned scroll. Desktop spreads, phone one page. Native full list remains available and is default if JS fails.
 
 ## Implementation

@@ -43,3 +43,10 @@ Code review identified missing static-page notes and a keyboard focus regression
 
 ## Verification and limits
 See progress.md and ignored .book-qa/ captures. The scene now has project-led spreads, leather grain, physical paper edges, curved resting pages and a stationary camera throughout a turn. The phone uses a longer lens rather than retreating mid-animation. Six state/geometry tests cover navigation and paper bounds, not full camera projection; actual held-turn screenshots provide the visual check. No low-end-device FPS, battery or cold public-network benchmark has been performed. Neither source comments nor test success imply user aesthetic acceptance or parity with the reference video.
+# 2026-10-22 interaction refinement
+
+Default mode distinguishes on-paper page dragging from outside model rotation. Explicit rotation and pan modes remain available. Sheet progress follows the pointer and settles back when released below threshold. Reduced motion performs at most one turn per release.
+
+Cover return rotates the physical left binding around the spine onto the right page block and eases framing to the closed book. Directory return dismisses the mobile catalog first. Inner visual and story pages now share ivory laid-paper artwork (see book-paper-asset.md), dark Songti ink and restrained print borders. Curvature varies slightly along page height to avoid a uniform cylinder turn.
+
+Verified with actual pointer input in the local preview: forward turn, short-drag cancellation, held hinge, completed close/open, directory close, and reduced-motion five-move drag producing only one turn. Screenshot evidence under ignored .book-qa/: paper-drag-v4.png and closing-held-v4.png.37 automated tests pass. This is not a deployment or a claim of user aesthetic acceptance.

@@ -1,6 +1,6 @@
 // A constant arc-length paper strip. Each sample is an actual 3D vertex.
 export function sheetStrip(progress, width, segments=36, across=.5) {
-  const p=Math.max(0,Math.min(1,progress));
+  const p=Math.max(0,Math.min(1,progress+Math.sin(Math.PI*progress)*(across-.5)*.16));
   const curl=Math.sin(Math.PI*p);
   const points=[{x:0,z:0}];
   for(let i=1;i<=segments;i++) {

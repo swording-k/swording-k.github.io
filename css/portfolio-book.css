@@ -71,6 +71,14 @@
 .crisp-page-edge span { display:block;font:80px/1 Georgia,serif; }
 .epic-crisp-page:hover .crisp-page-edge,.crisp-page-edge:focus-visible { opacity:.7; }
 .epic-crisp-page.is-cover { background:#1b1916;color:#dfcda5; }
+.epic-crisp-page:not(.is-cover),.epic-crisp-page.is-visual { background:#eee5d2 url('../images/book/laid-paper-v1.webp') center/100% 100%;color:#353025; }
+.is-visual .crisp-running,.is-visual .crisp-kind { color:#786b52; }
+.is-visual .crisp-actions button { color:#72572c; }
+.crisp-visual img:not(.crisp-icon-only):not(.crisp-image-detail) { border:12px solid #faf4e7;box-sizing:border-box; }
+.epic-crisp-page:not(.is-cover)::after { content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#37291c25,transparent 8%); }
+.epic-crisp-page.is-visual::after { background:linear-gradient(270deg,#37291c25,transparent 8%); }
+.epic-return-cover { background:none;border:0;color:#cdb78e;padding:12px 0;text-align:left;font-size:13px; }
+@media(max-width:480px) { .epic-model-tools { flex-wrap:wrap;gap:4px; }.epic-model-tools>div { margin-left:auto; } }
 .is-cover h4 { top:510px;left:0;width:100%;text-align:center;font-size:76px;line-height:1.4; }
 .crisp-cover-author { top:130px;text-align:center;font-size:28px; }
 .crisp-cover-line { top:650px;text-align:center;font-size:30px; }

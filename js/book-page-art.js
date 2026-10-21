@@ -2,6 +2,7 @@
 const PW=768, PH=1056;
 const serif='"Songti SC", "Noto Serif CJK SC", Georgia, serif';
 const sans=serif;
+const bookNotes=value=>value.replace(/Launched/g,'发布：').replace(/Built with/g,' · 技术：').replace(/Role/g,' · 负责：');
 const visuals=[
   [/fit\s?genius/i,'images/book/fitgenius-promo.webp','产品界面'],
   [/atoll/i,'images/book/atoll-stats.webp','产品界面','images/book/atoll-media.webp'],
@@ -36,8 +37,8 @@ export function paintBookPage(ctx,index,count,chapters,load) {
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   const cover=index===0||index===count-1;
   const face=!cover&&index%2===1;
-  const dark=cover||face;
-  ctx.fillStyle=dark?'#1b1916':'#eee5d2';ctx.fillRect(0,0,PW,PH);
+  ctx.fillStyle=cover?'#1b1916':'#eee5d2';ctx.fillRect(0,0,PW,PH);
+  if(!cover){const stock=load('images/book/laid-paper-v1.webp');if(stock)ctx.drawImage(stock,0,0,PW,PH);}
   // Quiet grain belongs to the paper, not a translucent veil over the whole site.
   for(let y=0;y<PH;y+=4){ctx.fillStyle=y%12?'#00000003':'#ffffff05';ctx.fillRect(0,y,PW,1);}
   const gutter=ctx.createLinearGradient(face?PW:0,0,face?PW-58:58,0);
@@ -69,7 +70,7 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     ctx.restore();return;
   }
   const ch=chapters[Math.floor((index-1)/2)],spec=visuals.find(v=>v[0].test(ch.title));
-  const ink=face?'#d8caab':'#30372f',muted=face?'#a3977d':'#7c7057';
+  const ink='#353025',muted='#786b52';
   ctx.fillStyle=muted;ctx.font=`25px ${sans}`;
   ctx.fillText(face?'杨锟 / 作品之书':'项目手记',58,75);
   if(face) {
@@ -78,7 +79,8 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     if(spec) {
       const img=load(spec[1]);
       const tall=img&&img.naturalHeight/img.naturalWidth>1.15;
-      image(ctx,img,tall?98:48,338,tall?570:670,466);
+      ctx.fillStyle='#faf4e7';ctx.fillRect(48,338,670,466);
+      image(ctx,img,tall?110:60,350,tall?546:646,442);
       if(spec[3]) {
         ctx.fillStyle='#080d0b';ctx.fillRect(64,728,640,111);
         image(ctx,load(spec[3]),74,733,620,98);
@@ -87,7 +89,7 @@ export function paintBookPage(ctx,index,count,chapters,load) {
       // No invented screenshots for projects without a captured interface.
       image(ctx,load(ch.icon.getAttribute('src')),205,380,358,358);
     }
-    const notes=ch.notes.replace(/(Launched|Built with|Role)/g,' · $1: ').replace(/^ · /,'');
+    const notes=bookNotes(ch.notes);
     ctx.fillStyle=ink;text(ctx,notes,56,874,620,24,34,2);
     ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,972);
   } else {
@@ -120,7 +122,7 @@ export function createCrispPage(index,count,chapters) {
   el.querySelector('h4').textContent=ch.title;
   el.querySelector('.crisp-kind').textContent=ch.label;
   el.querySelector('.crisp-intro').textContent=ch.intro;
-  el.querySelector('.crisp-notes').textContent=ch.notes.replace(/(Launched|Built with|Role)/g,' · $1: ').replace(/^ · /,'');
+  el.querySelector('.crisp-notes').textContent=bookNotes(ch.notes);
   el.querySelector('.crisp-folio').textContent=String(index).padStart(2,'0');
   const spec=visuals.find(v=>v[0].test(ch.title)),picture=document.createElement('img');
   picture.src=spec?.[1]||ch.icon.getAttribute('src');picture.alt=ch.title;picture.draggable=false;
