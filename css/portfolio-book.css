@@ -34,6 +34,43 @@
 .epic-3d-active { padding:0; }
 .epic-webgl { display:block;width:100%;height:auto;touch-action:pan-y;cursor:grab;border-radius:4px; }
 .epic-webgl:active { cursor:grabbing; }
+.epic-spatial .epic-book-controls { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+.epic-spatial :is(.epic-live-actions,.epic-chapter-controls) { display:none; }
+.epic-crisp-layer { position:absolute;inset:0;pointer-events:none;overflow:hidden; }
+.epic-crisp-page { position:absolute;left:0;top:0;width:768px;height:1056px;transform-origin:0 0;background:#eee5d2;color:#30372f;overflow:hidden;font-family:-apple-system,'PingFang SC',sans-serif; }
+.epic-crisp-page p,.epic-crisp-page h4 { margin:0;position:absolute;left:58px;width:648px; }
+.epic-crisp-page h4 { top:178px;font:500 54px/66px 'Songti SC',Georgia,serif;max-height:132px;overflow:hidden; }
+.crisp-running { top:50px;font-size:25px;line-height:34px;color:#7c7057; }
+.crisp-kind { display:none; }
+.crisp-intro { top:350px;font-size:40px;line-height:62px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:8;overflow:hidden; }
+.crisp-visual { display:none; }
+.crisp-notes { display:none; }
+.epic-crisp-page.is-visual { background:#1b1916;color:#e5d9bd; }
+.epic-crisp-page.is-visual h4 { top:124px;left:54px;width:660px;font-size:54px; }
+.is-visual .crisp-running { color:#b9aa8d; }
+.is-visual .crisp-kind { display:block;top:265px;left:54px;color:#c8baa0;font-size:25px;line-height:36px; }
+.is-visual .crisp-intro { display:none; }
+.is-visual .crisp-notes { display:-webkit-box;top:849px;left:56px;width:620px;font-size:24px;line-height:34px;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden; }
+.is-visual .crisp-actions { bottom:64px; }
+.is-visual .crisp-visual { display:block;position:absolute;left:48px;top:338px;width:670px;height:466px; }
+.crisp-visual img { display:block;position:absolute;width:100%;height:100%;object-fit:contain; }
+.crisp-visual img.crisp-image-detail { top:395px;left:26px;width:620px;height:98px;object-fit:contain;background:#0c1110; }
+.crisp-visual img.crisp-icon-only { top:42px;left:157px;width:358px;height:358px; }
+.crisp-actions { position:absolute;left:58px;right:58px;bottom:82px;display:flex;align-items:center;gap:32px;flex-wrap:wrap; }
+.crisp-actions :is(button,a),.crisp-open { pointer-events:auto;background:none;border:0;color:#72572c;padding:8px 0;font:28px/40px -apple-system,'PingFang SC',sans-serif;text-decoration:none; }
+.is-visual .crisp-actions button { color:#dfcda5; }
+.crisp-folio { position:absolute;bottom:30px;right:58px;color:#9b8b6b;font-size:24px; }
+.epic-crisp-page .crisp-page-edge { position:absolute;top:120px;bottom:100px;width:44px;padding:0;border:0;background:transparent;color:inherit;pointer-events:auto;opacity:0;transition:opacity .18s; }
+.crisp-page-edge.prev { left:0; }.crisp-page-edge.next { right:0; }
+.crisp-page-edge span { display:block;font:80px/1 Georgia,serif; }
+.epic-crisp-page:hover .crisp-page-edge,.crisp-page-edge:focus-visible { opacity:.7; }
+.epic-crisp-page.is-cover { background:#1b1916;color:#dfcda5; }
+.is-cover h4 { top:510px;left:0;width:100%;text-align:center;font-size:76px;line-height:1.4; }
+.crisp-cover-author { top:130px;text-align:center;font-size:28px; }
+.crisp-cover-line { top:650px;text-align:center;font-size:30px; }
+.crisp-open { position:absolute;top:820px;left:250px;width:268px;color:#dfcda5; }
+.crisp-cover-blade { position:absolute;left:382px;top:290px;width:5px;height:170px;background:#b8a073; }
+.crisp-cover-blade::after { content:'';position:absolute;top:38px;left:-35px;width:75px;height:5px;background:inherit; }
 .epic-live-actions { display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 20px;margin:18px 0 0; }
 .epic-live-actions :is(button,a) { color:#d2b581;font-size:12px;padding:8px 0;background:none;border:0;border-bottom:1px solid #bca37055;text-decoration:none; }
 .epic-live-actions button { color:#f2e2bf; }
@@ -108,3 +145,12 @@
  .epic-details-content { padding:25px; }.epic-details-content h3 { font-size:34px; }.epic-details-bar { padding:16px 22px; }
 }
 @media(prefers-reduced-motion:reduce) { .epic-library *, .epic-library *::before,.epic-library *::after { transition:none!important;animation:none!important; } }
+@media(max-width:1050px) {
+ .epic-library-layout { display:block;position:relative; }
+ .epic-catalog-toggle { display:block; }
+ .epic-catalog { display:none;position:absolute;left:0;top:0;width:min(420px,100%);max-height:70vh;overflow:auto;padding:18px;background:#171512;z-index:8; }
+ .epic-catalog-open .epic-catalog { display:block; }
+ .epic-chapters { grid-template-columns:1fr 1fr;gap:4px 12px; }
+ .epic-catalog-note { display:none; }
+ .epic-3d-active { padding:0; }
+}

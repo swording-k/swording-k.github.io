@@ -115,7 +115,7 @@ function initBook() {
   ['mousedown','touchstart'].forEach(type=>bookEl.addEventListener(type,e=>{if(e.target.closest('a,button'))e.stopPropagation();},{capture:true,passive:true}));
   shell.addEventListener('click',e=>{
     const chapter=e.target.closest('[data-chapter].epic-chapter');
-    if(chapter){go(chapterPage(Number(chapter.dataset.chapter),chapters.length));shell.classList.remove('epic-catalog-open');shell.querySelector('.epic-catalog-toggle').setAttribute('aria-expanded','false');return;}
+    if(chapter){go(chapterPage(Number(chapter.dataset.chapter),chapters.length),true);shell.classList.remove('epic-catalog-open');shell.querySelector('.epic-catalog-toggle').setAttribute('aria-expanded','false');return;}
     const read=e.target.closest('[data-read]');if(read){readChapter(Number(read.dataset.read),read);return;}
     const action=e.target.closest('[data-book-action]')?.dataset.bookAction;
     if(action==='cover') go(0,true);
@@ -154,7 +154,7 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=10');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=11');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();
