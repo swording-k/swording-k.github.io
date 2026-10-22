@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip,restingPaperZ,turningPaperZ } from './book-surface.mjs?v=5';
-import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=8';
+import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=9';
 import { pageMatrix } from './book-projection.mjs';
 import { dragBookView, bookGesture } from './book-view-state.mjs?v=3';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
@@ -152,6 +152,13 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
     if(!src)return null;
     if(images.has(src))return images.get(src).complete&&images.get(src).naturalWidth?images.get(src):null;
     const img=new Image();images.set(src,img);
+    let retried=false;
+    img.onerror=()=>{
+      if(disposed||retried)return;
+      retried=true;
+      // Retry transient/cache failures once; retain the original page-painting key.
+      img.src=src+(src.includes('?')?'&':'?')+'book-retry=1';
+    };
     img.onload=()=>{
       if(disposed)return;
       if(src.includes('leather-binding')) {
@@ -348,6 +355,11 @@ export async function createBookScene(host, chapters, {initialPage=1,onPage,read
   resize();
   // Decode before exposing the interactive scene: a first reverse turn must not paint an empty photo.
   await Promise.all([...images.values()].map(img=>img.decode().catch(()=>{})));
+  // Decode and load events can settle separately: commit all available ink.
+  for(const [index,texture] of textures){
+    paintBookPage(texture.image.getContext('2d'),index,count,chapters,loadImage);
+    texture.needsUpdate=true;
+  }
   draw();
   return {
     getCurrentPageIndex:()=>current,getOrientation:()=>portrait?'portrait':'landscape',

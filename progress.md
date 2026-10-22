@@ -21,3 +21,10 @@ Independent review: initial fix verdict identified two navigation/gesture issues
 Second visual pass: added five compressed real product captures (about190KB), dark visual/ivory story spreads, native leather grain and curved resting sheets. Removed camera pullback from bend; tightened the constant-length strip and used a longer fixed lens on phones. Hide absent left stack edges in portrait. Actual final screenshots at1440×1000 and390×844: .book-qa/desktop-v2.png, desktop-turn-v2.png, mobile-v2.png, mobile-turn-v2.png. Phone mid-turn raised top is now inside the stage; the departing sheet naturally exits toward the left. Original full article dialog preserves FitGenius1.6 content; portrait next reaches02 and prev returns01. Directory WorkIsland updates status, list mode restores original cards, returning to book works. Desktop logs contain no observed console errors. Mobile body width equals390, desktop equals1440.
 
 Independent code review of this pass found no blocking regression; requested image provenance now recorded in docs/portfolio-book.md. Full test run initially exposed an existing stale expectation of8 project cards (production2328e4f already has9). Updated the preservation assertion to require all nine named cards while allowing future additions. Final full suite:32/32 pass, including six book state/geometry tests. git diff --check passes. No device FPS/battery test or public deployment claimed.
+# Release preparation — 2026-10-22
+
+- User approved the hall/book design for main and public deployment.
+- Checked book screenshots, icons and paper/binding sources in the publishable tree; no missing local files. Browser checks showed Atoll, WorkIsland, Theme Creator, bookstore, blog and Pets pages rendering. The originally reported intermittent blank state was not reproduced in this session.
+- Fixed the confirmed empty-mount failure path: retry image failures once, retain the product icon when a screenshot is unavailable, and repaint cached page textures after initial decode. Updated module cache versions.
+- All 44 Node tests, JavaScript syntax and whitespace checks pass. Publication status must be verified separately after push.
+

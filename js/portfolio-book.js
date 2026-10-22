@@ -155,7 +155,7 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=19');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=20');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();

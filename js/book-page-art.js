@@ -89,13 +89,14 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     ctx.fillStyle=ink;text(ctx,ch.title,titleX,178,714-titleX,54,66,2);
     ctx.fillStyle=muted;text(ctx,ch.label,54,290,660,25,36,2);
     if(spec) {
-      const img=load(spec[1]);
+      const img=load(spec[1])||productIcon;
       const tall=img&&img.naturalHeight/img.naturalWidth>1.15;
       ctx.fillStyle='#faf4e7';ctx.fillRect(48,338,670,466);
       image(ctx,img,tall?110:60,350,tall?546:646,442);
-      if(spec[3]) {
+      const detail=spec[3]&&load(spec[3]);
+      if(detail) {
         ctx.fillStyle='#080d0b';ctx.fillRect(64,728,640,111);
-        image(ctx,load(spec[3]),74,733,620,98);
+        image(ctx,detail,74,733,620,98);
       }
     } else {
       // No invented screenshots for projects without a captured interface.
