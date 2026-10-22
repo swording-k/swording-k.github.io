@@ -9,14 +9,16 @@ const visuals=[
   [/workisland/i,'images/book/workisland-approval.webp','产品界面示例'],
   [/theme/i,'images/book/theme-studio.webp','主题工作台'],
   [/最后的书店/,'images/last-bookstore-poster.png','作品海报'],
-  [/pet/i,'images/codex-pet-collection-preview.png','角色动作预览']
+  [/lovecourt/i,'images/book/lovecourt-home.webp','产品界面']
 ];
+const petPortraits=[['images/book/pet-buddy.webp','原创健身小人'],['images/book/pet-zoro.webp','索隆'],['images/book/pet-spongebob.webp','海绵宝宝']];
 export function preloadBookImages(chapters,load) {
   const sources=new Set(['images/book/laid-paper-v1.webp','images/book/leather-binding-v1.webp']);
   for(const ch of chapters) {
     sources.add(ch.icon.getAttribute('src'));
     const spec=visuals.find(v=>v[0].test(ch.title));
     if(spec){sources.add(spec[1]);if(spec[3])sources.add(spec[3]);}
+    if(/pet/i.test(ch.title))petPortraits.forEach(([src])=>sources.add(src));
   }
   sources.forEach(src=>{if(src)load(src);});
 }
@@ -88,7 +90,14 @@ export function paintBookPage(ctx,index,count,chapters,load) {
   if(face) {
     ctx.fillStyle=ink;text(ctx,ch.title,titleX,178,714-titleX,54,66,2);
     ctx.fillStyle=muted;text(ctx,ch.label,54,290,660,25,36,2);
-    if(spec) {
+    if(/pet/i.test(ch.title)) {
+      petPortraits.forEach(([src,label],i)=>{
+        image(ctx,load(src),60+i*226,375,188,328);
+        ctx.fillStyle=ink;ctx.font=`24px ${serif}`;ctx.textAlign='center';
+        ctx.fillText(label,154+i*226,754);
+      });
+      ctx.textAlign='left';
+    } else if(spec) {
       const img=load(spec[1])||productIcon;
       const tall=img&&img.naturalHeight/img.naturalWidth>1.15;
       ctx.fillStyle='#faf4e7';ctx.fillRect(48,338,670,466);
@@ -141,6 +150,10 @@ export function createCrispPage(index,count,chapters) {
   picture.src=spec?.[1]||ch.icon.getAttribute('src');picture.alt=ch.title;picture.draggable=false;
   if(!spec)picture.className='crisp-icon-only';
   el.querySelector('.crisp-visual').append(picture);
+  if(/pet/i.test(ch.title)){
+    const portraits=petPortraits.map(([src,label])=>{const img=document.createElement('img');img.src=src;img.alt=label;img.draggable=false;return img;});
+    el.querySelector('.crisp-visual').replaceChildren(...portraits);
+  }
   if(spec?.[3]){const detail=document.createElement('img');detail.src=spec[3];detail.alt='Atoll 媒体控制';detail.className='crisp-image-detail';detail.draggable=false;el.querySelector('.crisp-visual').append(detail);}
   const actions=el.querySelector('.crisp-actions'),read=document.createElement('button');
   read.type='button';read.dataset.surfaceAction='read';read.textContent='完整介绍 ↗';actions.append(read);

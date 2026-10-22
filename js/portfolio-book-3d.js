@@ -1,12 +1,12 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip,restingPaperZ,turningPaperZ } from './book-surface.mjs?v=5';
-import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=9';
+import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=10';
 import { pageMatrix } from './book-projection.mjs';
 import { dragBookView, bookGesture } from './book-view-state.mjs?v=3';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
 
 // Real geometry, lighting and two independently typeset paper faces.
-export async function createBookScene(host, chapters, {initialPage=1,onPage,readChapter}) {
+export async function createBookScene(host, chapters, {initialPage=0,onPage,readChapter}) {
   const W=2.65,H=3.65, count=chapters.length*2+2;
   await document.fonts.load('40px "Songti SC"');
   host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','锻造之书，方向键翻页');

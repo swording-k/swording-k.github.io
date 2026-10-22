@@ -1,5 +1,15 @@
 # Epic portfolio book
 
+## Catalog and product truth revision, 2026-10-22
+- [x] Verify product repositories and write source-backed short copy.
+- [x] Start closed; group chapters into personal products, open-source contributions, hackathon works, and remaining tools/content.
+- [x] Add LoveCourt with its public demo (no private repository link); hold Mineradio until user says ready.
+- [x] Replace the Pets contact sheet with large representative atlas frames.
+- [x] Check desktop/phone cover, catalog/search/page mapping, links and rendering.
+- [ ] Merge and verify public deployment.
+
+Reuse decision: extend the existing semantic catalog, DOM article source and Three.js renderer. No new carousel, book engine or dependency is needed. Explicit user design is the specification; preserve the accepted visual world.
+
 ## Active correction, 2026-10-22
 - [x] Diagnose undersized canvas text and intentional instant catalog path.
 - [x] Implement sharp native resting pages, transparent stage, animated catalog and paper-edge controls.

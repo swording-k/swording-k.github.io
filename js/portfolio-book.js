@@ -1,4 +1,5 @@
 import { chapterPage, pageChapter } from './portfolio-book-state.mjs?v=2';
+import { BOOK_CATEGORIES, orderChapters, matchesChapter } from './portfolio-catalog.mjs?v=1';
 
 function initBook() {
   const section = document.querySelector('#projects');
@@ -11,18 +12,26 @@ function initBook() {
     const el = document.createElement(tag); el.className = cls;
     if(value) el.textContent=value; return el;
   };
-  const chapters = source.map((article,i) => ({
+  const chapters = orderChapters(source.map((article,i) => ({
     title:text(article.querySelector('h3')), article, index:i,
+    category:article.dataset.bookCategory,
     icon:article.querySelector('.featured-visual img,.project-card-head img'),
     label:text(article.querySelector('.project-meta,.project-label')),
     intro:text(article.querySelector('.featured-copy > p')) || text(article.querySelector(':scope > p')),
     links:[...article.querySelectorAll('.project-actions a,:scope > a')],
     notes:text(article.querySelector('.project-notes,.launch-strip'))
-  }));
+  })));
   const shell=make('div','epic-library');
   shell.innerHTML=`<div class="epic-library-top"><div><h3>锻造之书</h3><p>翻过一页，走进一个作品。</p></div><div class="epic-view-tools"><button type="button" class="epic-catalog-toggle" aria-expanded="false">目录</button><button type="button" class="epic-list-toggle" aria-pressed="false">列表阅读</button></div></div><div class="epic-library-layout"><aside class="epic-catalog" aria-label="锻造之书目录"><label class="epic-search-label">查找作品<input type="search" placeholder="搜索项目名称" aria-label="搜索项目名称"></label><nav class="epic-chapters"></nav><p class="epic-no-results" hidden>没有匹配的作品</p><p class="epic-catalog-note">目录可以直接跳转，<br>不必从第一页开始。</p></aside><div class="epic-desk"><div class="epic-book-wrap"><div class="epic-book" aria-label="可翻阅的项目作品册"></div></div><div class="epic-book-controls"><button type="button" data-book-action="prev" aria-label="上一页">←</button><div><output class="epic-page-status" aria-live="polite"></output><span>拖动页角 · 点击箭头翻页</span></div><button type="button" data-book-action="next" aria-label="下一页">→</button></div><div class="epic-chapter-controls"><button type="button" data-book-action="previous-chapter">上一作品</button><button type="button" data-book-action="cover">查看封面</button><button type="button" data-book-action="next-chapter">下一作品</button></div></div></div>`;
   section.querySelector('.section-header').after(shell);
   const bookEl=shell.querySelector('.epic-book'), nav=shell.querySelector('.epic-chapters');
+  const groups=new Map();
+  for(const category of BOOK_CATEGORIES){
+    const members=chapters.filter(ch=>ch.category===category);if(!members.length)continue;
+    const group=make('section','epic-chapter-group'),heading=make('h4','',category);
+    heading.append(make('span','',String(members.length)));
+    const items=make('div','epic-chapter-items');group.append(heading,items);nav.append(group);groups.set(category,items);
+  }
   const returnCover=make('button','epic-return-cover','返回封面');returnCover.type='button';returnCover.dataset.bookAction='cover';nav.before(returnCover);
   const pageNodes=[];
   function page(cls) {
@@ -33,7 +42,7 @@ function initBook() {
   cover.innerHTML='<span class="epic-cover-author">杨锟 · Killian Yang</span><div class="epic-cover-sword" aria-hidden="true"></div><h4>锻造之书</h4><p>从 AI 创意，到产品落地。</p><button type="button" data-book-action="open">打开作品册 →</button><span class="epic-cover-bottom">AI 产品 builder</span>';
   for (const ch of chapters) {
     const b=make('button','epic-chapter',ch.title); b.type='button';b.dataset.chapter=ch.index;
-    const small=make('span','',String(ch.index+1).padStart(2,'0'));b.prepend(small);nav.append(b);
+    const small=make('span','',String(ch.index+1).padStart(2,'0'));b.prepend(small);groups.get(ch.category).append(b);
     const left=page('epic-project-face');left.parentElement.dataset.chapter=ch.index;
     left.append(make('span','epic-running-head','杨锟 / 作品集'));
     const icon=ch.icon.cloneNode();icon.removeAttribute('style');icon.className='epic-project-icon';icon.loading='lazy';left.append(icon);
@@ -76,7 +85,7 @@ function initBook() {
     const content=dialog.querySelector('.epic-details-content');content.replaceChildren(copy);
     document.body.classList.add('epic-dialog-open');dialog.showModal();dialog.scrollTop=0;
   }
-  let fallbackPage=1;
+  let fallbackPage=0;
   const fallbackTurn=p=>{fallbackPage=Math.max(0,Math.min(pageNodes.length-1,p));sync(fallbackPage);};
   const fallbackStep=()=>shell.querySelector('.epic-book-wrap').clientWidth<620?1:2;
   let flip={
@@ -85,11 +94,11 @@ function initBook() {
     flipNext:()=>fallbackTurn(fallbackPage+fallbackStep()),flipPrev:()=>fallbackTurn(fallbackPage-fallbackStep()),
     turnToNextPage:()=>fallbackTurn(fallbackPage+fallbackStep()),turnToPrevPage:()=>fallbackTurn(fallbackPage-fallbackStep())
   };
-  let currentPage=1,currentChapter=0,listMode=false;
+  let currentPage=0,currentChapter=0,listMode=false;
   function sync(pageNumber) {
     currentPage=pageNumber;currentChapter=pageChapter(pageNumber,chapters.length);
     const coverState=pageNumber===0||pageNumber===pageNodes.length-1;
-    nav.querySelectorAll('button').forEach((b,i)=>{b.setAttribute('aria-current',String(!coverState&&i===currentChapter));});
+    nav.querySelectorAll('.epic-chapter').forEach(b=>{b.setAttribute('aria-current',String(!coverState&&Number(b.dataset.chapter)===currentChapter));});
     shell.querySelector('.epic-page-status').textContent=coverState?'锻造之书':`${chapters[currentChapter].title} · ${currentChapter+1} / ${chapters.length}`;
     shell.querySelector('[data-book-action="prev"]').disabled=pageNumber===0;
     shell.querySelector('[data-book-action="next"]').disabled=pageNumber>=pageNodes.length-1;
@@ -133,14 +142,15 @@ function initBook() {
     if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
       e.preventDefault();shell.querySelector(`[data-book-action="${e.key==='ArrowRight'?'next':'prev'}"]`).click();
     }
-    if(e.key==='Home'){e.preventDefault();go(1);}
+    if(e.key==='Home'){e.preventDefault();go(0,true);}
   });
   shell.querySelector('.epic-catalog-toggle').addEventListener('click',e=>{
     const open=shell.classList.toggle('epic-catalog-open');e.currentTarget.setAttribute('aria-expanded',String(open));
   });
   shell.querySelector('input').addEventListener('input',e=>{
     const q=e.target.value.toLowerCase().trim();let found=0;
-    nav.querySelectorAll('button').forEach((b,i)=>{b.hidden=!chapters[i].title.toLowerCase().includes(q);if(!b.hidden)found++;});
+    nav.querySelectorAll('.epic-chapter').forEach(b=>{b.hidden=!matchesChapter(chapters[Number(b.dataset.chapter)],q);if(!b.hidden)found++;});
+    nav.querySelectorAll('.epic-chapter-group').forEach(group=>{group.hidden=![...group.querySelectorAll('.epic-chapter')].some(b=>!b.hidden);});
     shell.querySelector('.epic-no-results').hidden=found>0;
   });
   shell.querySelector('.epic-list-toggle').addEventListener('click',e=>{
@@ -155,7 +165,7 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=20');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=21');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();

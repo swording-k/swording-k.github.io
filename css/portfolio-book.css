@@ -17,7 +17,17 @@
 .epic-catalog { padding-top:12px; }
 .epic-search-label { display:block;font-size:12px;color:#a99c83; }
 .epic-search-label input { display:block;width:100%;background:#13120f;border:1px solid #514731;border-radius:2px;color:#e8dec9;padding:12px 10px;margin-top:10px;font:13px inherit; }
-.epic-chapters { display:grid;gap:3px;margin-top:20px; }
+.epic-chapters { display:grid;gap:3px;margin-top:20px;max-height:min(640px,calc(100svh - 330px));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7c6b49 #15130f; }
+.epic-chapter-group { min-width:0;margin:0 0 20px; }
+.epic-chapter-group h4 { display:flex;justify-content:space-between;align-items:baseline;gap:12px;font:400 17px/1.5 'Songti SC',Georgia,serif;color:#dfcda7;margin:0 0 7px;padding:0 7px; }
+.epic-chapter-group h4 span { color:#aa9a7e;font:12px/1.5 inherit;font-variant-numeric:tabular-nums; }
+.epic-chapter-items { display:grid;gap:3px; }
+.epic-chapter-group .epic-chapter { width:100%; }
+.pet-representatives { display:flex;gap:16px;align-items:end;margin:22px 0; }
+.pet-representatives figure { flex:1;min-width:0;margin:0;text-align:center; }
+.pet-representatives img { width:100%;height:180px;object-fit:contain; }
+.pet-representatives figcaption { margin-top:10px;font-size:13px;color:#c6bba6; }
+@media(max-width:1024px){.epic-chapters{max-height:none;overflow:visible;}}
 .epic-chapter { display:flex;gap:10px;align-items:baseline;text-align:left;background:transparent;border:0;border-left:2px solid transparent;color:#b7b0a0;font-size:13px;line-height:1.6;padding:10px 7px;transition:color .2s,background .2s; }
 .epic-chapter span { color:#7d735f;font-size:10px;font-variant-numeric:tabular-nums; }
 .epic-chapter[aria-current='true'] { color:#f1ddaf;border-left-color:#c7aa73;background:#b89a5b15; }
