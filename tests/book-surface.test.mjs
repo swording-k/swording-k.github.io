@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { sheetStrip } from '../js/book-surface.mjs';
+import { sheetStrip,restingPaperZ,turningPaperZ } from '../js/book-surface.mjs';
+test('forward and reverse sheets clear every vertex of the resting page without image interpenetration',()=>{
+  for(const progress of [0,.001,.01,.99,.999,1])for(const across of [0,.5,1]) {
+    for(const p of sheetStrip(progress,2.65,36,across)) {
+      const u=Math.min(1,Math.abs(p.x)/2.65);
+      assert.ok(turningPaperZ(p.z)>restingPaperZ(u)+.005,`progress=${progress}, u=${u}`);
+    }
+  }
+});
 test('sheet starts flat right, ends flat left, keeps its hinge',()=>{
   for(const progress of [0,.25,.5,.75,1]) {
     const points=sheetStrip(progress,2.65,36,.5);

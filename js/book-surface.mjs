@@ -1,4 +1,7 @@
 // A constant arc-length paper strip. Each sample is an actual 3D vertex.
+export const restingPaperZ=(u,base=.009)=>base+.04*Math.sin(Math.PI*u);
+// Clear the crown of both resting sheets, including their mesh offsets.
+export const turningPaperZ=lift=>.065+lift;
 export function sheetStrip(progress, width, segments=36, across=.5) {
   const p=Math.max(0,Math.min(1,progress+Math.sin(Math.PI*progress)*(across-.5)*.16));
   const curl=Math.sin(Math.PI*p);

@@ -11,6 +11,15 @@ const visuals=[
   [/最后的书店/,'images/last-bookstore-poster.png','作品海报'],
   [/pet/i,'images/codex-pet-collection-preview.png','角色动作预览']
 ];
+export function preloadBookImages(chapters,load) {
+  const sources=new Set(['images/book/laid-paper-v1.webp','images/book/leather-binding-v1.webp']);
+  for(const ch of chapters) {
+    sources.add(ch.icon.getAttribute('src'));
+    const spec=visuals.find(v=>v[0].test(ch.title));
+    if(spec){sources.add(spec[1]);if(spec[3])sources.add(spec[3]);}
+  }
+  sources.forEach(src=>{if(src)load(src);});
+}
 function text(ctx,value,x,y,width,size=24,lineHeight=38,maxLines=8) {
   ctx.font=`${size}px ${sans}`;
   let line='',n=0;
@@ -64,7 +73,7 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     }
     const center=binding?420:405;
     ctx.textAlign='center';ctx.fillStyle='#a58c61';ctx.font=`66px ${serif}`;
-    ctx.shadowColor='#090603';ctx.shadowOffsetY=3;ctx.fillText(index===0?'作品之书':'未完，待续',center,600);ctx.shadowOffsetY=0;
+    ctx.shadowColor='#090603';ctx.shadowOffsetY=3;ctx.fillText(index===0?'锻造之书':'未完，待续',center,600);ctx.shadowOffsetY=0;
     ctx.font=`29px ${serif}`;ctx.fillStyle='#a18a65';ctx.fillText('杨锟',center,826);
     ctx.font=`21px ${serif}`;ctx.fillStyle='#786244';ctx.fillText('Killian Yang  ·  2026',center,874);
     ctx.restore();return;
@@ -72,9 +81,12 @@ export function paintBookPage(ctx,index,count,chapters,load) {
   const ch=chapters[Math.floor((index-1)/2)],spec=visuals.find(v=>v[0].test(ch.title));
   const ink='#353025',muted='#786b52';
   ctx.fillStyle=muted;ctx.font=`25px ${sans}`;
-  ctx.fillText(face?'杨锟 / 作品之书':'项目手记',58,75);
+  ctx.fillText(face?'锻造之书 / 杨锟':'项目手记',58,75);
+  const productIcon=load(ch.icon.getAttribute('src'));
+  image(ctx,productIcon,58,face?130:181,48,48);
+  const titleX=ch.icon.getAttribute('src')?124:58;
   if(face) {
-    ctx.fillStyle=ink;text(ctx,ch.title,54,178,660,54,66,2);
+    ctx.fillStyle=ink;text(ctx,ch.title,titleX,178,714-titleX,54,66,2);
     ctx.fillStyle=muted;text(ctx,ch.label,54,290,660,25,36,2);
     if(spec) {
       const img=load(spec[1]);
@@ -94,7 +106,7 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,972);
   } else {
     ctx.fillStyle=ink;
-    text(ctx,ch.title,58,229,648,54,66,2);
+    text(ctx,ch.title,titleX,229,714-titleX,54,66,2);
     ctx.fillStyle='#353c33';
     text(ctx,ch.intro,58,390,644,40,62,8);
     ctx.fillStyle='#745b32';ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,952);
@@ -113,12 +125,12 @@ export function createCrispPage(index,count,chapters) {
   if(cover) {
     el.classList.add('is-cover');
     el.innerHTML='<p class="crisp-cover-author">杨锟 / Killian Yang</p><div class="crisp-cover-blade"></div><h4></h4><p class="crisp-cover-line">从 AI 创意，到产品落地。</p><button type="button" class="crisp-open" data-surface-action="open">打开作品册</button>';
-    el.querySelector('h4').textContent=index===0?'作品之书':'未完，待续';return el;
+    el.querySelector('h4').textContent=index===0?'锻造之书':'未完，待续';return el;
   }
   const ch=chapters[Math.floor((index-1)/2)],visual=index%2===1;
   el.classList.toggle('is-visual',visual);
   el.innerHTML='<p class="crisp-running"></p><h4></h4><p class="crisp-kind"></p><div class="crisp-visual"></div><p class="crisp-intro"></p><p class="crisp-notes"></p><div class="crisp-actions"></div><span class="crisp-folio"></span>';
-  el.querySelector('.crisp-running').textContent=visual?'杨锟 / 作品之书':'项目手记';
+  el.querySelector('.crisp-running').textContent=visual?'锻造之书 / 杨锟':'项目手记';
   el.querySelector('h4').textContent=ch.title;
   el.querySelector('.crisp-kind').textContent=ch.label;
   el.querySelector('.crisp-intro').textContent=ch.intro;

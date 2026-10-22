@@ -20,7 +20,7 @@ function initBook() {
     notes:text(article.querySelector('.project-notes,.launch-strip'))
   }));
   const shell=make('div','epic-library');
-  shell.innerHTML=`<div class="epic-library-top"><div><h3>作品之书</h3><p>翻过一页，走进一个作品。</p></div><div class="epic-view-tools"><button type="button" class="epic-catalog-toggle" aria-expanded="false">目录</button><button type="button" class="epic-list-toggle" aria-pressed="false">列表阅读</button></div></div><div class="epic-library-layout"><aside class="epic-catalog" aria-label="作品之书目录"><label class="epic-search-label">查找作品<input type="search" placeholder="搜索项目名称" aria-label="搜索项目名称"></label><nav class="epic-chapters"></nav><p class="epic-no-results" hidden>没有匹配的作品</p><p class="epic-catalog-note">目录可以直接跳转，<br>不必从第一页开始。</p></aside><div class="epic-desk"><div class="epic-book-wrap"><div class="epic-book" aria-label="可翻阅的项目作品册"></div></div><div class="epic-book-controls"><button type="button" data-book-action="prev" aria-label="上一页">←</button><div><output class="epic-page-status" aria-live="polite"></output><span>拖动页角 · 点击箭头翻页</span></div><button type="button" data-book-action="next" aria-label="下一页">→</button></div><div class="epic-chapter-controls"><button type="button" data-book-action="previous-chapter">上一作品</button><button type="button" data-book-action="cover">查看封面</button><button type="button" data-book-action="next-chapter">下一作品</button></div></div></div>`;
+  shell.innerHTML=`<div class="epic-library-top"><div><h3>锻造之书</h3><p>翻过一页，走进一个作品。</p></div><div class="epic-view-tools"><button type="button" class="epic-catalog-toggle" aria-expanded="false">目录</button><button type="button" class="epic-list-toggle" aria-pressed="false">列表阅读</button></div></div><div class="epic-library-layout"><aside class="epic-catalog" aria-label="锻造之书目录"><label class="epic-search-label">查找作品<input type="search" placeholder="搜索项目名称" aria-label="搜索项目名称"></label><nav class="epic-chapters"></nav><p class="epic-no-results" hidden>没有匹配的作品</p><p class="epic-catalog-note">目录可以直接跳转，<br>不必从第一页开始。</p></aside><div class="epic-desk"><div class="epic-book-wrap"><div class="epic-book" aria-label="可翻阅的项目作品册"></div></div><div class="epic-book-controls"><button type="button" data-book-action="prev" aria-label="上一页">←</button><div><output class="epic-page-status" aria-live="polite"></output><span>拖动页角 · 点击箭头翻页</span></div><button type="button" data-book-action="next" aria-label="下一页">→</button></div><div class="epic-chapter-controls"><button type="button" data-book-action="previous-chapter">上一作品</button><button type="button" data-book-action="cover">查看封面</button><button type="button" data-book-action="next-chapter">下一作品</button></div></div></div>`;
   section.querySelector('.section-header').after(shell);
   const bookEl=shell.querySelector('.epic-book'), nav=shell.querySelector('.epic-chapters');
   const returnCover=make('button','epic-return-cover','返回封面');returnCover.type='button';returnCover.dataset.bookAction='cover';nav.before(returnCover);
@@ -30,7 +30,7 @@ function initBook() {
     const inner=make('div','epic-paper-inner'); p.append(inner); bookEl.append(p);pageNodes.push(p);return inner;
   }
   const cover=page('epic-cover'); cover.parentElement.dataset.density='hard';
-  cover.innerHTML='<span class="epic-cover-author">杨锟 · Killian Yang</span><div class="epic-cover-sword" aria-hidden="true"></div><h4>作品之书</h4><p>从 AI 创意，到产品落地。</p><button type="button" data-book-action="open">打开作品册 →</button><span class="epic-cover-bottom">AI 产品 builder</span>';
+  cover.innerHTML='<span class="epic-cover-author">杨锟 · Killian Yang</span><div class="epic-cover-sword" aria-hidden="true"></div><h4>锻造之书</h4><p>从 AI 创意，到产品落地。</p><button type="button" data-book-action="open">打开作品册 →</button><span class="epic-cover-bottom">AI 产品 builder</span>';
   for (const ch of chapters) {
     const b=make('button','epic-chapter',ch.title); b.type='button';b.dataset.chapter=ch.index;
     const small=make('span','',String(ch.index+1).padStart(2,'0'));b.prepend(small);nav.append(b);
@@ -90,7 +90,7 @@ function initBook() {
     currentPage=pageNumber;currentChapter=pageChapter(pageNumber,chapters.length);
     const coverState=pageNumber===0||pageNumber===pageNodes.length-1;
     nav.querySelectorAll('button').forEach((b,i)=>{b.setAttribute('aria-current',String(!coverState&&i===currentChapter));});
-    shell.querySelector('.epic-page-status').textContent=coverState?'作品之书':`${chapters[currentChapter].title} · ${currentChapter+1} / ${chapters.length}`;
+    shell.querySelector('.epic-page-status').textContent=coverState?'锻造之书':`${chapters[currentChapter].title} · ${currentChapter+1} / ${chapters.length}`;
     shell.querySelector('[data-book-action="prev"]').disabled=pageNumber===0;
     shell.querySelector('[data-book-action="next"]').disabled=pageNumber>=pageNodes.length-1;
     shell.querySelector('[data-book-action="previous-chapter"]').disabled=!currentChapter;
@@ -155,7 +155,7 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=15');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=19');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();

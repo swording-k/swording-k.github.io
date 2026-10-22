@@ -12,10 +12,12 @@ test('pan mode moves the book without rotating and bounds its travel',()=>{
   assert.equal(view.x,1.25);assert.equal(view.y,1);assert.equal(view.yaw,0);
   assert.equal(dragBookView(initial,80000,0,800,600,'pan').x,2);
 });
-test('paper dragging belongs to reading while outside dragging still rotates',()=>{
+test('the selected mode owns the gesture without implicit rotation or modifier overrides',()=>{
   assert.equal(bookGesture(true,false),'page');
-  assert.equal(bookGesture(false,false),'rotate');
-  assert.equal(bookGesture(true,true),'rotate');
+  assert.equal(bookGesture(false,false),'none');
+  assert.equal(bookGesture(true,true),'page');
   assert.equal(bookGesture(true,false,'rotate'),'rotate');
-  assert.equal(bookGesture(true,false,'read',true),'pan');
+  assert.equal(bookGesture(true,false,'read',true),'page');
+  assert.equal(bookGesture(true,true,'pan'),'pan');
+  assert.equal(bookGesture(false,true,'read'),'none');
 });

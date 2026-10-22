@@ -77,6 +77,13 @@
 .crisp-visual img:not(.crisp-icon-only):not(.crisp-image-detail) { border:12px solid #faf4e7;box-sizing:border-box; }
 .epic-crisp-page:not(.is-cover)::after { content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#37291c25,transparent 8%); }
 .epic-crisp-page.is-visual::after { background:linear-gradient(270deg,#37291c25,transparent 8%); }
+/* Semantic links stay native; all visible paper and ink remain on the same lit 3D surface. */
+.epic-crisp-page.is-hit-surface { background:none!important;color:transparent!important; }
+.epic-crisp-page.is-hit-surface::after { display:none; }
+.is-hit-surface > :not(.crisp-actions):not(.crisp-page-edge) { opacity:0; }
+.is-hit-surface .crisp-actions :is(a,button),.is-hit-surface .crisp-page-edge { color:transparent!important; }
+.is-hit-surface :is(a,button):focus-visible { outline:4px solid #806b43;outline-offset:4px; }
+.epic-crisp-layer:not([data-mode='read']) .crisp-page-edge { pointer-events:none; }
 .epic-return-cover { background:none;border:0;color:#cdb78e;padding:12px 0;text-align:left;font-size:13px; }
 @media(max-width:480px) { .epic-model-tools { flex-wrap:wrap;gap:4px; }.epic-model-tools>div { margin-left:auto; } }
 .is-cover h4 { top:510px;left:0;width:100%;text-align:center;font-size:76px;line-height:1.4; }
