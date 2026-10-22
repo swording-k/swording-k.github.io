@@ -6,7 +6,7 @@
 - [x] Add LoveCourt with its public demo (no private repository link); hold Mineradio until user says ready.
 - [x] Replace the Pets contact sheet with large representative atlas frames.
 - [x] Check desktop/phone cover, catalog/search/page mapping, links and rendering.
-- [ ] Merge and verify public deployment.
+- [x] Merge and verify public deployment — code2eaf5ba built successfully; live cover/category/page/asset checks passed.
 
 Reuse decision: extend the existing semantic catalog, DOM article source and Three.js renderer. No new carousel, book engine or dependency is needed. Explicit user design is the specification; preserve the accepted visual world.
 
