@@ -17,6 +17,10 @@
 
 ## Official references
 
+## Checkpoint
+
+Implementation and42 Node tests completed. Actual390px hero and book section checked; viewport-fixed background is continuous, width390 equals scrollWidth.1440px hero checked. Accepted book source files unchanged. Cursor math/lifecycle independently reviewed and corrected; its final live visual capture remains open because the browser connection timed out during screencast. No public deployment or main merge. Screenshot evidence: `.book-qa/hall-mobile-v2.png`, `.book-qa/hall-mobile-projects-v2.png`. The initial hero-only background was rejected for a section seam and oversized phone crop and was replaced by the viewport-fixed global surface.
+
 - https://reactbits.dev/animations/ribbons and https://github.com/DavidHDev/react-bits/blob/main/src/content/Animations/Ribbons/Ribbons.jsx — tapered continuous path, no copied source; current React Bits license is MIT plus Commons Clause.
 - https://motionsites.ai/lesson/cursor-tracking-website-with-motionsites — unified scene and coalesced pointer input; not a real-time 3D runtime. Screenshot name alone does not uniquely identify its domain.
 - https://uiverse.io/elements — small CSS feedback, MIT elements.

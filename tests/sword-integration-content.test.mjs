@@ -31,7 +31,7 @@ test("showcase and background use the same transparent sword asset", async () =>
     assert.match(html, new RegExp(`data-sword-role="background"[^>]+src="${asset.replaceAll(".", "\\.")}"`));
     assert.match(html, new RegExp(`data-sword-role="showcase"[^>]+src="${asset.replaceAll(".", "\\.")}"`));
     assert.match(html, /css\/sword-background\.css\?v=20260724-three-armory-v1/);
-    assert.match(html, /js\/main\.js\?v=20260724-three-armory-v1/);
+    assert.match(html, /js\/main\.js\?v=[\w-]+/);
 });
 
 test("hero showcase hands off to the cinematic background with linear scroll motion", async () => {

@@ -2,7 +2,7 @@
 
 User direction: preserve existing factual content, three weapon choices, scrolling handoff and accepted portfolio book. Improve the hero's sense of a single space, informed by the supplied ocean-reference recording. Replace the disliked segmented mouse streak with sword-like motion. No publication in this pass.
 
-Keep the existing hall artwork. Remove independent amber/cyan fog, glass capsule, holographic rings and oversized backdrop lettering. Text reads against the hall's naturally dark left wall; the sword remains under the architectural light on the right. Console facts remain but their glass box recedes. No new background asset or fabricated product claim.
+Keep the existing hall artwork. Remove independent amber/cyan fog, glass capsule, holographic rings and oversized backdrop lettering. Text reads against the hall's naturally dark left wall; the sword remains under the architectural light on the right. Console facts remain but their glass box recedes. No new background asset or fabricated product claim. User correction expands continuity across the whole page: use one fixed viewport-sized background, not a second cover-sized image in the tall hero. On phones center the doorway at 78% of the source image and maintain a single viewport height; the giant sword's overlay stage must be transparent.
 
 Pointer treatment: one continuous, tapered silver/old-gold wake, driven by elapsed-time-normalized speed. Slow movement stays quiet; quick gestures leave a short-lived blade-shaped curve. Keep native cursor. Disable over readable text, controls, the book, touch and reduced-motion devices. Stop rendering at rest/hidden. Bound sample count and device-pixel ratio. Never affect hit testing.
 

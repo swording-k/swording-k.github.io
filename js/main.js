@@ -475,65 +475,6 @@
         render();
     }
 
-    function initSwordQiTrail() {
-        if (prefersReducedMotion || !window.matchMedia("(pointer: fine)").matches) return;
-
-        const POOL_MAX = 22;
-        const pool = [];
-        let lastSpawn = 0;
-        let lastX = 0;
-        let lastY = 0;
-        let armed = false;
-
-        function spawn(x, y, angle, speed) {
-            let el = pool.find((node) => !node.classList.contains("is-live"));
-            if (!el) {
-                if (pool.length >= POOL_MAX) return;
-                el = document.createElement("div");
-                el.className = "sword-qi";
-                el.addEventListener("animationend", () => {
-                    el.classList.remove("is-live");
-                });
-                document.body.appendChild(el);
-                pool.push(el);
-            }
-            const cyan = Math.random() < 0.3;
-            const len = 32 + Math.min(speed * 0.5, 42);
-            el.style.setProperty("--qx", `${x}px`);
-            el.style.setProperty("--qy", `${y}px`);
-            el.style.setProperty("--qrot", `${angle}deg`);
-            el.style.setProperty("--qlen", `${len}px`);
-            el.style.setProperty("--qhue", cyan ? "#8fd2e3" : "#c7a56d");
-            el.classList.remove("is-live");
-            void el.offsetWidth;
-            el.classList.add("is-live");
-        }
-
-        document.addEventListener(
-            "mousemove",
-            (event) => {
-                const now = performance.now();
-                if (!armed) {
-                    armed = true;
-                    lastX = event.clientX;
-                    lastY = event.clientY;
-                    lastSpawn = now;
-                    return;
-                }
-                const dx = event.clientX - lastX;
-                const dy = event.clientY - lastY;
-                const dist = Math.hypot(dx, dy);
-                if (now - lastSpawn < 14 || dist < 2) return;
-                const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-                spawn(event.clientX, event.clientY, angle, dist);
-                lastX = event.clientX;
-                lastY = event.clientY;
-                lastSpawn = now;
-            },
-            { passive: true }
-        );
-    }
-
     function initBladeStage() {
         const stage = document.querySelector(".blade-stage");
         const blade = stage?.querySelector(".blade-object");
@@ -1320,18 +1261,17 @@
             initMagneticButtons();
             initCardTilt();
             // initCursorAura removed — conflicts with sword-qi trail
-            initSwordQiTrail();
+            // Pointer wake is an independent on-demand canvas module.
             initBladeStage();
             initImageLightbox();
             initKeyboard();
 
             // Advanced Interactions
-            initSwordAuraMist();
-            initTypewriter();
+            if (!document.documentElement.classList.contains('sword-hall-home')) {initSwordAuraMist();initTypewriter();}
             // initMouseTrail removed — conflicts with sword-qi trail
             initScrollAccentShift();
             initCardGlare();
-            initHeroGleam();
+            if (!document.documentElement.classList.contains('sword-hall-home')) initHeroGleam();
             initSectionEnterFX();
             initWeaponArmory();
             initGlobalSwordCinematic();

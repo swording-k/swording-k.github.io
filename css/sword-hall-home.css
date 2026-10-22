@@ -1,0 +1,46 @@
+/* One viewport-sized architectural scene across every section, including phones. */
+html.sword-hall-home body { background:#050506!important;isolation:isolate; }
+html.sword-hall-home body::before {
+  content:'';position:fixed;inset:0;z-index:-2;height:100lvh;pointer-events:none;
+  background:linear-gradient(180deg,#05060826,#0506080d 48%,#05060859),url('../assets/cinematic/longclaw-hall-v1.png') center/cover no-repeat;
+  opacity:1;mask-image:none;-webkit-mask-image:none;filter:none;
+}
+html.sword-hall-home body::after,
+html.sword-hall-home .section-shell::after { display:none; }
+html.sword-hall-home .global-sword-stage { background:transparent; }
+html.sword-hall-home .sword-vignette { opacity:.28; }
+html.sword-hall-home :is(.sword-halo,.sword-mist) { display:none; }
+html.sword-hall-home .hero { isolation:isolate;background:none; }
+html.sword-hall-home .hero::before { display:none; }
+html.sword-hall-home .hero::after,
+html.sword-hall-home .hero-bg,
+html.sword-hall-home .hero-artifact::before,
+html.sword-hall-home .hero-artifact::after,
+html.sword-hall-home .hero-title::after,
+html.sword-hall-home .blade-aura,
+html.sword-hall-home .blade-orbit,
+html.sword-hall-home .blade-object::before { display:none; }
+html.sword-hall-home .sword-aura-mist { display:none; }
+html.sword-hall-home .hero-edition { padding:0;border:0;border-radius:0;background:none;box-shadow:none;gap:24px; }
+html.sword-hall-home .hero-edition span,
+html.sword-hall-home .hero-edition span:first-child { background:none;color:#b7ad98;box-shadow:none;border:0;padding:0; }
+html.sword-hall-home .hero-alias { background:none;border:0;box-shadow:none;padding:0;color:#c6ad7a; }
+html.sword-hall-home .hero-signal-row span { background:none;box-shadow:none;border:0;padding-left:0;padding-right:16px; }
+html.sword-hall-home .hero-artifact :is(.console-topbar,.console-body,.stage-caption) {
+  background:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  border:0;border-radius:0;
+}
+html.sword-hall-home .hero-artifact .console-body { padding-top:10px;padding-bottom:12px; }
+html.sword-hall-home .hero-artifact .console-topbar { border-bottom:1px solid #d1bf982b; }
+html.sword-hall-home .hero-artifact .stage-caption { border-top:1px solid #d1bf982b; }
+html.sword-hall-home .hero-artifact .stage-tags span { border:0;background:none;padding-left:0;padding-right:12px; }
+html.sword-hall-home .weapon-card { filter:drop-shadow(0 8px 12px #0008); }
+.sword-wake { position:fixed;inset:0;width:100%;height:100%;z-index:80;pointer-events:none;contain:strict; }
+@media(max-width:760px) {
+  html.sword-hall-home body::before {
+    background-image:linear-gradient(180deg,#05060880,#05060833 48%,#05060873),url('../assets/cinematic/longclaw-hall-v1.png');
+    background-position:78% center;
+  }
+  html.sword-hall-home .hero-edition { gap:12px; }
+}
+@media(prefers-reduced-motion:reduce),(pointer:coarse) { .sword-wake { display:none; } }

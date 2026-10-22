@@ -7,7 +7,7 @@ const load = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 test('cinematic background is enabled by default without replacing portfolio markup', async () => {
   const html = await load('../index.html');
 
-  assert.match(html, /<html[^>]+class="cinematic-background"/);
+  assert.match(html, /<html[^>]+class="[^"]*\bcinematic-background\b[^"]*"/);
   assert.match(html, /<link[^>]+href="css\/cinematic-background\.css\?v=20260919"/);
   assert.doesNotMatch(html, /searchParams\.get\(['"]cinematic['"]\)/i);
   assert.doesNotMatch(html, /cinematic[^'"\s>]*\.mjs/);
