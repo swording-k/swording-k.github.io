@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,stat} from 'node:fs/promises';
 import vm from 'node:vm';
 
 const main=await readFile(new URL('../js/main.js',import.meta.url),'utf8');
@@ -30,4 +30,17 @@ test('hall digits use a stable local font and no whole-section entrance filter',
   assert.match(css,/font-family:\s*"SFMono-Regular", Consolas, monospace/);
   assert.doesNotMatch(css,/infinite|blur\(/);
   assert.match(main,/if \(!document\.documentElement\.classList\.contains\('sword-hall-home'\)\) initSectionEnterFX\(\)/);
+});
+
+test('hall background is small and discovered before stylesheet loading',async()=>{
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  const preload=html.match(/<link[^>]+rel="preload"[^>]+longclaw-hall-v1\.webp[^>]+>/)?.[0];
+  assert.ok(preload,'background must be discovered in the document head');
+  assert.match(preload,/fetchpriority="high"/);
+  assert.ok((await stat(new URL('../assets/cinematic/longclaw-hall-v1.webp',import.meta.url))).size<300000);
+  for(const path of ['../css/cinematic-background.css','../css/sword-hall-home.css']){
+    const css=await readFile(new URL(path,import.meta.url),'utf8');
+    assert.match(css,/longclaw-hall-v1\.webp/);
+    assert.doesNotMatch(css,/longclaw-hall-v1\.png/);
+  }
 });

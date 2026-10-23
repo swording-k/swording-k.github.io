@@ -2,7 +2,7 @@
 html.sword-hall-home body { background:#050506!important;isolation:isolate; }
 html.sword-hall-home body::before {
   content:'';position:fixed;inset:0;z-index:-2;height:100lvh;pointer-events:none;
-  background:linear-gradient(180deg,#05060826,#0506080d 48%,#05060859),url('../assets/cinematic/longclaw-hall-v1.png') center/cover no-repeat;
+  background:linear-gradient(180deg,#05060826,#0506080d 48%,#05060859),url('../assets/cinematic/longclaw-hall-v1.webp') center/cover no-repeat;
   opacity:1;mask-image:none;-webkit-mask-image:none;filter:none;
 }
 html.sword-hall-home body::after,
@@ -38,7 +38,7 @@ html.sword-hall-home .weapon-card { filter:drop-shadow(0 8px 12px #0008); }
 .sword-wake { position:fixed;inset:0;width:100%;height:100%;z-index:80;pointer-events:none;contain:strict; }
 @media(max-width:760px) {
   html.sword-hall-home body::before {
-    background-image:linear-gradient(180deg,#05060880,#05060833 48%,#05060873),url('../assets/cinematic/longclaw-hall-v1.png');
+    background-image:linear-gradient(180deg,#05060880,#05060833 48%,#05060873),url('../assets/cinematic/longclaw-hall-v1.webp');
     background-position:78% center;
   }
   html.sword-hall-home .hero-edition { gap:12px; }

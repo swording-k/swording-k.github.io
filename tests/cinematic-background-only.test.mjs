@@ -8,7 +8,7 @@ test('cinematic background is enabled by default without replacing portfolio mar
   const html = await load('../index.html');
 
   assert.match(html, /<html[^>]+class="[^"]*\bcinematic-background\b[^"]*"/);
-  assert.match(html, /<link[^>]+href="css\/cinematic-background\.css\?v=20260919"/);
+  assert.match(html, /<link[^>]+href="css\/cinematic-background\.css\?v=20261023"/);
   assert.doesNotMatch(html, /searchParams\.get\(['"]cinematic['"]\)/i);
   assert.doesNotMatch(html, /cinematic[^'"\s>]*\.mjs/);
   assert.match(html, /class="weapon-armory"/);
@@ -19,7 +19,7 @@ test('cinematic background is enabled by default without replacing portfolio mar
 test('cinematic stylesheet changes only the page background', async () => {
   const css = await load('../css/cinematic-background.css');
 
-  assert.match(css, /longclaw-hall-v1\.png/);
+  assert.match(css, /longclaw-hall-v1\.webp/);
   assert.match(css, /html\.cinematic-background body/);
   for (const selector of [
     '.hero-name-main',
