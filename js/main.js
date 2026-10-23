@@ -169,6 +169,9 @@
         }
 
         gsap.defaults({ ease: "power3.out" });
+        // The hall uses a single compositor-driven entrance from the first paint.
+        // Do not rebuild its text or compete with the scroll camera's transforms.
+        if (!document.documentElement.classList.contains('sword-hall-home')) {
         splitMotionText(".hero-name-main, .hero-roman");
         const heroTimeline = gsap.timeline({ defaults: { duration: 0.78, ease: "expo.out" } });
         heroTimeline
@@ -196,6 +199,7 @@
             stagger: 0.22,
             ease: "sine.inOut"
         });
+        }
 
         gsap.to(".hero-copy", {
             y: -56,
@@ -364,7 +368,6 @@
             ScrollTrigger.update();
         };
         requestAnimationFrame(refreshScrollTriggers);
-        window.setTimeout(refreshScrollTriggers, 300);
         window.addEventListener("load", refreshScrollTriggers, { once: true });
         return true;
     }
@@ -1272,7 +1275,7 @@
             initScrollAccentShift();
             initCardGlare();
             if (!document.documentElement.classList.contains('sword-hall-home')) initHeroGleam();
-            initSectionEnterFX();
+            if (!document.documentElement.classList.contains('sword-hall-home')) initSectionEnterFX();
             initWeaponArmory();
             initGlobalSwordCinematic();
         } catch (e) {
