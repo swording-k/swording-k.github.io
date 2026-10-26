@@ -11,8 +11,10 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   await document.fonts.load('40px "Songti SC"');
   host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','锻造之书，方向键翻页');
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+  // 窄屏（手机）降低像素比与阴影分辨率，保留双页 3D 效果的同时减轻 GPU 负担，避免卡顿/掉帧。
+  const narrowScreen=innerWidth<620;
   const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(Math.max(devicePixelRatio,1.5),2));
+  renderer.setPixelRatio(narrowScreen?Math.min(devicePixelRatio,1.5):Math.min(Math.max(devicePixelRatio,1.5),2));
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
@@ -21,7 +23,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(35,1,.1,50), book=new THREE.Group(),pivot=new THREE.Group();
   pivot.add(book);scene.add(pivot,new THREE.HemisphereLight(0xfff8ec,0x302b23,1.5));
   const lamp=new THREE.DirectionalLight(0xfff5e5,2.3);lamp.position.set(-3,1,7);lamp.castShadow=true;
-  lamp.shadow.mapSize.set(2048,2048);lamp.shadow.camera.left=-4;lamp.shadow.camera.right=4;lamp.shadow.camera.top=4;lamp.shadow.camera.bottom=-4;lamp.shadow.normalBias=.015;lamp.shadow.bias=-.0003;lamp.shadow.radius=4;scene.add(lamp);
+  lamp.shadow.mapSize.set(narrowScreen?1024:2048,narrowScreen?1024:2048);lamp.shadow.camera.left=-4;lamp.shadow.camera.right=4;lamp.shadow.camera.top=4;lamp.shadow.camera.bottom=-4;lamp.shadow.normalBias=.015;lamp.shadow.bias=-.0003;lamp.shadow.radius=4;scene.add(lamp);
   const fill=new THREE.DirectionalLight(0xfff4e4,.7);fill.position.set(4,-2,4);scene.add(fill);
   const grainCanvas=document.createElement('canvas');grainCanvas.width=grainCanvas.height=256;
   const grainContext=grainCanvas.getContext('2d'),grainData=grainContext.createImageData(256,256);
@@ -106,7 +108,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   const backMat=new THREE.MeshStandardMaterial({side:THREE.BackSide,roughness:.94});
   const front=new THREE.Mesh(geom,frontMat),back=new THREE.Mesh(backGeom,backMat);
   for(const m of [front,back]){m.castShadow=true;m.receiveShadow=true;m.visible=false;m.frustumCulled=false;book.add(m);}
-  let current=initialPage, animation=null, raf=0, portrait=false, drag=null, disposed=false,queuedTarget=null;
+  let current=initialPage, animation=null, raf=0, portrait=false, narrow=false, drag=null, disposed=false,queuedTarget=null;
   const textures=new Map();
   let view={yaw:0,pitch:0,x:0,y:0},viewMode='read';
   const crisp=document.createElement('div');crisp.className='epic-crisp-layer';crisp.dataset.mode=viewMode;host.append(crisp);
@@ -274,13 +276,24 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     const closed=closedness??(current===0||current===count-1?1:0),center=portrait?W/2:closed*W/2;
     camera.fov=15;
     const halfAngle=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
-    const distance=Math.max((portrait?2.95:5.65-closed*2.7)/(2*halfAngle*camera.aspect),4.4/(2*halfAngle));
+    // 单页竖屏按单页宽取景；双页（含窄屏双页）按整本摊开宽取景。
+    // narrow（窄屏双页）时整本书比视口更宽，需要按 aspect 额外拉远，保证左右两半页都在画面内。
+    const spreadWidth=portrait?2.95:5.65-closed*2.7;
+    const distance=Math.max(spreadWidth/(2*halfAngle*camera.aspect),4.4/(2*halfAngle))*(narrow&&!portrait?1.12:1);
     camera.position.set(center+.1,-distance*.29,distance);
     camera.lookAt(center,.18,.25);camera.updateProjectionMatrix();
   }
   function resize() {
-    const width=host.clientWidth;if(width<1)return;portrait=width<620;
-    const height=portrait?Math.max(440,Math.min(650,width*1.6)):Math.max(490,Math.min(740,width*.82));
+    const width=host.clientWidth;if(width<1)return;
+    // 只有极窄视口（如小屏竖屏手机）才退回单页；其余窄屏保留翻开的双页，只是整体缩小取景。
+    portrait=width<380;
+    narrow=width<620;
+    // 双页需要更扁的画布比例才容得下左右两半；窄屏双页给足高度避免书被裁。
+    const height=portrait
+      ? Math.max(440,Math.min(650,width*1.6))
+      : narrow
+        ? Math.max(360,Math.min(560,width*.9))
+        : Math.max(490,Math.min(740,width*.82));
     renderer.setSize(width,height,false);camera.aspect=width/height;
     frameCamera();
     book.rotation.set(0,-.08,portrait?-.015:-.045);staticPages();if(animation)animationPose(animation.progress??animation.from);draw();
