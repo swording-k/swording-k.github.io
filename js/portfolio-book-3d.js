@@ -204,12 +204,16 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     for(const [i,t] of textures)if(textures.size>8&&!held.has(i)){t.dispose();textures.delete(i);}
   }
   function bend(p) {
+    // 双页：纸绕书脊(x=0)从右半翻到左半，几何原样使用。
+    // 单页(portrait)：居中只有一页，若仍绕 x=0 翻，会翻到屏幕外"消失"。
+    // 改为让翻动的纸绕居中页的左边缘(装订侧)原地卷起，全程留在可见区内 —— 更像翻一本单页册子。
+    const geomBaseX=portrait?W/2:0; // 几何生成在 [0,W]；单页需整体左移半页宽，使翻页轴落在居中页左缘
     for(let row=0;row<=12;row++) {
       const strip=sheetStrip(p,W,36,row/12);
       for(let col=0;col<=36;col++) {
         const i=row*37+col,pt=strip[col];
-        geom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,turningPaperZ(pt.z));
-        backGeom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,turningPaperZ(pt.z));
+        geom.attributes.position.setXYZ(i,pt.x-geomBaseX,H/2-row*H/12,turningPaperZ(pt.z));
+        backGeom.attributes.position.setXYZ(i,pt.x-geomBaseX,H/2-row*H/12,turningPaperZ(pt.z));
       }
     }
     for(const g of [geom,backGeom]){g.attributes.position.needsUpdate=true;g.computeVertexNormals();}
@@ -275,7 +279,9 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     camera.fov=15;
     const halfAngle=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
     const distance=Math.max((portrait?2.95:5.65-closed*2.7)/(2*halfAngle*camera.aspect),4.4/(2*halfAngle));
-    camera.position.set(center+.1,-distance*.29,distance);
+    // 单页竖屏取消水平偏移，让居中页在屏幕正中（双页维持原有 +.1 的轻微偏移）。
+    const xOffset=portrait?0:.1;
+    camera.position.set(center+xOffset,-distance*.29,distance);
     camera.lookAt(center,.18,.25);camera.updateProjectionMatrix();
   }
   function resize() {
