@@ -200,8 +200,17 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     edges.children.forEach(m=>{m.visible=!portrait||m.userData.side===1;});
     if(!closed){mats[0].map=makeTexture(start);mats[0].needsUpdate=true;}
     mats[1].map=makeTexture(closed?page:portrait?page:Math.min(count-1,start+1));mats[1].needsUpdate=true;
-    const held=new Set([0,start,start+1,page,animation?.frontIndex,animation?.backIndex]);
-    for(const [i,t] of textures)if(textures.size>8&&!held.has(i)){t.dispose();textures.delete(i);}
+    // 保留当前页及其相邻页，避免回翻时目标页纹理已被清掉、翻页首帧现画 1024x1408 大图造成卡顿。
+    const held=new Set([0,count-1,start,start+1,page,page-1,page+1,page+2,animation?.frontIndex,animation?.backIndex]);
+    for(const [i,t] of textures)if(textures.size>12&&!held.has(i)){t.dispose();textures.delete(i);}
+  }
+  // 空闲时预生成相邻页纹理，让下一次翻页（尤其回翻）首帧无需同步绘制、消除卡顿。
+  const idle=window.requestIdleCallback||(cb=>setTimeout(()=>cb({timeRemaining:()=>0}),1));
+  function prefetchNeighbors(page){
+    if(disposed)return;
+    for(const i of [page-1,page+1,page-2,page+2]){
+      if(i>=0&&i<count&&!textures.has(i)) idle(()=>{if(!disposed)makeTexture(i);});
+    }
   }
   function bend(p) {
     for(let row=0;row<=12;row++) {
@@ -232,6 +241,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     current=animation.target;animation=null;front.visible=back.visible=false;
     frameCamera();staticPages();onPage(current);draw();
     if(queuedTarget!==null){const target=queuedTarget;queuedTarget=null;turn(target,true);}
+    else prefetchNeighbors(current);
   }
   function frame(time) {
     raf=0;if(!animation)return;
@@ -275,12 +285,19 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     camera.fov=15;
     const halfAngle=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
     const distance=Math.max((portrait?2.95:5.65-closed*2.7)/(2*halfAngle*camera.aspect),4.4/(2*halfAngle));
-    camera.position.set(center+.1,-distance*.29,distance);
+    // 单页竖屏取消水平偏移，让居中页在屏幕正中（双页维持原有 +.1 的轻微偏移）。
+    const xOffset=portrait?0:.1;
+    camera.position.set(center+xOffset,-distance*.29,distance);
     camera.lookAt(center,.18,.25);camera.updateProjectionMatrix();
   }
   function resize() {
     const width=host.clientWidth;if(width<1)return;portrait=width<620;
-    const height=portrait?Math.max(440,Math.min(650,width*1.6)):Math.max(490,Math.min(740,width*.82));
+    // 竖屏单页：画布尽量高，让单页放大到接近满屏，纹理不再被缩小，清晰度大幅提升。
+    // 画布高度上限参考视口高度，避免超出一屏。
+    const portraitHeight=Math.min(Math.round(innerHeight*.78),Math.round(width*1.62));
+    const height=portrait
+      ? Math.max(480,portraitHeight)
+      : Math.max(490,Math.min(740,width*.82));
     renderer.setSize(width,height,false);camera.aspect=width/height;
     frameCamera();
     book.rotation.set(0,-.08,portrait?-.015:-.045);staticPages();if(animation)animationPose(animation.progress??animation.from);draw();
@@ -305,6 +322,8 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     } else {
       viewMode=mode;crisp.dataset.mode=mode;tools.querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===mode)));
       tools.querySelector('.epic-model-hint').textContent=mode==='read'?'左右拖动书页 · 封面向左拖动打开':mode==='pan'?'拖动移动整本书':'拖动旋转整本书';
+      // 读模式纵向滑动交还页面滚动(pan-y)；旋转/移动模式需要双向手势，接管全部(none)。
+      canvas.style.touchAction=mode==='read'?'pan-y':'none';
     }
   });
   canvas.addEventListener('contextmenu',e=>e.preventDefault());
@@ -361,6 +380,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     texture.needsUpdate=true;
   }
   draw();
+  prefetchNeighbors(current); // 书加载后预热相邻页，保证第一次翻页（含回翻）不卡
   return {
     getCurrentPageIndex:()=>current,getOrientation:()=>portrait?'portrait':'landscape',
     turnToPage:p=>turn(p,false),flip:p=>turn(p,true),

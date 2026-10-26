@@ -169,12 +169,13 @@ function initBook() {
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();
-      if(location.hash==='#projects')requestAnimationFrame(()=>section.scrollIntoView({block:'start',behavior:'instant'}));
     } catch(error){console.warn('[portfolio book] WebGL unavailable; keeping HTML paper:',error);}
   },{rootMargin:'300px'});
   upgrade.observe(shell);
-  if(location.hash==='#projects')requestAnimationFrame(()=>section.scrollIntoView({block:'start',behavior:'instant'}));
 }
+
+// 页面刷新时不恢复上次滚动位置，避免带 #projects 时自动跳到作品区（锻造之书），始终从顶部开始。
+if('scrollRestoration' in history) history.scrollRestoration='manual';
 
 try { initBook(); } catch(error) {
   console.warn('[portfolio book] Keeping original project list:',error);

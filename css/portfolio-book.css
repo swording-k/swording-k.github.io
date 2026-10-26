@@ -44,7 +44,9 @@
 .epic-3d-active { padding:0; }
 .epic-webgl { display:block;width:100%;height:auto;touch-action:pan-y;cursor:grab;border-radius:4px; }
 .epic-webgl:active { cursor:grabbing; }
-.epic-spatial .epic-webgl { touch-action:none; }
+/* 读模式（默认）纵向手势交还浏览器滚动页面，只有横滑才翻页，避免手指落在书上时上下滑被卡住。
+   旋转/移动模式时由 JS 把 canvas 的 touch-action 临时设为 none 以接管全部手势。 */
+.epic-spatial .epic-webgl { touch-action:pan-y; }
 .epic-model-tools { display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 4px 10px;color:#aa9a7e;font-size:12px; }
 .epic-model-tools>div { display:flex;gap:4px; }
 .epic-model-tools button { color:#b9aa8c;border:0;background:transparent;padding:8px 10px;font-size:12px; }
