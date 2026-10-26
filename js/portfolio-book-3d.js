@@ -200,20 +200,25 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     edges.children.forEach(m=>{m.visible=!portrait||m.userData.side===1;});
     if(!closed){mats[0].map=makeTexture(start);mats[0].needsUpdate=true;}
     mats[1].map=makeTexture(closed?page:portrait?page:Math.min(count-1,start+1));mats[1].needsUpdate=true;
-    const held=new Set([0,start,start+1,page,animation?.frontIndex,animation?.backIndex]);
-    for(const [i,t] of textures)if(textures.size>8&&!held.has(i)){t.dispose();textures.delete(i);}
+    // 保留当前页及其相邻页，避免回翻时目标页纹理已被清掉、翻页首帧现画 1024x1408 大图造成卡顿。
+    const held=new Set([0,count-1,start,start+1,page,page-1,page+1,page+2,animation?.frontIndex,animation?.backIndex]);
+    for(const [i,t] of textures)if(textures.size>12&&!held.has(i)){t.dispose();textures.delete(i);}
+  }
+  // 空闲时预生成相邻页纹理，让下一次翻页（尤其回翻）首帧无需同步绘制、消除卡顿。
+  const idle=window.requestIdleCallback||(cb=>setTimeout(()=>cb({timeRemaining:()=>0}),1));
+  function prefetchNeighbors(page){
+    if(disposed)return;
+    for(const i of [page-1,page+1,page-2,page+2]){
+      if(i>=0&&i<count&&!textures.has(i)) idle(()=>{if(!disposed)makeTexture(i);});
+    }
   }
   function bend(p) {
-    // 双页：纸绕书脊(x=0)从右半翻到左半，几何原样使用。
-    // 单页(portrait)：居中只有一页，若仍绕 x=0 翻，会翻到屏幕外"消失"。
-    // 改为让翻动的纸绕居中页的左边缘(装订侧)原地卷起，全程留在可见区内 —— 更像翻一本单页册子。
-    const geomBaseX=portrait?W/2:0; // 几何生成在 [0,W]；单页需整体左移半页宽，使翻页轴落在居中页左缘
     for(let row=0;row<=12;row++) {
       const strip=sheetStrip(p,W,36,row/12);
       for(let col=0;col<=36;col++) {
         const i=row*37+col,pt=strip[col];
-        geom.attributes.position.setXYZ(i,pt.x-geomBaseX,H/2-row*H/12,turningPaperZ(pt.z));
-        backGeom.attributes.position.setXYZ(i,pt.x-geomBaseX,H/2-row*H/12,turningPaperZ(pt.z));
+        geom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,turningPaperZ(pt.z));
+        backGeom.attributes.position.setXYZ(i,pt.x,H/2-row*H/12,turningPaperZ(pt.z));
       }
     }
     for(const g of [geom,backGeom]){g.attributes.position.needsUpdate=true;g.computeVertexNormals();}
@@ -236,6 +241,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     current=animation.target;animation=null;front.visible=back.visible=false;
     frameCamera();staticPages();onPage(current);draw();
     if(queuedTarget!==null){const target=queuedTarget;queuedTarget=null;turn(target,true);}
+    else prefetchNeighbors(current);
   }
   function frame(time) {
     raf=0;if(!animation)return;
@@ -374,6 +380,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     texture.needsUpdate=true;
   }
   draw();
+  prefetchNeighbors(current); // 书加载后预热相邻页，保证第一次翻页（含回翻）不卡
   return {
     getCurrentPageIndex:()=>current,getOrientation:()=>portrait?'portrait':'landscape',
     turnToPage:p=>turn(p,false),flip:p=>turn(p,true),
