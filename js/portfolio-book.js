@@ -1,18 +1,9 @@
 import { chapterPage, pageChapter } from './portfolio-book-state.mjs?v=2';
 import { BOOK_CATEGORIES, orderChapters, matchesChapter } from './portfolio-catalog.mjs?v=1';
 
-// 手机（窄屏）不接管作品区：3D 翻书在竖屏既糊又会吃掉上下滚动手势，
-// 直接保留原始作品列表（清晰、可正常上下滚动）。电脑端照常显示 3D 书。
-const BOOK_MIN_WIDTH = 900;
-function isPhone() {
-  return matchMedia(`(max-width:${BOOK_MIN_WIDTH - 1}px)`).matches
-    || matchMedia('(hover:none) and (pointer:coarse)').matches;
-}
-
 function initBook() {
   const section = document.querySelector('#projects');
   if (!section) return;
-  if (isPhone()) return; // 手机保持原始列表，不渲染锻造之书
   const source = [...section.querySelectorAll('.featured-project,.project-card')];
   if (!source.length) return;
   const reduced = matchMedia('(prefers-reduced-motion:reduce)');

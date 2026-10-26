@@ -280,7 +280,12 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   }
   function resize() {
     const width=host.clientWidth;if(width<1)return;portrait=width<620;
-    const height=portrait?Math.max(440,Math.min(650,width*1.6)):Math.max(490,Math.min(740,width*.82));
+    // 竖屏单页：画布尽量高，让单页放大到接近满屏，纹理不再被缩小，清晰度大幅提升。
+    // 画布高度上限参考视口高度，避免超出一屏。
+    const portraitHeight=Math.min(Math.round(innerHeight*.78),Math.round(width*1.62));
+    const height=portrait
+      ? Math.max(480,portraitHeight)
+      : Math.max(490,Math.min(740,width*.82));
     renderer.setSize(width,height,false);camera.aspect=width/height;
     frameCamera();
     book.rotation.set(0,-.08,portrait?-.015:-.045);staticPages();if(animation)animationPose(animation.progress??animation.from);draw();
@@ -305,6 +310,8 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     } else {
       viewMode=mode;crisp.dataset.mode=mode;tools.querySelectorAll('[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===mode)));
       tools.querySelector('.epic-model-hint').textContent=mode==='read'?'左右拖动书页 · 封面向左拖动打开':mode==='pan'?'拖动移动整本书':'拖动旋转整本书';
+      // 读模式纵向滑动交还页面滚动(pan-y)；旋转/移动模式需要双向手势，接管全部(none)。
+      canvas.style.touchAction=mode==='read'?'pan-y':'none';
     }
   });
   canvas.addEventListener('contextmenu',e=>e.preventDefault());
