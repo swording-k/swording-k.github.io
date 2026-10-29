@@ -17,9 +17,10 @@
     <link rel="stylesheet" href="css/style.css?v=20261029-memelab">
     <link rel="stylesheet" href="css/sword-background.css?v=20260724-three-armory-v1">
     <link rel="stylesheet" href="css/cinematic-background.css?v=20261023">
-    <link rel="stylesheet" href="css/portfolio-book.css?v=3d-21">
+    <link rel="stylesheet" href="css/portfolio-book.css?v=3d-22">
     <link rel="stylesheet" href="css/sword-hall-home.css?v=3">
     <link rel="stylesheet" href="css/hero-startup.css?v=1">
+    <noscript><style>.projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail){display:block!important}.projects.epic-book-pending .epic-book-boot{display:none!important}</style></noscript>
 </head>
 <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -288,11 +289,16 @@
             </div>
 </section>
 
-    <section class="projects section-shell" id="projects">
+    <section class="projects section-shell epic-book-pending" id="projects">
             <div class="container">
                 <div class="section-header reveal">
                     <span class="section-kicker">02 / Selected Work</span>
                     <h2 class="section-title">重点作品</h2>
+                </div>
+
+                <div class="epic-book-boot" role="status" aria-live="polite">
+                    <span class="epic-book-boot-mark" aria-hidden="true"></span>
+                    <p>正在装订作品册…</p>
                 </div>
 
                 <div class="project-ledger reveal" aria-label="作品索引">
@@ -809,7 +815,7 @@
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>
     <script src="js/main.js?v=20261023-startup-v1"></script>
-    <script type="module" src="js/portfolio-book.js?v=3d-22"></script>
+    <script type="module" src="js/portfolio-book.js?v=3d-23" onerror="var p=document.getElementById('projects');if(p){p.classList.remove('epic-book-pending','epic-book-loading')}"></script>
     <script type="module" src="js/sword-wake.js?v=2"></script>
 </body>
 </html>

@@ -39,6 +39,20 @@ test("MEME lab entry exposes web, GitHub, mini-program code and WeChat search gu
     assert.ok(existsSync(new URL("../images/qrcode-wechatmemelab.png", import.meta.url)));
 });
 
+test("book boots through one deliberate loading state instead of flashing the flat fallbacks", async () => {
+    const html = await load("../index.html");
+    const css = await load("../css/portfolio-book.css");
+    const js = await load("../js/portfolio-book.js");
+
+    assert.match(html, /<section class="projects section-shell epic-book-pending" id="projects">/);
+    assert.match(html, /class="epic-book-boot"/);
+    assert.match(html, /onerror="var p=document\.getElementById\('projects'\)/);
+    assert.match(css, /\.projects\.epic-book-pending :is\(\.project-ledger/);
+    assert.match(css, /\.epic-book-loading-boot/);
+    assert.match(js, /epic-book-loading/);
+    assert.match(js, /finishLoading/);
+});
+
 test("showcase and background use the same transparent sword asset", async () => {
     const html = await load("../index.html");
     const asset = "images/longclaw-screen-used-weathered-v2-transparent.png";

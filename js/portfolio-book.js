@@ -159,7 +159,29 @@ function initBook() {
     if(!listMode)flip.update();
     window.ScrollTrigger?.refresh();
   });
-  section.classList.add('epic-book-ready');
+  // One deliberate loading state: the source list and the flat fallback book stay hidden
+  // until the interactive scene is ready (or WebGL is unavailable and the fallback wins).
+  const wrap=shell.querySelector('.epic-book-wrap');
+  const loadingBoot=make('div','epic-book-loading-boot');
+  loadingBoot.setAttribute('role','status');loadingBoot.setAttribute('aria-live','polite');
+  loadingBoot.innerHTML='<span class="epic-book-loading-title">锻造之书</span><span class="epic-book-boot-mark" aria-hidden="true"></span><p>正在装订作品册…</p>';
+  wrap.append(loadingBoot);
+  section.classList.add('epic-book-ready','epic-book-loading');
+  section.classList.remove('epic-book-pending');
+  section.querySelector('.epic-book-boot')?.remove();
+  section.setAttribute('aria-busy','true');
+  let loadingGuard=0;
+  const finishLoading=()=>{
+    if(loadingGuard){clearTimeout(loadingGuard);loadingGuard=0;}
+    section.classList.remove('epic-book-loading');
+    section.removeAttribute('aria-busy');
+    loadingBoot.remove();
+  };
+  // Never leave the section spinning forever: after 12s reveal the complete flat-paper fallback.
+  loadingGuard=window.setTimeout(()=>{
+    if(!section.classList.contains('epic-book-loading'))return;
+    finishLoading();flip.update();window.ScrollTrigger?.refresh();
+  },12000);
   window.ScrollTrigger?.refresh();
   const liveActions=make('div','epic-live-actions');shell.querySelector('.epic-book-controls').after(liveActions);
   const upgrade=new IntersectionObserver(async entries=>{
@@ -167,9 +189,9 @@ function initBook() {
     try {
       const {createBookScene}=await import('./portfolio-book-3d.js?v=22');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
-      flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
-      shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();
-    } catch(error){console.warn('[portfolio book] WebGL unavailable; keeping HTML paper:',error);}
+      flip=scene;wrap.classList.add('epic-3d-active');
+      shell.classList.add('epic-spatial');finishLoading();sync(currentPage);window.ScrollTrigger?.refresh();
+    } catch(error){console.warn('[portfolio book] WebGL unavailable; keeping HTML paper:',error);finishLoading();flip.update();}
   },{rootMargin:'300px'});
   upgrade.observe(shell);
 }
@@ -179,6 +201,9 @@ if('scrollRestoration' in history) history.scrollRestoration='manual';
 
 try { initBook(); } catch(error) {
   console.warn('[portfolio book] Keeping original project list:',error);
-  document.querySelector('#projects')?.classList.remove('epic-book-ready');
+  const p=document.querySelector('#projects');
+  p?.classList.remove('epic-book-ready','epic-book-loading','epic-book-pending');
+  p?.removeAttribute('aria-busy');
   document.querySelector('.epic-library')?.remove();
+  document.querySelector('.epic-book-boot')?.remove();
 }

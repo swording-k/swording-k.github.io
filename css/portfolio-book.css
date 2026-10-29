@@ -187,3 +187,21 @@
  .epic-catalog-note { display:none; }
  .epic-3d-active { padding:0; }
 }
+
+/* One deliberate loading state instead of flashing the source list and the flat fallback book. */
+.projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
+.projects.epic-book-loading :is(.project-ledger,.featured-project,.showcase-rail) { display:none!important; }
+.epic-book-boot { display:none; min-height:620px; align-items:center; justify-content:center; flex-direction:column; gap:18px; text-align:center; color:#a99c83; }
+.projects.epic-book-pending .epic-book-boot { display:flex; }
+.epic-book-boot-mark { width:22px;height:22px;border:1px solid #5d4f36;border-top-color:#d9bd86;border-radius:50%;animation:epic-book-spin 1s linear infinite; }
+.epic-book-boot p { margin:0;font:13px/1.6 'Inter',system-ui,sans-serif;letter-spacing:.08em;color:#a99c83; }
+.epic-book-loading .epic-book { visibility:hidden; }
+.epic-book-loading :is(.epic-book-controls,.epic-chapter-controls,.epic-live-actions) { visibility:hidden; }
+.epic-book-loading :is(.epic-view-tools,.epic-catalog) { opacity:.55;pointer-events:none; }
+.epic-book-loading .epic-book-wrap::before { display:none; }
+.epic-book-loading-boot { position:absolute;left:0;right:0;top:20px;bottom:8px;margin:0 auto;width:min(100%,760px);z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:radial-gradient(120% 90% at 30% 15%,#3a3025 0%,#241d16 45%,#15120e 100%);border:1px solid #4a3c28;border-radius:5px 9px 10px 5px;box-shadow:inset 0 0 0 1px #ffffff08,inset 0 0 90px #0009,0 20px 44px #000b;color:#a99c83;text-align:center; }
+.epic-book-loading-boot::before { content:'';position:absolute;inset:14px;border:1px solid #ffffff0d;border-radius:2px;pointer-events:none; }
+.epic-book-loading-title { font:400 34px/1.4 'Songti SC',Georgia,serif;letter-spacing:.22em;text-indent:.22em;color:#dcc79e; }
+@keyframes epic-book-spin { to { transform:rotate(360deg); } }
+@media(max-width:900px){ .epic-book-boot { min-height:520px; } }
+@media(prefers-reduced-motion:reduce){ .epic-book-boot-mark { animation:none; } }
