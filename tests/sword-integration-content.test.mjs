@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const load = (path) => readFile(new URL(path, import.meta.url), "utf8");
@@ -11,7 +12,7 @@ test("portfolio content and primary actions remain intact", async () => {
         assert.match(html, new RegExp(`id=["']${id}["']`));
     }
 
-    // Production already has nine cards; allow future projects without weakening
+    // Production already has ten cards; allow future projects without weakening
     // preservation of the original named entries.
     assert.ok((html.match(/<article class="project-card\b/g) ?? []).length >= 9);
     for (const card of ["atoll", "workisland", "memelab", "codetheme", "lastbook", "esports", "pet", "blog", "notes"]) {
@@ -22,6 +23,20 @@ test("portfolio content and primary actions remain intact", async () => {
     assert.match(html, /href="mailto:swordingk@gmail\.com"/);
     assert.match(html, /href="https:\/\/github\.com\/swording-k"/);
     assert.match(html, /href="files\/resume-yangkun-ai-product-engineer\.pdf"/);
+});
+
+test("MEME lab entry exposes web, GitHub, mini-program code and WeChat search guidance", async () => {
+    const html = await load("../index.html");
+    const card = html.match(/<article class="project-card memelab-card\b[\s\S]*?<\/article>/)?.[0] ?? "";
+
+    assert.ok(card, "MEME lab card must exist");
+    assert.match(card, /<h3>MEME lab<\/h3>/);
+    assert.match(card, /怪相馆/);
+    assert.match(card, /https:\/\/swording-k\.github\.io\/WechatMemeLab\//);
+    assert.match(card, /https:\/\/github\.com\/swording-k\/WechatMemeLab/);
+    assert.match(card, /images\/qrcode-wechatmemelab\.png/);
+    assert.match(card, /微信搜索「怪相馆」/);
+    assert.ok(existsSync(new URL("../images/qrcode-wechatmemelab.png", import.meta.url)));
 });
 
 test("showcase and background use the same transparent sword asset", async () => {

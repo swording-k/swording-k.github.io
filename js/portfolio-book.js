@@ -1,5 +1,5 @@
 import { chapterPage, pageChapter } from './portfolio-book-state.mjs?v=2';
-import { BOOK_CATEGORIES, orderChapters, matchesChapter } from './portfolio-catalog.mjs?v=1';
+import { BOOK_CATEGORIES, orderChapters, matchesChapter } from './portfolio-catalog.mjs?v=2';
 
 function initBook() {
   const section = document.querySelector('#projects');
@@ -165,7 +165,7 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=21');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=22');
       const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=scene;shell.querySelector('.epic-book-wrap').classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');sync(currentPage);window.ScrollTrigger?.refresh();

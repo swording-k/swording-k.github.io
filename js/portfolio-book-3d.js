@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip,restingPaperZ,turningPaperZ } from './book-surface.mjs?v=5';
-import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=10';
+import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=11';
 import { pageMatrix } from './book-projection.mjs';
 import { dragBookView, bookGesture } from './book-view-state.mjs?v=3';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';

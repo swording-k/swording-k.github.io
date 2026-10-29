@@ -18,3 +18,7 @@ test('catalog search matches product names or category names',()=>{
   assert.equal(matchesChapter({title:'Atoll',category:'开源贡献'},'开源'),true);
   assert.equal(matchesChapter({title:'FitGenius',category:'个人产品'},'开源'),false);
 });
+test('catalog search also matches the product alias kept in the label',()=>{
+  assert.equal(matchesChapter({title:'MEME lab',category:'个人产品',label:'怪相馆 · 动态表情包'},'怪相馆'),true);
+  assert.equal(matchesChapter({title:'MEME lab',category:'个人产品',label:'怪相馆 · 动态表情包'},'memelab'),false);
+});

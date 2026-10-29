@@ -1320,6 +1320,16 @@ ul {
     margin-top: 14px;
 }
 
+.memelab-qr img {
+    width: 128px;
+    height: 128px;
+    padding: 0;
+}
+
+.memelab-qr span {
+    max-width: 180px;
+}
+
 [data-lightbox-image],
 [data-lightbox-src] {
     cursor: zoom-in;

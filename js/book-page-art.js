@@ -2,7 +2,7 @@
 const PW=768, PH=1056;
 const serif='"Songti SC", "Noto Serif CJK SC", Georgia, serif';
 const sans=serif;
-const bookNotes=value=>value.replace(/Launched/g,'发布：').replace(/Built with/g,' · 技术：').replace(/Role/g,' · 负责：');
+const bookNotes=value=>value.replace(/Launched/g,'发布：').replace(/Built with/g,' · 技术：').replace(/Platform/g,' · 平台：');
 const visuals=[
   [/fit\s?genius/i,'images/book/fitgenius-promo.webp','产品界面'],
   [/atoll/i,'images/book/atoll-stats.webp','产品界面','images/book/atoll-media.webp'],

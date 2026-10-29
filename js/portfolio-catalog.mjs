@@ -7,5 +7,5 @@ export function orderChapters(chapters) {
 }
 
 export function matchesChapter(chapter,query) {
-  return `${chapter.title} ${chapter.category}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase());
+  return `${chapter.title} ${chapter.category} ${chapter.label||''}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase());
 }
