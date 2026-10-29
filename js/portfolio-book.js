@@ -175,7 +175,8 @@ function initBook() {
     if(loadingGuard){clearTimeout(loadingGuard);loadingGuard=0;}
     section.classList.remove('epic-book-loading');
     section.removeAttribute('aria-busy');
-    loadingBoot.remove();
+    loadingBoot.classList.add('is-done');
+    window.setTimeout(()=>loadingBoot.remove(),300);
   };
   // Never leave the section spinning forever: after 12s reveal the complete flat-paper fallback.
   loadingGuard=window.setTimeout(()=>{
