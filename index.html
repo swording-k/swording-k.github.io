@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=optional" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="css/style.css?v=20261029-memelab">
+    <link rel="stylesheet" href="css/style.css?v=20261105-footprint-v2">
     <link rel="stylesheet" href="css/sword-background.css?v=20260724-three-armory-v1">
     <link rel="stylesheet" href="css/cinematic-background.css?v=20261023">
     <link rel="stylesheet" href="css/portfolio-book.css?v=3d-23">
@@ -788,10 +788,7 @@
                             </a>
                             <a class="social-link-card woshipm" href="https://wen.woshipm.com/user/profile/oqka5vf.html" target="_blank" rel="noopener noreferrer" aria-label="打开人人都是产品经理 宝剑 Killian">
                                 <span class="social-link-icon" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" role="img">
-                                        <circle cx="9" cy="7" r="3" />
-                                        <path d="M3 20v-3a6 6 0 0 1 12 0v3M16 4a3 3 0 0 1 0 6M18 13a5 5 0 0 1 3 4v3" />
-                                    </svg>
+                                    <img src="images/woshipm-icon.png" width="28" height="28" alt="" loading="lazy">
                                 </span>
                                 <span>
                                     <strong>人人都是产品经理</strong>
@@ -808,8 +805,8 @@
     <footer class="footer">
         <div class="container">
             <p>© 2026 Killian Yang · Built as an AI product workbench.</p>
-            <div class="footprint-row" id="footprint" aria-live="polite" hidden>
-                <span class="footprint-text">已有 <strong id="footprintCount">…</strong> 位访客为此剑驻足</span>
+            <div class="footprint-row" id="footprint" aria-live="polite">
+                <span class="footprint-text"><span id="footprintLabel">累计访客：</span><strong id="footprintCount">加载中</strong><span id="footprintSuffix"></span></span>
             </div>
         </div>
     </footer>
@@ -837,7 +834,7 @@
 
     <script src="js/gsap.min.js"></script>
     <script src="js/ScrollTrigger.min.js"></script>
-    <script src="js/main.js?v=20261023-startup-v1"></script>
+    <script src="js/main.js?v=20261105-footprint-v2"></script>
     <script type="module" src="js/portfolio-book.js?v=3d-24" onerror="var p=document.getElementById('projects');if(p){p.classList.remove('epic-book-pending','epic-book-loading')}"></script>
     <script type="module" src="js/sword-wake.js?v=2"></script>
 </body>

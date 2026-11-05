@@ -1228,25 +1228,56 @@
     function initFootprint() {
         const el = document.getElementById("footprint");
         const countEl = document.getElementById("footprintCount");
-        if (!el || !countEl) return;
+        const labelEl = document.getElementById("footprintLabel");
+        const suffixEl = document.getElementById("footprintSuffix");
+        if (!el || !countEl || !labelEl || !suffixEl) return;
 
-        const apiBase = "https://baojian-personalweb.vercel.app";
-        fetch(`${apiBase}/api/visit`, { credentials: "include" })
+        const cacheKey = "killian_visit_count";
+        let lastCount = null;
+        // Storage can be unavailable in private or restricted browser contexts.
+        try {
+            const stored = window.localStorage.getItem(cacheKey);
+            const value = stored === null ? NaN : Number(stored);
+            if (Number.isSafeInteger(value) && value >= 0) lastCount = value;
+        } catch (_) {}
+
+        function render(count, stale = false) {
+            labelEl.textContent = stale ? "上次记录的累计访客：" : "累计访客：";
+            countEl.textContent = count.toLocaleString("zh-CN");
+            suffixEl.textContent = " 位";
+        }
+        function unavailable() {
+            if (lastCount !== null) {
+                render(lastCount, true);
+            } else {
+                labelEl.textContent = "累计访客：";
+                countEl.textContent = "暂时无法获取";
+                suffixEl.textContent = "";
+            }
+        }
+        el.hidden = false;
+        if (lastCount !== null) render(lastCount, true);
+
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        // Do not retry an incrementing endpoint automatically after a timeout.
+        fetch("https://baojian-personalweb.vercel.app/api/visit", {
+            credentials: "include",
+            cache: "no-store",
+            signal: controller.signal,
+        })
             .then((res) => (res.ok ? res.json() : null))
             .then((data) => {
-                if (!data) return;
-                countEl.textContent = data.count.toLocaleString();
-                if (data.persisted) {
-                    el.classList.add("is-ready");
-                } else {
-                    el.classList.add("is-warming");
-                    countEl.textContent = "准备中";
+                if (!data || data.persisted !== true || !Number.isSafeInteger(data.count) || data.count < 0) {
+                    unavailable();
+                    return;
                 }
-                el.hidden = false;
+                lastCount = data.count;
+                render(lastCount);
+                try { window.localStorage.setItem(cacheKey, String(lastCount)); } catch (_) {}
             })
-            .catch(() => {
-                el.hidden = true;
-            });
+            .catch(unavailable)
+            .finally(() => clearTimeout(timer));
     }
 
     function init() {
