@@ -1552,14 +1552,6 @@ button.social-link-card {
     transition: color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
-.social-link-icon img {
-    display: block;
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    border-radius: 6px;
-}
-
 .social-link-icon svg {
     width: 19px;
     height: 19px;
