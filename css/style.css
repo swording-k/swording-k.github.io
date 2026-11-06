@@ -3451,7 +3451,7 @@ body::after,
 }
 
 .hero-dossier div {
-    grid-template-columns: 38px 108px 1fr;
+    grid-template-columns: 38px 108px minmax(0, 1fr) 48px;
     min-height: 54px;
     padding: 11px 0;
 }
@@ -3473,20 +3473,19 @@ body::after,
 }
 
 .affiliation-mark {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    margin-left: 8px;
-    vertical-align: -3px;
+    display: block;
+    justify-self: center;
+    width: 38px;
+    height: 38px;
     background-color: var(--gold);
-    opacity: 0.72;
+    opacity: 0.9;
     -webkit-mask: var(--affiliation-image) center / contain no-repeat;
     mask: var(--affiliation-image) center / contain no-repeat;
 }
 
 .affiliation-mark--csu { --affiliation-image: url('../images/affiliation-csu.png'); }
 .affiliation-mark--lev0 { --affiliation-image: url('../images/affiliation-lev0.svg'); }
-.affiliation-mark--ignai { --affiliation-image: url('../images/affiliation-ignai.svg'); }
+.affiliation-mark--ignai { width: 48px; height: 48px; --affiliation-image: url('../images/affiliation-ignai.svg'); }
 
 .metric-link-inline:hover {
     color: rgba(242, 237, 227, 0.92);
@@ -3571,7 +3570,8 @@ body::after,
 
 @media (max-width: 760px) {
     .hero-dossier div {
-        grid-template-columns: 34px 92px 1fr;
+        grid-template-columns: 28px 82px minmax(0, 1fr) 42px;
+        gap: 8px;
     }
 
     .hero-actions .button-primary,
