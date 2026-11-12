@@ -8,6 +8,11 @@
 
 ## 2026-11-12 MineRadio 与移动端入口
 
+书页左下角优先展示可追溯的项目成果，再放平台、技术等标签。下载次数不等于独立用户数，团队项目数据不算作个人客户端数据。2026-11-12 核对：
+
+- Codex Theme Creator：[官网统计脚本](https://swording-k.github.io/codex-theme-creator/site.js) 合计公开 GitHub Releases 的 dmg、exe、msi、zip 下载次数，共 177 次。
+- MineRadio：[原项目仓库](https://github.com/XxHuberrr/Mineradio-paused) 11,403 Stars；[项目账号发布的抖音视频](https://www.douyin.com/video/7654826766774635802) 公开页面快照显示 19.6 万粉丝。书页使用保守取整值，前端不请求第三方计数。
+
 用户确认公开加入 MineRadio，归类为开源贡献，注明以 iOS 客户端开发者身份加入团队，负责 iPhone / iPad 客户端。产品介绍以 https://mineradio.cn/ 为来源；项目源码链接使用官网提供的 https://github.com/XxHuberrr/Mineradio 。官方 MR 图标来自 iOS 工程保留的官网素材，原始来源为 https://mineradio.cn/images/inline/inline-02.png 。暂不展示 App Store 下载按钮和未经核对的流量数据。
 
 手机与桌面默认显示可翻页的立体书。手机按需加载图片，限制纹理分辨率，关闭实时阴影，不启用全站滚动动效；WebGL 不可用时显示 HTML 书页。纸面按钮的可见文字、底色与透明点击区域共用同一套坐标。手机在书下方另有原生操作入口。开源贡献按 Atoll、MineRadio 排列；MineRadio 展示 iOS AppIcon 的正式黑底版本。

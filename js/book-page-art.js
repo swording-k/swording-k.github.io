@@ -149,6 +149,9 @@ export function createCrispPage(index,count,chapters) {
   el.innerHTML='<p class="crisp-running"></p><h4></h4><p class="crisp-kind"></p><div class="crisp-visual"></div><p class="crisp-intro"></p><p class="crisp-notes"></p><div class="crisp-actions"></div><span class="crisp-folio"></span>';
   el.querySelector('.crisp-running').textContent=visual?'锻造之书 / 杨锟':'项目手记';
   el.querySelector('h4').textContent=ch.title;
+  const titleIcon=ch.icon.cloneNode(false);
+  titleIcon.className='crisp-title-icon';titleIcon.alt='';
+  el.querySelector('h4').prepend(titleIcon);
   el.querySelector('.crisp-kind').textContent=ch.label;
   el.querySelector('.crisp-intro').textContent=ch.intro;
   el.querySelector('.crisp-notes').textContent=bookNotes(ch.notes);

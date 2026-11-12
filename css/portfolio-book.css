@@ -189,10 +189,10 @@
 }
 
 /* One deliberate loading state instead of flashing the source list and the flat fallback book. */
-:where(html:not(.mobile-reading)) .projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
+:where(html:not(.mobile-reading),html.wechat-reading) .projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
 .projects.epic-book-loading :is(.project-ledger,.featured-project,.showcase-rail) { display:none!important; }
 .epic-book-boot { display:none; min-height:620px; align-items:center; justify-content:center; flex-direction:column; gap:18px; text-align:center; color:#a99c83; }
-:where(html:not(.mobile-reading)) .projects.epic-book-pending .epic-book-boot { display:flex; }
+:where(html:not(.mobile-reading),html.wechat-reading) .projects.epic-book-pending .epic-book-boot { display:flex; }
 html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
 .mobile-reading .epic-book { grid-template-columns:minmax(0,1fr); }
 .mobile-reading .reveal { opacity:1; visibility:visible; transform:none; }
@@ -204,6 +204,19 @@ html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
 .epic-live-actions button { color:#302311; }
 .is-hit-surface .crisp-actions { position:absolute;inset:0;display:block;pointer-events:none; }
 .is-hit-surface .crisp-actions :is(button,a) { background:transparent;border:0;padding:0;pointer-events:auto;touch-action:manipulation; }
+.crisp-title-icon { display:inline-block;width:48px;height:48px;object-fit:contain;vertical-align:middle;margin-right:16px; }
+.epic-crisp-page.is-reading-surface { background:#eee6d5 url('../images/book/laid-paper-v1.webp') center/100% 100%;color:#332d23; }
+.is-reading-surface .crisp-intro { font-size:39px;line-height:1.52;color:#332d23; }
+.is-reading-surface .crisp-notes { top:828px;font-size:30px;line-height:39px;color:#514633; }
+.is-reading-surface .crisp-actions { inset:0;display:block;pointer-events:none; }
+.is-reading-surface .crisp-actions :is(a,button) { display:inline-flex;align-items:center;justify-content:center;margin:0;padding:0 5px;background:#9f86551b;border:0;border-bottom:2px solid #9d845a;color:#453822;font-size:27px;line-height:1.2;touch-action:manipulation; }
+.is-reading-surface .crisp-actions a:first-child { background:#605138;color:#fff6e4; }
+.is-reading-surface .crisp-actions a::after { content:'↗';margin-left:5px;font-size:.72em; }
+.epic-crisp-page.is-reading-surface.is-cover { background:#2a211b url('../images/book/leather-binding-v1.webp') center/100% 100%;color:#c5ac7c; }
+.is-reading-surface.is-cover .crisp-cover-blade { display:none; }
+.is-reading-surface.is-cover .crisp-open { border:1px solid #ad936b80;color:#e2cb9e;font-size:33px; }
+.is-reading-surface .crisp-visual:has(img:nth-child(3)) { display:flex;align-items:center; }
+.is-reading-surface .crisp-visual:has(img:nth-child(3)) img { position:static;width:33.33%;border:0; }
 .mobile-reading .epic-spatial .epic-live-actions { display:flex; }
 .epic-library .epic-live-actions :is(a,button), .epic-project-links .epic-project-link, .epic-library .epic-read, .epic-details-content a {
   background:#b2956415;color:#51442f;border:0;border-bottom:1px solid #ad9672;border-radius:2px;
@@ -224,3 +237,12 @@ html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
 @keyframes epic-book-spin { to { transform:rotate(360deg); } }
 @media(max-width:900px){ .epic-book-boot { min-height:520px; } }
 @media(prefers-reduced-motion:reduce){ .epic-book-boot-mark { animation:none; } }
+
+/* A bound volume in WeChat: native print at rest; only a turning leaf is composited. */
+.wechat-bound .epic-book { display:none; }
+.wechat-bound { padding:0 10px 12px 5px; }
+.wechat-bound::before { display:none; }
+.wechat-volume { position:relative;margin:auto;width:100%;max-width:410px;aspect-ratio:8/11;perspective:900px;touch-action:pan-y pinch-zoom;background:#30251b;border-radius:2px 4px 4px 2px;
+ box-shadow:2px 2px 0 #ac9d80,3px 3px 0 #796c58,4px 4px 0 #d1c5a8,5px 5px 0 #796c58,6px 7px 0 #423829,0 12px 18px #0006; }
+.wechat-leaf { position:absolute;inset:0;overflow:hidden;transform-origin:left center;backface-visibility:hidden;border-radius:2px 3px 3px 2px; }
+.wechat-leaf .epic-crisp-page { transform:scale(var(--ink-scale)); }

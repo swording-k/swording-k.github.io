@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip,restingPaperZ,turningPaperZ } from './book-surface.mjs?v=5';
-import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=mobile-ink-1';
+import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=reading-type-1';
 import { pageMatrix } from './book-projection.mjs';
 import { dragBookView, bookGesture } from './book-view-state.mjs?v=3';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
@@ -115,7 +115,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   function positionCrispPages() {
     crisp.hidden=!!animation;
     if(animation)return;
-    if(current===0||current===count-1){crisp.hidden=true;return;}
+    if(!mobileReading&&(current===0||current===count-1)){crisp.hidden=true;return;}
     book.updateMatrixWorld(true);
     for(const [slot,mesh] of [left,right].entries()) {
       const index=mesh.material.map?.userData.pageIndex;
@@ -124,8 +124,8 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
       if(!mesh.visible||index===undefined||normal.dot(towardCamera)<.08){if(crispSlots[slot])crispSlots[slot].hidden=true;continue;}
       let el=crispSlots[slot];
       if(!el||el.dataset.page!==String(index)) {
-        // One visible ink source: WebGL at rest and in motion. DOM only supplies semantic hit targets.
-        const next=createCrispPage(index,count,chapters);next.classList.add('is-hit-surface');next.dataset.page=index;
+        const next=createCrispPage(index,count,chapters);
+        next.classList.add(mobileReading?'is-reading-surface':'is-hit-surface');next.dataset.page=index;
         if(el)el.replaceWith(next);else crisp.append(next);el=crispSlots[slot]=next;
       }
       el.hidden=false;

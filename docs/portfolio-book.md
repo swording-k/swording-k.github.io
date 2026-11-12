@@ -54,3 +54,5 @@ Default mode distinguishes on-paper page dragging from outside model rotation. E
 Cover return rotates the physical left binding around the spine onto the right page block and eases framing to the closed book. Directory return dismisses the mobile catalog first. Inner visual and story pages now share ivory laid-paper artwork (see book-paper-asset.md), dark Songti ink and restrained print borders. Curvature varies slightly along page height to avoid a uniform cylinder turn.
 
 Verified with actual pointer input in the local preview: forward turn, short-drag cancellation, held hinge, completed close/open, directory close, and reduced-motion five-move drag producing only one turn. Screenshot evidence under ignored .book-qa/: paper-drag-v4.png and closing-held-v4.png.37 automated tests pass. This is not a deployment or a claim of user aesthetic acceptance.
+
+微信内置浏览器默认用原生文字和 CSS 透视书页，纵向滑动交给文档，横向滑动或箭头翻页。只有点「自由旋转」才加载 WebGL；图形上下文丢失时回到同一页。Safari 等浏览器沿用完整立体模型。微信真机是否被宿主重新载入，不能用浏览器标识模拟验收。
