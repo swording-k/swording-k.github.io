@@ -1,19 +1,19 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip,restingPaperZ,turningPaperZ } from './book-surface.mjs?v=5';
-import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=11';
+import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=mobile-ink-1';
 import { pageMatrix } from './book-projection.mjs';
 import { dragBookView, bookGesture } from './book-view-state.mjs?v=3';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
 
 // Real geometry, lighting and two independently typeset paper faces.
-export async function createBookScene(host, chapters, {initialPage=0,onPage,readChapter}) {
+export async function createBookScene(host, chapters, {initialPage=0,onPage,readChapter,mobileReading=false,onLoss}) {
   const W=2.65,H=3.65, count=chapters.length*2+2;
   await document.fonts.load('40px "Songti SC"');
   host.tabIndex=0;host.setAttribute('role','group');host.setAttribute('aria-label','锻造之书，方向键翻页');
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
-  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(Math.max(devicePixelRatio,1.5),2));
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  const renderer=new THREE.WebGLRenderer({antialias:!mobileReading,alpha:true,powerPreference:'low-power'});
+  renderer.setPixelRatio(mobileReading?Math.min(devicePixelRatio,1.5):Math.min(Math.max(devicePixelRatio,1.5),2));
+  renderer.shadowMap.enabled=!mobileReading;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
   renderer.domElement.className='epic-webgl';renderer.domElement.setAttribute('aria-label','立体作品册，拖动纸页左右翻阅');
@@ -175,7 +175,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   }
   function makeTexture(index) {
     if(textures.has(index))return textures.get(index);
-    const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=1408;
+    const canvas=document.createElement('canvas');canvas.width=mobileReading?768:1024;canvas.height=mobileReading?1056:1408;
     paintBookPage(canvas.getContext('2d'),index,count,chapters,loadImage);
     const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());
     texture.userData.pageIndex=index;
@@ -202,12 +202,12 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     mats[1].map=makeTexture(closed?page:portrait?page:Math.min(count-1,start+1));mats[1].needsUpdate=true;
     // 保留当前页及其相邻页，避免回翻时目标页纹理已被清掉、翻页首帧现画 1024x1408 大图造成卡顿。
     const held=new Set([0,count-1,start,start+1,page,page-1,page+1,page+2,animation?.frontIndex,animation?.backIndex]);
-    for(const [i,t] of textures)if(textures.size>12&&!held.has(i)){t.dispose();textures.delete(i);}
+    for(const [i,t] of textures)if(textures.size>(mobileReading?5:12)&&!held.has(i)){t.dispose();textures.delete(i);}
   }
   // 空闲时预生成相邻页纹理，让下一次翻页（尤其回翻）首帧无需同步绘制、消除卡顿。
   const idle=window.requestIdleCallback||(cb=>setTimeout(()=>cb({timeRemaining:()=>0}),1));
   function prefetchNeighbors(page){
-    if(disposed)return;
+    if(disposed||mobileReading)return;
     for(const i of [page-1,page+1,page-2,page+2]){
       if(i>=0&&i<count&&!textures.has(i)) idle(()=>{if(!disposed)makeTexture(i);});
     }
@@ -369,11 +369,14 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
   }
   canvas.addEventListener('pointerup',()=>releaseDrag());
   canvas.addEventListener('pointercancel',()=>releaseDrag(true));
-  canvas.addEventListener('webglcontextlost',()=>{host.classList.remove('epic-3d-active');});
-  preloadBookImages(chapters,loadImage);
+  canvas.addEventListener('webglcontextlost',()=>{
+    dispose();onLoss?.();
+  },{once:true});
+  if(!mobileReading)preloadBookImages(chapters,loadImage);
   resize();
   // Decode before exposing the interactive scene: a first reverse turn must not paint an empty photo.
   await Promise.all([...images.values()].map(img=>img.decode().catch(()=>{})));
+  if(disposed)throw new Error('Book graphics context was lost during startup');
   // Decode and load events can settle separately: commit all available ink.
   for(const [index,texture] of textures){
     paintBookPage(texture.image.getContext('2d'),index,count,chapters,loadImage);
@@ -385,12 +388,14 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     getCurrentPageIndex:()=>current,getOrientation:()=>portrait?'portrait':'landscape',
     turnToPage:p=>turn(p,false),flip:p=>turn(p,true),
     flipNext:()=>next(true),flipPrev:()=>prev(true),turnToNextPage:()=>next(false),turnToPrevPage:()=>prev(false),update:resize,
-    dispose(){
+    dispose
+  };
+  function dispose(){
+      if(disposed)return;
       disposed=true;observer.disconnect();if(raf)cancelAnimationFrame(raf);
       textures.forEach(t=>t.dispose());grain.dispose();bindingMap?.dispose();crisp.remove();tools.remove();
       const geometries=new Set(),materials=new Set();
       scene.traverse(m=>{if(m.geometry)geometries.add(m.geometry);if(m.material)materials.add(m.material);});
-      geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());renderer.dispose();
-    }
-  };
+      geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());renderer.dispose();canvas.remove();
+  }
 }

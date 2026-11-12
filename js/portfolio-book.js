@@ -95,12 +95,13 @@ function initBook() {
   let fallbackPage=0;
   const fallbackTurn=p=>{fallbackPage=Math.max(0,Math.min(pageNodes.length-1,p));sync(fallbackPage);};
   const fallbackStep=()=>mobileReading || shell.querySelector('.epic-book-wrap').clientWidth<620?1:2;
-  let flip={
+  const fallback={
     getCurrentPageIndex:()=>fallbackPage,getOrientation:()=>fallbackStep()===1?'portrait':'landscape',
     turnToPage:fallbackTurn,flip:fallbackTurn,update:()=>sync(fallbackPage),
     flipNext:()=>fallbackTurn(fallbackPage+fallbackStep()),flipPrev:()=>fallbackTurn(fallbackPage-fallbackStep()),
     turnToNextPage:()=>fallbackTurn(fallbackPage+fallbackStep()),turnToPrevPage:()=>fallbackTurn(fallbackPage-fallbackStep())
   };
+  let flip=fallback;
   let currentPage=0,currentChapter=0,listMode=false;
   function sync(pageNumber) {
     currentPage=pageNumber;currentChapter=pageChapter(pageNumber,chapters.length);
@@ -166,13 +167,6 @@ function initBook() {
   });
   // One deliberate loading state: the source list and the flat fallback book stay hidden
   // until the interactive scene is ready (or WebGL is unavailable and the fallback wins).
-  if(mobileReading){
-    section.classList.add('epic-book-ready');
-    section.classList.remove('epic-book-pending');
-    section.querySelector('.epic-book-boot')?.remove();
-    shell.querySelector('.epic-book-controls span').textContent='轻点箭头翻页';
-    return;
-  }
   const wrap=shell.querySelector('.epic-book-wrap');
   const loadingBoot=make('div','epic-book-loading-boot');
   loadingBoot.setAttribute('role','status');loadingBoot.setAttribute('aria-live','polite');
@@ -200,8 +194,11 @@ function initBook() {
   const upgrade=new IntersectionObserver(async entries=>{
     if(!entries.some(e=>e.isIntersecting))return;upgrade.disconnect();
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=22');
-      const scene=await createBookScene(shell.querySelector('.epic-book-wrap'),chapters,{initialPage:currentPage,onPage:sync,readChapter});
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=mobile-ink-1');
+      const scene=await createBookScene(wrap,chapters,{initialPage:currentPage,onPage:sync,readChapter,mobileReading,onLoss(){
+        flip=fallback;wrap.classList.remove('epic-3d-active');shell.classList.remove('epic-spatial');
+        finishLoading();fallbackTurn(currentPage);
+      }});
       flip=scene;wrap.classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');finishLoading();sync(currentPage);window.ScrollTrigger?.refresh();
     } catch(error){console.warn('[portfolio book] WebGL unavailable; keeping HTML paper:',error);finishLoading();flip.update();}

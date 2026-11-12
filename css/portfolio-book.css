@@ -202,8 +202,13 @@ html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
  display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid #a07c43;border-radius:7px;background:#d9bc83;color:#302311;font-size:13px;font-weight:600;line-height:1.5;text-decoration:none;touch-action:manipulation;
 }
 .epic-live-actions button { color:#302311; }
-.crisp-actions :is(button,a) { padding:14px 20px;background:#d9bc83;color:#302311;border:2px solid #a07c43;border-radius:10px; }
-.is-visual .crisp-actions button { color:#302311; }
+.is-hit-surface .crisp-actions { position:absolute;inset:0;display:block;pointer-events:none; }
+.is-hit-surface .crisp-actions :is(button,a) { background:transparent;border:0;padding:0;pointer-events:auto;touch-action:manipulation; }
+.mobile-reading .epic-spatial .epic-live-actions { display:flex; }
+.epic-library .epic-live-actions :is(a,button), .epic-project-links .epic-project-link, .epic-library .epic-read, .epic-details-content a {
+  background:#b2956415;color:#51442f;border:0;border-bottom:1px solid #ad9672;border-radius:2px;
+}
+.epic-library .epic-live-actions :is(a,button) { color:#e0ceb0; }
 .mobile-reading .projects .project-actions a { min-height:44px;touch-action:manipulation;transform:none; }
 .mobile-reading .projects .project-actions a:active, .epic-project-link:active { background:#c9a563; }
 .epic-book-boot-mark { width:22px;height:22px;border:1px solid #5d4f36;border-top-color:#d9bd86;border-radius:50%;animation:epic-book-spin 1s linear infinite; }

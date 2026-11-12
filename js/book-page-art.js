@@ -40,6 +40,12 @@ function image(ctx,img,x,y,w,h) {
   const iw=img.naturalWidth*scale,ih=img.naturalHeight*scale;
   ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);
 }
+function pageActions(chapter,face) {
+  const entries=face?[]:chapter.links.slice(0,3).map(link=>({link,label:link.textContent.trim()}));
+  entries.push({label:'完整介绍'});
+  const width=Math.min(180,(652-(entries.length-1)*14)/entries.length);
+  return entries.map((entry,i)=>({...entry,x:58+i*(width+14),y:920,width,height:72}));
+}
 function rule(ctx,x,y,w,color) {
   ctx.strokeStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+w,y);ctx.stroke();
 }
@@ -113,17 +119,18 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     }
     const notes=bookNotes(ch.notes);
     ctx.fillStyle=ink;text(ctx,notes,56,874,620,24,34,2);
-    ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,972);
   } else {
     ctx.fillStyle=ink;
     text(ctx,ch.title,titleX,229,714-titleX,54,66,2);
     ctx.fillStyle='#353c33';
     text(ctx,ch.intro,58,390,644,40,62,8);
-    ctx.fillStyle='#745b32';ctx.font=`28px ${sans}`;ctx.fillText('完整介绍 ↗',58,952);
-    let linkX=58+ctx.measureText('完整介绍 ↗').width+32;
-    for(const a of ch.links.slice(0,2)) {
-      const label=a.textContent.trim();ctx.fillText(label,linkX,952);linkX+=ctx.measureText(label).width+32;
-    }
+  }
+  for(const {label,link,x,y,width,height} of pageActions(ch,face)){
+    const primary=link && x===58;
+    ctx.fillStyle=primary?'#605138':'#94713d20';ctx.fillRect(x,y+10,width,height-20);
+    rule(ctx,x,y+height-10,width,'#aa9166');
+    ctx.fillStyle=primary?'#fff6e4':'#493d2a';ctx.font=`28px ${serif}`;ctx.fillText(label,x+10,y+46,width-44);
+    ctx.fillStyle=primary?'#ead8b8':'#806538';ctx.font=`22px ${serif}`;ctx.fillText(link?'↗':'›',x+width-25,y+45);
   }
   ctx.fillStyle=muted;ctx.font=`24px ${sans}`;ctx.textAlign='right';ctx.fillText(String(index).padStart(2,'0'),710,1026);
   ctx.restore();
@@ -155,9 +162,14 @@ export function createCrispPage(index,count,chapters) {
     el.querySelector('.crisp-visual').replaceChildren(...portraits);
   }
   if(spec?.[3]){const detail=document.createElement('img');detail.src=spec[3];detail.alt='Atoll 媒体控制';detail.className='crisp-image-detail';detail.draggable=false;el.querySelector('.crisp-visual').append(detail);}
-  const actions=el.querySelector('.crisp-actions'),read=document.createElement('button');
-  read.type='button';read.dataset.surfaceAction='read';read.textContent='完整介绍 ↗';actions.append(read);
-  if(!visual)ch.links.slice(0,2).forEach(a=>{const link=a.cloneNode(true);link.removeAttribute('class');link.removeAttribute('style');actions.append(link);});
+  const actions=el.querySelector('.crisp-actions');
+  for(const {label,link,x,y,width,height} of pageActions(ch,visual)){
+    const control=link?link.cloneNode(false):document.createElement('button');
+    if(!link){control.type='button';control.dataset.surfaceAction='read';}
+    control.removeAttribute('class');control.textContent=label;
+    control.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${width}px;height:${height}px`;
+    actions.append(control);
+  }
   for(const direction of ['prev','next']) {
     const edge=document.createElement('button');edge.type='button';edge.className='crisp-page-edge '+direction;
     edge.dataset.surfaceAction=direction;edge.setAttribute('aria-label',direction==='prev'?'翻到上一页':'翻到下一页');
