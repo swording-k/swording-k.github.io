@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.min.js';
 import { sheetStrip,restingPaperZ,turningPaperZ } from './book-surface.mjs?v=5';
-import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=reading-type-1';
+import { paintBookPage, createCrispPage,preloadBookImages } from './book-page-art.js?v=native-reading-1';
 import { pageMatrix } from './book-projection.mjs';
 import { dragBookView, bookGesture } from './book-view-state.mjs?v=3';
 import { adjacentPage } from './portfolio-book-state.mjs?v=2';
@@ -177,7 +177,7 @@ export async function createBookScene(host, chapters, {initialPage=0,onPage,read
     if(textures.has(index))return textures.get(index);
     const canvas=document.createElement('canvas');canvas.width=mobileReading?768:1024;canvas.height=mobileReading?1056:1408;
     paintBookPage(canvas.getContext('2d'),index,count,chapters,loadImage);
-    const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());
+    const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
     texture.userData.pageIndex=index;
     textures.set(index,texture);return texture;
   }

@@ -191,37 +191,25 @@ function initBook() {
   },12000);
   window.ScrollTrigger?.refresh();
   const liveActions=make('div','epic-live-actions');shell.querySelector('.epic-book-controls').after(liveActions);
-  const isWechat=document.documentElement.classList.contains('wechat-reading');
-  let lightBook,restoreLightBook;
+  let lightBook;
   async function loadFullBook(){
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=reading-type-1');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=native-reading-1');
       const scene=await createBookScene(wrap,chapters,{initialPage:currentPage,onPage:sync,readChapter,mobileReading,onLoss(){
         flip=fallback;wrap.classList.remove('epic-3d-active');shell.classList.remove('epic-spatial');
-        if(restoreLightBook)restoreLightBook();else {finishLoading();fallbackTurn(currentPage);}
+        finishLoading();fallbackTurn(currentPage);
       }});
-      lightBook?.dispose();lightBook=null;wrap.classList.remove('wechat-bound');
+      lightBook?.dispose();lightBook=null;
       flip=scene;wrap.classList.add('epic-3d-active');
       shell.classList.add('epic-spatial');finishLoading();sync(currentPage);window.ScrollTrigger?.refresh();
     } catch(error){console.warn('[portfolio book] WebGL unavailable; keeping HTML paper:',error);finishLoading();flip.update();}
   }
-  if(isWechat){
-    import('./wechat-book.js?v=1').then(({createWechatBook})=>{
-      const rotate=make('button','epic-full-model','自由旋转');
-      rotate.type='button';shell.querySelector('.epic-view-tools').append(rotate);
-      restoreLightBook=()=>{
-        wrap.classList.add('wechat-bound');
-        if(!lightBook)lightBook=createWechatBook(wrap,chapters,{initialPage:currentPage,onPage:sync,readChapter});
-        flip=lightBook;finishLoading();sync(currentPage);
-        rotate.hidden=false;rotate.disabled=false;
-      };
-      restoreLightBook();
-      rotate.addEventListener('click',async()=>{
-        rotate.disabled=true;
-        await loadFullBook();
-        rotate.disabled=false;rotate.hidden=!lightBook;
-      });
-    }).catch(()=>{wrap.classList.remove('wechat-bound');finishLoading();});
+  if(mobileReading){
+    import('./mobile-book.js?v=native-reading-1').then(({createMobileBook})=>{
+      wrap.classList.add('mobile-bound');
+      lightBook=createMobileBook(wrap,chapters,{initialPage:currentPage,onPage:sync,readChapter});
+      flip=lightBook;finishLoading();sync(currentPage);
+    }).catch(()=>{wrap.classList.remove('mobile-bound');finishLoading();flip.update();});
   }else{
     const upgrade=new IntersectionObserver(entries=>{
       if(!entries.some(e=>e.isIntersecting))return;

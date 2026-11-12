@@ -15,7 +15,7 @@
 
 用户确认公开加入 MineRadio，归类为开源贡献，注明以 iOS 客户端开发者身份加入团队，负责 iPhone / iPad 客户端。产品介绍以 https://mineradio.cn/ 为来源；项目源码链接使用官网提供的 https://github.com/XxHuberrr/Mineradio 。官方 MR 图标来自 iOS 工程保留的官网素材，原始来源为 https://mineradio.cn/images/inline/inline-02.png 。暂不展示 App Store 下载按钮和未经核对的流量数据。
 
-手机与桌面默认显示可翻页的立体书。手机按需加载图片，限制纹理分辨率，关闭实时阴影，不启用全站滚动动效；WebGL 不可用时显示 HTML 书页。纸面按钮的可见文字、底色与透明点击区域共用同一套坐标。手机在书下方另有原生操作入口。开源贡献按 Atoll、MineRadio 排列；MineRadio 展示 iOS AppIcon 的正式黑底版本。
+桌面显示可翻页的立体书；手机统一显示原生文字书页，翻页过程不加载 WebGL，也不区分微信与 Safari。纸面按钮的可见文字、底色与透明点击区域共用同一套坐标。手机在书下方另有原生操作入口。开源贡献按 Atoll、MineRadio 排列；MineRadio 展示 iOS AppIcon 的正式黑底版本。
 
 ## 2026-10-29 介绍模式改版与 MEME lab 入口
 

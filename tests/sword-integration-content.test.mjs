@@ -22,7 +22,7 @@ test("portfolio content and primary actions remain intact", async () => {
     assert.match(html, /href="tel:15193342670"/);
     assert.match(html, /href="mailto:swordingk@gmail\.com"/);
     assert.match(html, /href="https:\/\/github\.com\/swording-k"/);
-    assert.match(html, /href="files\/resume-yangkun-ai-product-engineer\.pdf"/);
+    assert.match(html, /href="files\/resume-yangkun-ai-product-engineer\.pdf\?v=20261029"/);
 });
 
 test("MEME lab entry exposes web, GitHub, mini-program code and WeChat search guidance", async () => {

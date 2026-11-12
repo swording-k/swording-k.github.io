@@ -35,6 +35,15 @@ html.sword-hall-home .hero-artifact .console-topbar { border-bottom:1px solid #d
 html.sword-hall-home .hero-artifact .stage-caption { border-top:1px solid #d1bf982b; }
 html.sword-hall-home .hero-artifact .stage-tags span { border:0;background:none;padding-left:0;padding-right:12px; }
 html.sword-hall-home .weapon-card { filter:drop-shadow(0 8px 12px #0008); }
+html.sword-hall-home .hero-subtitle span {
+  display:block;
+  margin-top:8px;
+  color:rgba(242,237,227,.7);
+  font-size:clamp(16px,4.4vw,19px);
+  font-weight:400;
+  line-height:1.7;
+  letter-spacing:0;
+}
 .sword-wake { position:fixed;inset:0;width:100%;height:100%;z-index:80;pointer-events:none;contain:strict; }
 @media(max-width:760px) {
   html.sword-hall-home body::before {

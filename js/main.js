@@ -1261,8 +1261,16 @@
 
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 8000);
+        const hostname = window.location.hostname;
+        const apiAvailable = hostname.endsWith(".vercel.app") ||
+            ((hostname === "localhost" || hostname === "127.0.0.1") && window.location.port === "3000");
+        if (!apiAvailable) {
+            clearTimeout(timer);
+            unavailable();
+            return;
+        }
         // Do not retry an incrementing endpoint automatically after a timeout.
-        fetch("https://baojian-personalweb.vercel.app/api/visit", {
+        fetch("/api/visit", {
             credentials: "include",
             cache: "no-store",
             signal: controller.signal,

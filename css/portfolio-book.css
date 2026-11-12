@@ -189,11 +189,11 @@
 }
 
 /* One deliberate loading state instead of flashing the source list and the flat fallback book. */
-:where(html:not(.mobile-reading),html.wechat-reading) .projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
+:where(html:not(.mobile-reading)) .projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
 .projects.epic-book-loading :is(.project-ledger,.featured-project,.showcase-rail) { display:none!important; }
 .epic-book-boot { display:none; min-height:620px; align-items:center; justify-content:center; flex-direction:column; gap:18px; text-align:center; color:#a99c83; }
-:where(html:not(.mobile-reading),html.wechat-reading) .projects.epic-book-pending .epic-book-boot { display:flex; }
-html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
+:where(html:not(.mobile-reading)) .projects.epic-book-pending .epic-book-boot { display:flex; }
+html.mobile-reading, .mobile-reading body { overscroll-behavior-y:contain; }
 .mobile-reading .epic-book { grid-template-columns:minmax(0,1fr); }
 .mobile-reading .reveal { opacity:1; visibility:visible; transform:none; }
 .mobile-reading .epic-project-face .epic-project-links { justify-content:center;margin-top:12px;padding-bottom:24px; }
@@ -218,6 +218,25 @@ html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
 .is-reading-surface .crisp-visual:has(img:nth-child(3)) { display:flex;align-items:center; }
 .is-reading-surface .crisp-visual:has(img:nth-child(3)) img { position:static;width:33.33%;border:0; }
 .mobile-reading .epic-spatial .epic-live-actions { display:flex; }
+.mobile-reading .epic-live-actions {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:14px;
+}
+.mobile-reading .epic-live-actions :is(a,button) {
+  min-width:0;
+  padding:10px 12px;
+  border:1px solid #8b744d;
+  border-radius:4px;
+  background:#211d17;
+  color:#e2d0ad;
+  font-size:13px;
+  line-height:1.4;
+  white-space:nowrap;
+}
+.mobile-reading .epic-live-actions button { color:#f2e2bf; }
+.mobile-reading .epic-book-controls > div > span { display:none; }
 .epic-library .epic-live-actions :is(a,button), .epic-project-links .epic-project-link, .epic-library .epic-read, .epic-details-content a {
   background:#b2956415;color:#51442f;border:0;border-bottom:1px solid #ad9672;border-radius:2px;
 }
@@ -238,11 +257,30 @@ html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
 @media(max-width:900px){ .epic-book-boot { min-height:520px; } }
 @media(prefers-reduced-motion:reduce){ .epic-book-boot-mark { animation:none; } }
 
-/* A bound volume in WeChat: native print at rest; only a turning leaf is composited. */
-.wechat-bound .epic-book { display:none; }
-.wechat-bound { padding:0 10px 12px 5px; }
-.wechat-bound::before { display:none; }
-.wechat-volume { position:relative;margin:auto;width:100%;max-width:410px;aspect-ratio:8/11;perspective:900px;touch-action:pan-y pinch-zoom;background:#30251b;border-radius:2px 4px 4px 2px;
+/* Mobile reading keeps native lettering on the final compositing layer throughout a turn. */
+.mobile-bound { padding:0 8px 12px; }
+.mobile-bound::before { display:none; }
+.mobile-bound .epic-book { display:none; }
+.mobile-readable { position:relative;margin:auto;width:100%;max-width:430px;aspect-ratio:8/11;overflow:hidden;touch-action:pan-y pinch-zoom;background:#30251b;border-radius:2px 4px 4px 2px;
  box-shadow:2px 2px 0 #ac9d80,3px 3px 0 #796c58,4px 4px 0 #d1c5a8,5px 5px 0 #796c58,6px 7px 0 #423829,0 12px 18px #0006; }
-.wechat-leaf { position:absolute;inset:0;overflow:hidden;transform-origin:left center;backface-visibility:hidden;border-radius:2px 3px 3px 2px; }
-.wechat-leaf .epic-crisp-page { transform:scale(var(--ink-scale)); }
+.mobile-leaf { position:absolute;inset:0;overflow:hidden;border-radius:2px 3px 3px 2px;will-change:transform; }
+.mobile-leaf .epic-crisp-page { zoom:var(--ink-scale); }
+.mobile-leaf .crisp-running { top:42px;font-size:22px; }
+.mobile-leaf .epic-crisp-page h4 { top:142px;font-size:46px;line-height:58px; }
+.mobile-leaf .crisp-title-icon { width:42px;height:42px;margin-right:12px; }
+.mobile-leaf .crisp-kind { top:218px;font-size:22px;line-height:32px; }
+.mobile-leaf .crisp-intro { top:320px;font-size:36px;line-height:56px; }
+.mobile-leaf .crisp-visual { top:306px;height:416px; }
+.mobile-leaf .crisp-visual img.crisp-icon-only { top:28px;left:157px;width:358px;height:358px; }
+.mobile-leaf .crisp-visual img.crisp-image-detail { top:360px;left:26px;width:620px;height:98px; }
+.mobile-leaf .crisp-notes { top:790px;font-size:26px;line-height:34px; }
+.mobile-leaf .crisp-actions { bottom:58px; }
+.mobile-leaf .crisp-actions :is(a,button) { font-size:24px; }
+.mobile-leaf .crisp-folio { bottom:22px;font-size:21px; }
+.mobile-leaf .is-cover h4 { top:480px;font-size:68px; }
+.mobile-leaf .crisp-cover-author { top:120px;font-size:25px; }
+.mobile-leaf .crisp-cover-line { top:618px;font-size:27px; }
+.mobile-leaf .crisp-open { top:770px;left:240px;width:288px;font-size:30px; }
+.mobile-leaf :is(.epic-crisp-page,.crisp-actions) :is(a,button) { min-height:44px; }
+.mobile-leaf .crisp-page-edge { opacity:.34; }
+@media(max-width:420px) { .mobile-bound { padding-inline:2px; } }

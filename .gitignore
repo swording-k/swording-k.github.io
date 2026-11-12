@@ -5,8 +5,15 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
++.claude/
+.obsidian/
+.workbuddy/
+.superpowers/
 
-# 临时文件
+# 临时文件与视觉验收截图
 *.log
 .vercel
 .book-qa/
+*.tmp
+*.base
+未命名.md

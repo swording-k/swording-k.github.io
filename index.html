@@ -6,27 +6,6 @@
     <script>
         if (matchMedia('(pointer: coarse), (max-width: 760px)').matches)
             document.documentElement.classList.add('mobile-reading');
-        if (document.documentElement.classList.contains('mobile-reading') && /MicroMessenger/i.test(navigator.userAgent)) {
-            document.documentElement.classList.add('wechat-reading');
-            // Some embedded browsers still pass a pull at the document edge to the host.
-            let start;
-            function move(e) {
-                if (!start || e.touches.length !== 1 || window.scrollY > 0) return;
-                const dx=e.touches[0].clientX-start.x, dy=e.touches[0].clientY-start.y;
-                if (dy>0 && dy>Math.abs(dx) && e.cancelable) e.preventDefault();
-            }
-            function end() {
-                start=null; document.removeEventListener('touchmove',move);
-            }
-            document.addEventListener('touchstart', e=>{
-                end();
-                if (e.touches.length!==1 || window.scrollY>0 || e.target.closest?.('dialog,.epic-catalog,input,textarea,select,.mobile-menu')) return;
-                start={x:e.touches[0].clientX,y:e.touches[0].clientY};
-                document.addEventListener('touchmove',move,{passive:false});
-            },{passive:true});
-            document.addEventListener('touchend',end,{passive:true});
-            document.addEventListener('touchcancel',end,{passive:true});
-        }
     </script>
     <title>杨锟 Killian Yang | AI 产品 builder</title>
     <meta name="description" content="杨锟 Killian Yang 的个人作品集，AI 产品 builder，展示 AI 产品、AI 应用开发、iOS 开发与项目作品。">
@@ -42,8 +21,8 @@
     <link rel="stylesheet" href="css/style.css?v=20261106-affiliation-layout-v2">
     <link rel="stylesheet" href="css/sword-background.css?v=20260724-three-armory-v1">
     <link rel="stylesheet" href="css/cinematic-background.css?v=20261023">
-    <link rel="stylesheet" href="css/portfolio-book.css?v=wechat-reader-2">
-    <link rel="stylesheet" href="css/sword-hall-home.css?v=3">
+    <link rel="stylesheet" href="css/portfolio-book.css?v=native-reading-1">
+    <link rel="stylesheet" href="css/sword-hall-home.css?v=native-reading-1">
     <link rel="stylesheet" href="css/hero-startup.css?v=1">
     <noscript><style>.projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail){display:block!important}.projects.epic-book-pending .epic-book-boot{display:none!important}</style></noscript>
 </head>
@@ -759,7 +738,7 @@
                                 </span>
                                 <span>github.com/swording-k</span>
                             </a>
-                            <a class="contact-link magnetic" href="files/resume-yangkun-ai-product-engineer.pdf" target="_blank" rel="noreferrer">
+                            <a class="contact-link magnetic" href="files/resume-yangkun-ai-product-engineer.pdf?v=20261029" target="_blank" rel="noreferrer">
                                 <span class="contact-icon" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" role="img">
                                         <path d="M6.5 3.5h7.2l3.8 3.8v13.2h-11c-.9 0-1.6-.7-1.6-1.6V5.1c0-.9.7-1.6 1.6-1.6Z" />
@@ -891,14 +870,14 @@
     <script>
         const siteScripts = document.documentElement.classList.contains('mobile-reading')
             ? [] : ['js/gsap.min.js', 'js/ScrollTrigger.min.js'];
-        for (const src of [...siteScripts, 'js/main.js?v=mobile-reader-1']) {
+        for (const src of [...siteScripts, 'js/main.js?v=native-reading-1']) {
             const script = document.createElement('script');
             script.async = false;
             script.src = src;
             document.body.append(script);
         }
     </script>
-    <script type="module" src="js/portfolio-book.js?v=wechat-reader-2" onerror="var p=document.getElementById('projects');if(p){p.classList.remove('epic-book-pending','epic-book-loading')}"></script>
+    <script type="module" src="js/portfolio-book.js?v=native-reading-1" onerror="var p=document.getElementById('projects');if(p){p.classList.remove('epic-book-pending','epic-book-loading')}"></script>
     <script type="module" src="js/sword-wake.js?v=2"></script>
 </body>
 </html>

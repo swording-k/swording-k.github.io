@@ -1,58 +1,21 @@
-# 三维作品册
+# 作品册
 
-## Current polish, 2026-10-22
-The user accepted the readability direction and requested realistic binding, whole-object manipulation and removal of a font jump. These are now implemented. Dragging the canvas rotates the entire model through unrestricted yaw/pitch; the Move mode or Shift/right drag pans within bounds; Reset restores its pose. Page edges still turn pages, so manipulation and reading do not compete for the same drag. Camera framing remains fixed during interaction. The persistent view pivot rotates around the visible book center (spread or single/closed book), and back-facing pages suppress the projected HTML ink.
+## 当前实现
 
-Cover mode uses the new generated leather albedo (docs/book-cover-asset.md), native beveled leather boards, aged brass L guards, spine ribs and a textured underside. The cover does not get covered by a flat HTML card. Its title/author are rendered with actual typesetting, not generated lettering. This is a material-and-geometry improvement, not a claim of photogrammetric accuracy or an imported GLB.
+作品区只增强 `index.html#projects`。原始项目文章仍是唯一内容源：标题、简介、图标、外链和 `data-book-category` 生成目录与两页书页；展开介绍复用原始文章，无脚本或模块失败时回退为项目列表。
 
-The cause of the font jump was the Canvas text helper overriding headings/body with the sans stack, while resting HTML headings used Songti. Canvas and all resting page text now share the same Songti stack and regular weight; the title, running label, intro, notes, link captions and folio positions were also aligned. A regression test records the actual paint function's font selections. Minor browser-specific text antialiasing may still differ between a curved texture and native HTML, but the blackface-to-serif replacement is removed.
+桌面端在作品区接近视口时按需加载 `js/portfolio-book-3d.js`。书页、封面、书脊、金属护角和卷曲纸张由 Three.js 几何体与 Canvas 纹理绘制，支持目录跳转、拖动翻页、旋转、移动、复位和键盘方向键。纹理使用 mipmap 与最高 8× 各向异性过滤；纸张顶点由 `js/book-surface.mjs` 约束，避免卷曲页与静止页穿插。
 
-Actual browser checks: rotate the closed model to yaw3.147/pitch0.492; rotate an open spread to the rear and observe zero visible HTML page layers; pan then reset to yaw/pitch0; read→page-edge next with Songti visible mid-turn; cover/read labels follow page state.390px body equals viewport width; no observed console errors. Captures: .book-qa/cover-v3.png, cover-mobile-v3.png, font-turn-v3.png. Full suite36/36 passes. This supersedes the previous browser-tool blocker below. No merge/push/publication.
+所有触屏/窄屏设备改用 `js/mobile-book.js`。文字始终是原生 DOM，书页使用 `zoom` 适配容器；翻页时清晰的新页从首帧就位，只有上层的离场纸页做水平位移，不会把文字重新栅格化为 Canvas 纹理，也不会用 3D 旋转、缩放、模糊或透明度交叉。纵向滚动由浏览器处理，横向 Pointer 手势、页面箭头和目录都可以翻页。减少动态效果时直接换页。移动端没有浏览器 UA 分支、WebGL 上下文和文档级 `touchmove` 拦截。
 
-## Scope and content
-Only #projects is enhanced. HTML article text, project icons and product links remain the source of truth; adding a project article automatically adds a directory entry and two book pages. Outside this section the production layout and three swords are unchanged. Full text is available from the explicit detail button and original list mode, including when the 3D view is inappropriate for reading.
+## 设计原因
 
-## Visual system
-Retain production black/gold identity. Book uses dark green-black hardcover, brass corners, ivory paper, dark warm type. Desktop shows a spread; below620px scene width, the renderer shows a single page. Paper surfaces are actual 36×12 segmented geometry, not rotating DOM cards. Front/back have independent textures and mirrored backside UV so the text reads normally after turning. Shadows are cast by the actual sheet onto the next page and desk.
+旧实现曾在静止态显示清晰 DOM 文字、翻页时隐藏该层并切回低分辨率 WebGL 纹理，导致手指刚触到纸页或纸页卷起时突然变糊。旧微信路径又按 UA 分成 CSS 透视书页与 WebGL 两套实现，并拦截下拉手势；宿主重载、上下文丢失和渲染切换会互相放大。当前实现让每种设备在整个翻页周期只使用一种文字渲染路径。
 
-## Assets and dependency
-All project text and icons come from the original articles. Real product imagery is now typeset on dark visual pages opposite ivory story pages; see asset provenance below. No AI-generated interfaces. Three.js r160 (npm0.160.1) is vendored locally with MIT LICENSE; this module is imported only near the book section. Canvas textures are created as needed, bounded to an eight-page cache (1024×1408 per page). Product images load only when their page is painted. Static reading does not run a perpetual animation loop; pointer, resize and texture completion request frames.
+## 素材
 
-### Asset provenance
-The five new WebP files total approximately 190KB. They are resized/compressed copies of existing product assets, not newly invented screenshots:
+项目图标和截图来自原项目文章。皮革封面与纸纹生成素材的来源见 `docs/book-cover-asset.md` 和 `docs/book-paper-asset.md`；真实产品截图的来源与内容边界见 `docs/portfolio-catalog-content.md`。Three.js r160 以 MIT 许可 vendored 在 `js/vendor/`，桌面端才加载。
 
-| Local book asset | Existing source | Product |
-| --- | --- | --- |
-| fitgenius-promo.webp | FitGenius/docs/promo-cover.png | https://swording-k.github.io/fit-genius/ |
-| atoll-stats.webp | Atoll/DynamicIslandSamples/statsmonitor.png | https://getatoll.app/ |
-| atoll-media.webp | Atoll/DynamicIslandSamples/media.png | https://getatoll.app/ |
-| workisland-approval.webp | workisland/website/assets/demo/approval.png | WorkIsland project linked by the original article |
-| theme-studio.webp | codex-skins/video/codex-theme-creator-promo/public/textures/studio-default.png | Codex Theme Creator project linked by the original article |
+## 验证边界
 
-Source roots are the existing project folders under /Users/baojian/Desktop (FitGenius under Xcode项目). WorkIsland is labeled “产品界面示例” because the source is the product website's demo capture, not live personal task data. Existing bookstore poster and pet collection preview are reused directly from this repository. Promotional screenshots illustrate the product; they are not claimed to document every feature in the current release.
-
-## Interaction and fallback
-Directory selection performs a paper turn toward the chosen chapter without requiring the visitor to turn every intervening chapter. Keyboard/drag/page-edge controls flip. Reduced-motion chooses pages immediately and a long drag advances only once. Full project dialog preserves the original article. Native project list is retained if scripts fail; without WebGL the HTML book remains available. No browser backend or paid API is required.
-
-## 2026-10-22 readability correction (browser acceptance pending)
-The user rejected the small raster-text pages, green tabletop and external control rows. The tabletop is removed. Resting pages now use real HTML projected onto the paper's four corners by a CSS projective matrix; actual WebGL paper textures take over during a curl. This reuses the existing Three vector projection and browser CSS transforms, without adding a second rendering framework. The surrounding original sword background is left intact. Medium widths use the catalog drawer so two pages have enough space. The renderer uses at least1.5× sampling for curved pages; static text is no longer limited by a canvas texture.
-
-Catalog selection now animates a physical sheet toward the selected chapter. Rapid requests coalesce to the latest target after the active turn, rather than interrupting the middle of a sheet. For reduced motion, selection remains immediate. External arrows/action/chapter rows are visually removed in spatial mode; controls live on the outer paper edges and actual project links live on the pages. HTML fallback retains its controls. Keyboard-triggered page-edge turns transfer focus to the persistent book host before replacing sheets, preserving direction-key navigation.
-
-Code review identified missing static-page notes and a keyboard focus regression; both have been corrected. Static and turning pages now carry the same project notes and primary entry captions. Projection math has a four-corner numerical test. The33-test suite passed before the final review corrections; syntax and diff checks also pass afterward. **This is not visual acceptance:** CUA getTab/getState/getBrowser timed out repeatedly, and the fallback local inspector failed to launch Chrome within20s. No new screenshot or completed interaction test is claimed for this revision. The previous .book-qa/*-v2.png captures depict the rejected version, not this correction.
-
-## Verification and limits
-See progress.md and ignored .book-qa/ captures. The scene now has project-led spreads, leather grain, physical paper edges, curved resting pages and a stationary camera throughout a turn. The phone uses a longer lens rather than retreating mid-animation. Six state/geometry tests cover navigation and paper bounds, not full camera projection; actual held-turn screenshots provide the visual check. No low-end-device FPS, battery or cold public-network benchmark has been performed. Neither source comments nor test success imply user aesthetic acceptance or parity with the reference video.
-# 2026-10-22 interaction refinement
-
-v19 reverse-turn correction: turning base .04 intersected the resting crown (.009+.04). The shared geometry helpers now place the turning sheet at .065+curl, with an actual forward/reverse vertex-clearance regression. Product images decode before the interactive scene is exposed.38 tests pass. Actual v18 render verified unified ink, icons and the absence of the gutter bar; final v19 reverse-turn mouse verification is pending browser reconnection, so the requested main merge is not yet performed.
-
-Superseded by v18: User chose strict explicit read/rotate/pan modes (no implicit outside rotation or modifier override). Visible DOM paper was removed to eliminate the HTML/WebGL font and color handoff; transparent semantic targets preserve native links and focus. Stack depth is .27 per side, with bottom and fore-edge layers. Open spine top stays at -.05 below paper; the leather bound edge extends through the closed block so the left side is not exposed paper. Original project icons accompany screenshots. Book title is 锻造之书 as requested. Final browser QA is pending because the CUA connection repeatedly timed out; intermediate v16 was seen turning in the actual preview. This remains an isolated experiment, not published.
-
-Default mode distinguishes on-paper page dragging from outside model rotation. Explicit rotation and pan modes remain available. Sheet progress follows the pointer and settles back when released below threshold. Reduced motion performs at most one turn per release.
-
-Cover return rotates the physical left binding around the spine onto the right page block and eases framing to the closed book. Directory return dismisses the mobile catalog first. Inner visual and story pages now share ivory laid-paper artwork (see book-paper-asset.md), dark Songti ink and restrained print borders. Curvature varies slightly along page height to avoid a uniform cylinder turn.
-
-Verified with actual pointer input in the local preview: forward turn, short-drag cancellation, held hinge, completed close/open, directory close, and reduced-motion five-move drag producing only one turn. Screenshot evidence under ignored .book-qa/: paper-drag-v4.png and closing-held-v4.png.37 automated tests pass. This is not a deployment or a claim of user aesthetic acceptance.
-
-微信内置浏览器默认用原生文字和 CSS 透视书页，纵向滑动交给文档，横向滑动或箭头翻页。只有点「自由旋转」才加载 WebGL；图形上下文丢失时回到同一页。Safari 等浏览器沿用完整立体模型。微信真机是否被宿主重新载入，不能用浏览器标识模拟验收。
+`tests/` 覆盖书页状态、纸张几何、投影映射、素材存在、移动端阅读契约和启动降级。浏览器验收应同时检查桌面与手机静止/翻页中态、控制台、横向溢出和目录/外链；真机微信与 Safari 的宿主手势、帧率和页面恢复行为仍必须发布后在设备上确认，不能用 UA 模拟代替。

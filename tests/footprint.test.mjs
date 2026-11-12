@@ -6,10 +6,10 @@ const main=await readFile(new URL('../js/main.js',import.meta.url),'utf8');
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
 const code=main.slice(main.indexOf('    function initFootprint()'),main.indexOf('    function init() {'))+'\ninitFootprint();';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
-function run(fetch,cached){
+function run(fetch,cached,hostname='baojian-personalweb.vercel.app',port='',protocol='https:'){
  const nodes=Object.fromEntries(['footprint','footprintCount','footprintLabel','footprintSuffix'].map(id=>[id,{textContent:'',hidden:id==='footprint'&&/id="footprint"[^>]*hidden/.test(html),classList:{add(){},remove(){}}}]));
  const storage=new Map(cached===undefined?[]:[['killian_visit_count',String(cached)]]);let expire;
- vm.runInNewContext(code,{document:{getElementById:id=>nodes[id]},window:{localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)}},fetch,AbortController,setTimeout:fn=>(expire=fn,1),clearTimeout(){},Number,console});
+ vm.runInNewContext(code,{document:{getElementById:id=>nodes[id]},window:{location:{hostname,port,protocol},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)}},fetch,AbortController,setTimeout:fn=>(expire=fn,1),clearTimeout(){},Number,console});
  return {nodes,storage,expire:()=>expire()};
 }
 test('the counter stays visible while loading and after a failed request',async()=>{
@@ -34,4 +34,23 @@ test('only persisted non-negative integer counts replace the last confirmed valu
 test('a stalled request times out into a visible fallback',async()=>{
  const state=run((url,{signal})=>new Promise((resolve,reject)=>signal.addEventListener('abort',()=>reject(new Error('timeout')))));
  state.expire();await flush();assert.match(state.nodes.footprintCount.textContent,/暂时无法获取/);assert.equal(state.nodes.footprint.hidden,false);
+});
+test('a static host does not call a cross-origin visit API',()=>{
+ let calls=0;
+ const state=run(()=>{calls++;return Promise.resolve({ok:true,json:async()=>({count:1,persisted:true})});},undefined,'swording-k.github.io');
+ assert.equal(calls,0);
+ assert.equal(state.nodes.footprint.hidden,false);
+ assert.match(state.nodes.footprintCount.textContent,/暂时无法获取/);
+});
+test('a plain localhost static preview does not call a missing API route',()=>{
+ let calls=0;
+ const state=run(()=>{calls++;return Promise.resolve({ok:true,json:async()=>({count:1,persisted:true})});},undefined,'127.0.0.1','4179','http:');
+ assert.equal(calls,0);
+ assert.equal(state.nodes.footprint.hidden,false);
+ assert.match(state.nodes.footprintCount.textContent,/暂时无法获取/);
+});
+test('the Vercel CLI default localhost port uses the same-origin API',()=>{
+ let calls=0;
+ run(()=>{calls++;return Promise.resolve({ok:true,json:async()=>({count:1,persisted:true})});},undefined,'localhost','3000','http:');
+ assert.equal(calls,1);
 });
