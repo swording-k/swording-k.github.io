@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if (matchMedia('(pointer: coarse), (max-width: 760px)').matches)
+            document.documentElement.classList.add('mobile-reading');
+    </script>
     <title>杨锟 Killian Yang | AI 产品 builder</title>
     <meta name="description" content="杨锟 Killian Yang 的个人作品集，AI 产品 builder，展示 AI 产品、AI 应用开发、iOS 开发与项目作品。">
     <link rel="icon" href="images/favicon.ico" sizes="16x16 32x32 48x48">
@@ -17,7 +21,7 @@
     <link rel="stylesheet" href="css/style.css?v=20261106-affiliation-layout-v2">
     <link rel="stylesheet" href="css/sword-background.css?v=20260724-three-armory-v1">
     <link rel="stylesheet" href="css/cinematic-background.css?v=20261023">
-    <link rel="stylesheet" href="css/portfolio-book.css?v=3d-23">
+    <link rel="stylesheet" href="css/portfolio-book.css?v=mobile-actions-2">
     <link rel="stylesheet" href="css/sword-hall-home.css?v=3">
     <link rel="stylesheet" href="css/hero-startup.css?v=1">
     <noscript><style>.projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail){display:block!important}.projects.epic-book-pending .epic-book-boot{display:none!important}</style></noscript>
@@ -308,6 +312,7 @@
                     <span><strong>01</strong>FitGenius</span>
                     <span><strong>02</strong>Atoll · 开源贡献</span>
                     <span><strong>03</strong>WorkIsland · 开源协作</span>
+                    <span>MineRadio · iOS 客户端开发</span>
                     <span><strong>04</strong>MEME lab（怪相馆）</span>
                     <span><strong>05</strong>Codex Theme Creator</span>
                     <span><strong>06</strong>最后的书店</span>
@@ -322,7 +327,7 @@
                     <span class="project-number" aria-hidden="true">01</span>
                     <div class="featured-visual">
                         <div class="fit-stage-glow" aria-hidden="true"></div>
-                        <img src="images/AppIcon_Light.png" alt="FitGenius App 图标">
+                        <img loading="lazy" decoding="async" src="images/AppIcon_Light.png" alt="FitGenius App 图标">
                         <div class="orbit-label">App Store</div>
                     </div>
                     <div class="featured-copy">
@@ -367,10 +372,33 @@
 
                 <div class="showcase-rail">
                     <div class="projects-grid">
+                        <article class="project-card mineradio-card reveal" data-book-category="开源贡献">
+                            <div class="project-card-head">
+                                <img loading="lazy" decoding="async" src="images/mineradio-icon.png" alt="MineRadio 官方 MR 标志">
+                                <div>
+                                    <span class="project-label">开源协作 · iOS 音乐客户端</span>
+                                    <h3>MineRadio</h3>
+                                </div>
+                            </div>
+                            <p>把音乐播放与实时视觉融在一起的开源音乐播放器，让歌词、粒子和画面随节拍变化，打造沉浸式的个人音乐空间。</p>
+                            <div class="project-copy-stack">
+                                <p><strong>参与方式：</strong>作为 iOS 客户端开发者加入团队，负责 iPhone 与 iPad 客户端开发，把项目的音乐体验带到 Apple 移动设备上。</p>
+                            </div>
+                            <div class="project-notes">
+                                <span>iOS 客户端开发者</span>
+                                <span>iPhone / iPad</span>
+                                <span>开源协作</span>
+                            </div>
+                            <div class="project-actions compact">
+                                <a class="button button-primary magnetic" href="https://mineradio.cn/" target="_blank" rel="noreferrer">产品官网</a>
+                                <a class="button button-ghost magnetic" href="https://github.com/XxHuberrr/Mineradio" target="_blank" rel="noreferrer">项目源码</a>
+                            </div>
+                        </article>
+
                         <article class="project-card atoll-card reveal" data-book-category="开源贡献">
                             <span class="project-number" aria-hidden="true">02</span>
                             <div class="project-card-head">
-                                <img src="images/atoll-icon.png" alt="Atoll 应用图标">
+                                <img loading="lazy" decoding="async" src="images/atoll-icon.png" alt="Atoll 应用图标">
                                 <div>
                                     <span class="project-label">开源贡献 · macOS 灵动岛</span>
                                     <h3>Atoll</h3>
@@ -395,7 +423,7 @@
                         <article class="project-card workisland-card reveal" data-book-category="个人产品">
                             <span class="project-number" aria-hidden="true">03</span>
                             <div class="project-card-head">
-                                <img src="images/workisland-icon.png?v=20260816" alt="WorkIsland 应用图标">
+                                <img loading="lazy" decoding="async" src="images/workisland-icon.png?v=20260816" alt="WorkIsland 应用图标">
                                 <div>
                                     <span class="project-label">开源协作 · macOS 灵动岛</span>
                                     <h3>WorkIsland</h3>
@@ -420,7 +448,7 @@
                         <article class="project-card memelab-card reveal" data-book-category="个人产品">
                             <span class="project-number" aria-hidden="true">04</span>
                             <div class="project-card-head">
-                                <img src="images/wechatmemelab-icon.svg" alt="怪相馆（MEME lab）图标">
+                                <img loading="lazy" decoding="async" src="images/wechatmemelab-icon.svg" alt="怪相馆（MEME lab）图标">
                                 <div>
                                     <span class="project-label">怪相馆 · 动态表情包</span>
                                     <h3>MEME lab</h3>
@@ -438,7 +466,7 @@
                                 <span>微信搜「怪相馆」</span>
                             </div>
                             <div class="qr-block memelab-qr">
-                                <img src="images/qrcode-wechatmemelab.png" alt="怪相馆微信小程序码" data-lightbox-image data-lightbox-title="怪相馆微信小程序">
+                                <img loading="lazy" decoding="async" src="images/qrcode-wechatmemelab.png" alt="怪相馆微信小程序码" data-lightbox-image data-lightbox-title="怪相馆微信小程序">
                                 <span>微信扫码打开小程序<br>或在微信搜索「怪相馆」</span>
                             </div>
                             <div class="project-actions compact">
@@ -450,7 +478,7 @@
                         <article class="project-card codetheme-card reveal" data-book-category="个人产品">
                             <span class="project-number" aria-hidden="true">05</span>
                             <div class="project-card-head">
-                                <img src="images/codex-theme-creator-icon.png?v=20260722c" alt="Codex Theme Creator 图标">
+                                <img loading="lazy" decoding="async" src="images/codex-theme-creator-icon.png?v=20260722c" alt="Codex Theme Creator 图标">
                                 <div>
                                     <span class="project-label">macOS · 可视化主题管理</span>
                                     <h3>Codex Theme Creator</h3>
@@ -474,7 +502,7 @@
                         <article class="project-card lastbook-card reveal" data-book-category="黑客松作品">
                             <span class="project-number" aria-hidden="true">06</span>
                             <div class="project-card-head">
-                                <img src="images/last-bookstore-icon.png?v=20260722" alt="最后的书店图标">
+                                <img loading="lazy" decoding="async" src="images/last-bookstore-icon.png?v=20260722" alt="最后的书店图标">
                                 <div>
                                     <span class="project-label">腾讯云 AI 黑客松 · 叙事游戏</span>
                                     <h3>最后的书店</h3>
@@ -500,7 +528,7 @@
                         <article class="project-card esports-card reveal" data-book-category="黑客松作品">
                             <span class="project-number" aria-hidden="true">07</span>
                             <div class="project-card-head">
-                                <img src="images/esports-talent-icon.png" alt="电竞天赋检测站图标">
+                                <img loading="lazy" decoding="async" src="images/esports-talent-icon.png" alt="电竞天赋检测站图标">
                                 <div>
                                     <span class="project-label">抖音互动空间</span>
                                     <h3>电竞天赋检测站</h3>
@@ -518,7 +546,7 @@
                                 <span>抖音场景轻量传播</span>
                             </div>
                             <div class="qr-block">
-                                <img src="images/esports-douyin-qr.png" alt="抖音扫码体验二维码" data-lightbox-image data-lightbox-title="电竞天赋检测站">
+                                <img loading="lazy" decoding="async" src="images/esports-douyin-qr.png" alt="抖音扫码体验二维码" data-lightbox-image data-lightbox-title="电竞天赋检测站">
                                 <span>抖音扫码体验<br>38.2.0 及以上版本</span>
                             </div>
                             <div class="project-actions compact">
@@ -529,7 +557,7 @@
 
                         <article class="project-card lovecourt-card reveal" data-book-category="黑客松作品">
                             <div class="project-card-head">
-                                <img src="images/lovecourt-icon.svg" alt="LoveCourt 天平图标">
+                                <img loading="lazy" decoding="async" src="images/lovecourt-icon.svg" alt="LoveCourt 天平图标">
                                 <div>
                                     <span class="project-label">双人互动 · AI 恋爱法庭</span>
                                     <h3>LoveCourt</h3>
@@ -550,7 +578,7 @@
                         <article class="project-card pet-card reveal" data-book-category="工具与内容">
                             <span class="project-number" aria-hidden="true">08</span>
                             <div class="project-card-head">
-                                <img src="images/codex-buddy-frame.png" alt="Codex Buddy 健身小人桌宠形象">
+                                <img loading="lazy" decoding="async" src="images/codex-buddy-frame.png" alt="Codex Buddy 健身小人桌宠形象">
                                 <div>
                                     <span class="project-label">Codex Pets</span>
                                     <h3>Codex Pet Collection</h3>
@@ -580,7 +608,7 @@
                         <article class="project-card blog-card reveal" data-book-category="工具与内容">
                             <span class="project-number" aria-hidden="true">09</span>
                             <div class="project-card-head">
-                                <img src="images/blog-project-icon.svg" alt="个人博客项目图标">
+                                <img loading="lazy" decoding="async" src="images/blog-project-icon.svg" alt="个人博客项目图标">
                                 <div>
                                     <span class="project-label">NotionNext · 内容资产</span>
                                     <h3>个人博客</h3>
@@ -597,7 +625,7 @@
                                 <span>长期内容沉淀</span>
                             </div>
                             <div class="qr-block project-qr">
-                                <img src="images/qrcode-blog-site.png" alt="个人博客二维码" data-lightbox-image data-lightbox-title="个人博客">
+                                <img loading="lazy" decoding="async" src="images/qrcode-blog-site.png" alt="个人博客二维码" data-lightbox-image data-lightbox-title="个人博客">
                                 <span>扫码进入<br>个人博客</span>
                             </div>
                             <div class="project-actions compact">
@@ -608,7 +636,7 @@
                         <article class="project-card notes-card reveal" data-book-category="工具与内容">
                             <span class="project-number" aria-hidden="true">10</span>
                             <div class="project-card-head">
-                                <img src="images/ai-job-notes-icon.svg" alt="AI Job Notes 求职笔记图标">
+                                <img loading="lazy" decoding="async" src="images/ai-job-notes-icon.svg" alt="AI Job Notes 求职笔记图标">
                                 <div>
                                     <span class="project-label">求职知识库</span>
                                     <h3>AI Job Notes</h3>
@@ -653,7 +681,7 @@
                     <div class="life-entry-stack" aria-label="生活与性格入口">
                         <div class="life-entry-card mbti">
                             <a class="life-qr-link" href="https://www.16personalities.com/profiles/c0fb697012ac8" target="_blank" rel="noreferrer" aria-label="打开 MBTI 详情页面">
-                                <img src="images/qrcode-mbti.png" alt="MBTI 详情页面二维码" data-lightbox-image data-lightbox-title="MBTI 详情页面">
+                                <img loading="lazy" decoding="async" src="images/qrcode-mbti.png" alt="MBTI 详情页面二维码" data-lightbox-image data-lightbox-title="MBTI 详情页面">
                             </a>
                             <div>
                                 <span>MBTI</span>
@@ -662,7 +690,7 @@
                             </div>
                         </div>
                         <div class="life-entry-card douyin">
-                            <img src="images/IMG_7140 copy.jpeg" alt="抖音二维码" data-lightbox-image data-lightbox-title="抖音">
+                            <img loading="lazy" decoding="async" src="images/IMG_7140 copy.jpeg" alt="抖音二维码" data-lightbox-image data-lightbox-title="抖音">
                             <div>
                                 <span>Douyin</span>
                                 <strong>YK1158447544</strong>
@@ -841,10 +869,17 @@
         </div>
     </div>
 
-    <script src="js/gsap.min.js"></script>
-    <script src="js/ScrollTrigger.min.js"></script>
-    <script src="js/main.js?v=20261105-footprint-v2"></script>
-    <script type="module" src="js/portfolio-book.js?v=3d-24" onerror="var p=document.getElementById('projects');if(p){p.classList.remove('epic-book-pending','epic-book-loading')}"></script>
+    <script>
+        const siteScripts = document.documentElement.classList.contains('mobile-reading')
+            ? [] : ['js/gsap.min.js', 'js/ScrollTrigger.min.js'];
+        for (const src of [...siteScripts, 'js/main.js?v=mobile-reader-1']) {
+            const script = document.createElement('script');
+            script.async = false;
+            script.src = src;
+            document.body.append(script);
+        }
+    </script>
+    <script type="module" src="js/portfolio-book.js?v=mobile-actions-2" onerror="var p=document.getElementById('projects');if(p){p.classList.remove('epic-book-pending','epic-book-loading')}"></script>
     <script type="module" src="js/sword-wake.js?v=2"></script>
 </body>
 </html>

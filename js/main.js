@@ -7,6 +7,7 @@
     const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
     const scrollProgress = document.getElementById("scrollProgress");
     const heroStage = document.querySelector(".hero-stage");
+    const mobileReading = document.documentElement.classList.contains("mobile-reading");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cinematicTargets = [...document.querySelectorAll(".section-shell, .featured-project, .showcase-rail, .contact-panel")];
     const hasGsap = Boolean(window.gsap && window.ScrollTrigger);
@@ -25,14 +26,14 @@
     }
 
     function setHeroParallax() {
-        if (!heroStage || prefersReducedMotion || hasGsap) return;
+        if (!heroStage || mobileReading || prefersReducedMotion || hasGsap) return;
         const progress = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1);
         heroStage.style.setProperty("--stage-lift", `${progress * -28}px`);
         heroStage.style.setProperty("--stage-fade", `${1 - progress * 0.42}`);
     }
 
     function initCinematicScroll() {
-        if (prefersReducedMotion || hasGsap) return;
+        if (mobileReading || prefersReducedMotion || hasGsap) return;
 
         const viewportCenter = window.innerHeight * 0.52;
         cinematicTargets.forEach((target) => {
@@ -115,7 +116,7 @@
 
         const revealItems = document.querySelectorAll(".reveal");
 
-        if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+        if (mobileReading || prefersReducedMotion || !("IntersectionObserver" in window)) {
             revealItems.forEach((item) => item.classList.add("visible"));
             return;
         }
@@ -1296,14 +1297,14 @@
             initCardTilt();
             // initCursorAura removed — conflicts with sword-qi trail
             // Pointer wake is an independent on-demand canvas module.
-            initBladeStage();
+            if (!mobileReading) initBladeStage();
             initImageLightbox();
             initKeyboard();
 
             // Advanced Interactions
             if (!document.documentElement.classList.contains('sword-hall-home')) {initSwordAuraMist();initTypewriter();}
             // initMouseTrail removed — conflicts with sword-qi trail
-            initScrollAccentShift();
+            if (!mobileReading) initScrollAccentShift();
             initCardGlare();
             if (!document.documentElement.classList.contains('sword-hall-home')) initHeroGleam();
             if (!document.documentElement.classList.contains('sword-hall-home')) initSectionEnterFX();

@@ -7,6 +7,8 @@ function initBook() {
   const source = [...section.querySelectorAll('.featured-project,.project-card')];
   if (!source.length) return;
   const reduced = matchMedia('(prefers-reduced-motion:reduce)');
+  const mobileReading = document.documentElement.classList.contains('mobile-reading');
+  if(mobileReading) section.querySelectorAll('a[target="_blank"]').forEach(link=>link.removeAttribute('target'));
   const text = (node) => node?.textContent.trim().replace(/\s+/g, ' ') || '';
   const make = (tag, cls, value) => {
     const el = document.createElement(tag); el.className = cls;
@@ -19,7 +21,7 @@ function initBook() {
     label:text(article.querySelector('.project-meta,.project-label')),
     intro:text(article.querySelector('.featured-copy > p')) || text(article.querySelector(':scope > p')),
     links:[...article.querySelectorAll('.project-actions a,:scope > a')],
-    notes:text(article.querySelector('.project-notes,.launch-strip'))
+    notes:[...article.querySelectorAll('.project-notes span,.launch-strip span')].map(text).join(' · ') || text(article.querySelector('.project-notes,.launch-strip'))
   })));
   const shell=make('div','epic-library');
   shell.innerHTML=`<div class="epic-library-top"><div><h3>锻造之书</h3><p>翻过一页，走进一个作品。</p></div><div class="epic-view-tools"><button type="button" class="epic-catalog-toggle" aria-expanded="false">目录</button><button type="button" class="epic-list-toggle" aria-pressed="false">列表阅读</button></div></div><div class="epic-library-layout"><aside class="epic-catalog" aria-label="锻造之书目录"><label class="epic-search-label">查找作品<input type="search" placeholder="搜索项目名称" aria-label="搜索项目名称"></label><nav class="epic-chapters"></nav><p class="epic-no-results" hidden>没有匹配的作品</p><p class="epic-catalog-note">目录可以直接跳转，<br>不必从第一页开始。</p></aside><div class="epic-desk"><div class="epic-book-wrap"><div class="epic-book" aria-label="可翻阅的项目作品册"></div></div><div class="epic-book-controls"><button type="button" data-book-action="prev" aria-label="上一页">←</button><div><output class="epic-page-status" aria-live="polite"></output><span>拖动页角 · 点击箭头翻页</span></div><button type="button" data-book-action="next" aria-label="下一页">→</button></div><div class="epic-chapter-controls"><button type="button" data-book-action="previous-chapter">上一作品</button><button type="button" data-book-action="cover">查看封面</button><button type="button" data-book-action="next-chapter">下一作品</button></div></div></div>`;
@@ -49,6 +51,11 @@ function initBook() {
     left.append(make('p','epic-project-kind',ch.label),make('h4','epic-project-title',ch.title));
     if(ch.notes) left.append(make('p','epic-project-notes',ch.notes));
     const read=make('button','epic-read', '完整项目与细节 ↗');read.type='button';read.dataset.read=ch.index;left.append(read);
+    if(mobileReading){
+      const quickLinks=make('div','epic-project-links');
+      ch.links.slice(0,3).forEach(a=>{const link=a.cloneNode(true);link.className='epic-project-link';link.removeAttribute('style');quickLinks.append(link);});
+      left.append(quickLinks);
+    }
     left.append(make('span','epic-folio',String(ch.index*2+1).padStart(2,'0')));
     const right=page('epic-project-story');right.parentElement.dataset.chapter=ch.index;
     right.append(make('span','epic-running-head',ch.title),make('h4','epic-story-heading','关于这个作品'),make('p','epic-project-intro',ch.intro));
@@ -87,7 +94,7 @@ function initBook() {
   }
   let fallbackPage=0;
   const fallbackTurn=p=>{fallbackPage=Math.max(0,Math.min(pageNodes.length-1,p));sync(fallbackPage);};
-  const fallbackStep=()=>shell.querySelector('.epic-book-wrap').clientWidth<620?1:2;
+  const fallbackStep=()=>mobileReading || shell.querySelector('.epic-book-wrap').clientWidth<620?1:2;
   let flip={
     getCurrentPageIndex:()=>fallbackPage,getOrientation:()=>fallbackStep()===1?'portrait':'landscape',
     turnToPage:fallbackTurn,flip:fallbackTurn,update:()=>sync(fallbackPage),
@@ -121,8 +128,6 @@ function initBook() {
     sync(flip.getCurrentPageIndex());
   }
   sync(fallbackPage);
-  // Links and buttons are actions, not page-drag handles (including their SVG children).
-  ['mousedown','touchstart'].forEach(type=>bookEl.addEventListener(type,e=>{if(e.target.closest('a,button'))e.stopPropagation();},{capture:true,passive:true}));
   shell.addEventListener('click',e=>{
     const chapter=e.target.closest('[data-chapter].epic-chapter');
     if(chapter){go(chapterPage(Number(chapter.dataset.chapter),chapters.length),true);shell.classList.remove('epic-catalog-open');shell.querySelector('.epic-catalog-toggle').setAttribute('aria-expanded','false');return;}
@@ -161,6 +166,13 @@ function initBook() {
   });
   // One deliberate loading state: the source list and the flat fallback book stay hidden
   // until the interactive scene is ready (or WebGL is unavailable and the fallback wins).
+  if(mobileReading){
+    section.classList.add('epic-book-ready');
+    section.classList.remove('epic-book-pending');
+    section.querySelector('.epic-book-boot')?.remove();
+    shell.querySelector('.epic-book-controls span').textContent='轻点箭头翻页';
+    return;
+  }
   const wrap=shell.querySelector('.epic-book-wrap');
   const loadingBoot=make('div','epic-book-loading-boot');
   loadingBoot.setAttribute('role','status');loadingBoot.setAttribute('aria-live','polite');
@@ -196,9 +208,6 @@ function initBook() {
   },{rootMargin:'300px'});
   upgrade.observe(shell);
 }
-
-// 页面刷新时不恢复上次滚动位置，避免带 #projects 时自动跳到作品区（锻造之书），始终从顶部开始。
-if('scrollRestoration' in history) history.scrollRestoration='manual';
 
 try { initBook(); } catch(error) {
   console.warn('[portfolio book] Keeping original project list:',error);

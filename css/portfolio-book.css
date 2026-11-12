@@ -127,7 +127,7 @@
 .epic-project-intro { font-size:14px;line-height:1.95;color:#373327;margin:0 0 20px; }
 .epic-project-excerpt { font-size:12px;line-height:1.9;color:#77674f;border-top:1px solid #78654433;padding-top:16px;margin:0 0 16px; }
 .epic-project-links { display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:auto;padding-top:6px; }
-.epic-project-link { color:#69512c;font-size:12px;text-underline-offset:4px;text-decoration:underline; }
+.epic-project-link { display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid #a07c43;border-radius:7px;background:#d9bc83;color:#302311;font-size:13px;font-weight:600;text-decoration:none;touch-action:manipulation; }
 .epic-project-links + .epic-read { margin-top:10px; }
 .epic-paper :is(a,button) * { pointer-events:none; }
 .epic-cover { background:#171b18;color:#d0b27a;border:4px solid #302e23; }
@@ -189,10 +189,23 @@
 }
 
 /* One deliberate loading state instead of flashing the source list and the flat fallback book. */
-.projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
+:where(html:not(.mobile-reading)) .projects.epic-book-pending :is(.project-ledger,.featured-project,.showcase-rail),
 .projects.epic-book-loading :is(.project-ledger,.featured-project,.showcase-rail) { display:none!important; }
 .epic-book-boot { display:none; min-height:620px; align-items:center; justify-content:center; flex-direction:column; gap:18px; text-align:center; color:#a99c83; }
-.projects.epic-book-pending .epic-book-boot { display:flex; }
+:where(html:not(.mobile-reading)) .projects.epic-book-pending .epic-book-boot { display:flex; }
+html.mobile-reading, .mobile-reading body { overscroll-behavior-y:none; }
+.mobile-reading .epic-book { grid-template-columns:minmax(0,1fr); }
+.mobile-reading .reveal { opacity:1; visibility:visible; transform:none; }
+.mobile-reading .epic-project-face .epic-project-links { justify-content:center;margin-top:12px;padding-bottom:24px; }
+.mobile-reading .epic-project-face .epic-read { margin-top:24px; }
+.epic-read, .epic-live-actions :is(button,a), .epic-details-content a {
+ display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid #a07c43;border-radius:7px;background:#d9bc83;color:#302311;font-size:13px;font-weight:600;line-height:1.5;text-decoration:none;touch-action:manipulation;
+}
+.epic-live-actions button { color:#302311; }
+.crisp-actions :is(button,a) { padding:14px 20px;background:#d9bc83;color:#302311;border:2px solid #a07c43;border-radius:10px; }
+.is-visual .crisp-actions button { color:#302311; }
+.mobile-reading .projects .project-actions a { min-height:44px;touch-action:manipulation;transform:none; }
+.mobile-reading .projects .project-actions a:active, .epic-project-link:active { background:#c9a563; }
 .epic-book-boot-mark { width:22px;height:22px;border:1px solid #5d4f36;border-top-color:#d9bd86;border-radius:50%;animation:epic-book-spin 1s linear infinite; }
 .epic-book-boot p { margin:0;font:13px/1.6 'Inter',system-ui,sans-serif;letter-spacing:.08em;color:#a99c83; }
 .epic-book-loading .epic-book { visibility:hidden; }
