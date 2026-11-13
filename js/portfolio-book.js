@@ -194,7 +194,7 @@ function initBook() {
   let lightBook;
   async function loadFullBook(){
     try {
-      const {createBookScene}=await import('./portfolio-book-3d.js?v=native-reading-1');
+      const {createBookScene}=await import('./portfolio-book-3d.js?v=native-reading-2');
       const scene=await createBookScene(wrap,chapters,{initialPage:currentPage,onPage:sync,readChapter,mobileReading,onLoss(){
         flip=fallback;wrap.classList.remove('epic-3d-active');shell.classList.remove('epic-spatial');
         finishLoading();fallbackTurn(currentPage);
@@ -205,7 +205,7 @@ function initBook() {
     } catch(error){console.warn('[portfolio book] WebGL unavailable; keeping HTML paper:',error);finishLoading();flip.update();}
   }
   if(mobileReading){
-    import('./mobile-book.js?v=native-reading-1').then(({createMobileBook})=>{
+    import('./mobile-book.js?v=native-reading-2').then(({createMobileBook})=>{
       wrap.classList.add('mobile-bound');
       lightBook=createMobileBook(wrap,chapters,{initialPage:currentPage,onPage:sync,readChapter});
       flip=lightBook;finishLoading();sync(currentPage);

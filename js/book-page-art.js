@@ -43,8 +43,10 @@ function image(ctx,img,x,y,w,h) {
 function pageActions(chapter,face) {
   const entries=face?[]:chapter.links.slice(0,3).map(link=>({link,label:link.textContent.trim()}));
   entries.push({label:'完整介绍'});
-  const width=Math.min(180,(652-(entries.length-1)*14)/entries.length);
-  return entries.map((entry,i)=>({...entry,x:58+i*(width+14),y:920,width,height:72}));
+  const columns=entries.length>3?2:entries.length;
+  const width=Math.min(240,(652-(columns-1)*14)/columns);
+  const rows=Math.ceil(entries.length/columns);
+  return entries.map((entry,i)=>({...entry,x:58+(i%columns)*(width+14),y:920-(rows-1-Math.floor(i/columns))*76,width,height:68}));
 }
 function rule(ctx,x,y,w,color) {
   ctx.strokeStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+w,y);ctx.stroke();
@@ -123,7 +125,7 @@ export function paintBookPage(ctx,index,count,chapters,load) {
     ctx.fillStyle=ink;
     text(ctx,ch.title,titleX,229,714-titleX,54,66,2);
     ctx.fillStyle='#353c33';
-    text(ctx,ch.intro,58,390,644,40,62,8);
+    text(ctx,ch.intro,58,390,644,40,62,ch.links.length>2?7:8);
   }
   for(const {label,link,x,y,width,height} of pageActions(ch,face)){
     const primary=link && x===58;
@@ -146,6 +148,7 @@ export function createCrispPage(index,count,chapters) {
   }
   const ch=chapters[Math.floor((index-1)/2)],visual=index%2===1;
   el.classList.toggle('is-visual',visual);
+  el.classList.toggle('has-many-actions',!visual && ch.links.length>2);
   el.innerHTML='<p class="crisp-running"></p><h4></h4><p class="crisp-kind"></p><div class="crisp-visual"></div><p class="crisp-intro"></p><p class="crisp-notes"></p><div class="crisp-actions"></div><span class="crisp-folio"></span>';
   el.querySelector('.crisp-running').textContent=visual?'锻造之书 / 杨锟':'项目手记';
   el.querySelector('h4').textContent=ch.title;

@@ -1,4 +1,4 @@
-import { createCrispPage } from './book-page-art.js?v=native-reading-1';
+import { createCrispPage } from './book-page-art.js?v=native-reading-2';
 import { mobileTurnFrames, shouldTurnByGesture } from './mobile-book-state.mjs';
 
 export function createMobileBook(host, chapters, { initialPage, onPage, readChapter }) {

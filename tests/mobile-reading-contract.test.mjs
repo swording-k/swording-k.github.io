@@ -67,11 +67,11 @@ test('mobile publishing uses distinct script versions and the dated resume', asy
 
     assert.match(html, /href="files\/resume-yangkun-ai-product-engineer\.pdf\?v=20261029"/);
     assert.match(html, /js\/main\.js\?v=native-reading-1/);
-    assert.match(html, /js\/portfolio-book\.js\?v=native-reading-1/);
-    assert.match(html, /css\/portfolio-book\.css\?v=native-reading-1/);
+    assert.match(html, /js\/portfolio-book\.js\?v=native-reading-2/);
+    assert.match(html, /css\/portfolio-book\.css\?v=native-reading-2/);
     assert.match(html, /css\/sword-hall-home\.css\?v=native-reading-1/);
-    assert.match(portfolio, /import\('\.\/mobile-book\.js\?v=native-reading-1'/);
-    assert.match(portfolio, /import\('\.\/portfolio-book-3d\.js\?v=native-reading-1'/);
-    assert.match(mobile, /from '\.\/book-page-art\.js\?v=native-reading-1'/);
+    assert.match(portfolio, /import\('\.\/mobile-book\.js\?v=native-reading-2'/);
+    assert.match(portfolio, /import\('\.\/portfolio-book-3d\.js\?v=native-reading-2'/);
+    assert.match(mobile, /from '\.\/book-page-art\.js\?v=native-reading-2'/);
     assert.equal(resumeHash, '67206b2df9e1110bcc09cf4f1c7048e6166cf45590b6734a6c36c313f49e72c4', 'the published PDF must match the approved 10.29 resume');
 });

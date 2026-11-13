@@ -61,6 +61,7 @@
 .crisp-running { top:50px;font-size:25px;line-height:34px;color:#7c7057; }
 .crisp-kind { display:none; }
 .crisp-intro { top:350px;font-size:40px;line-height:62px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:8;overflow:hidden; }
+.has-many-actions .crisp-intro { -webkit-line-clamp:7; }
 .crisp-visual { display:none; }
 .crisp-notes { display:none; }
 .epic-crisp-page.is-visual { background:#1b1916;color:#e5d9bd; }
@@ -209,7 +210,7 @@ html.mobile-reading, .mobile-reading body { overscroll-behavior-y:contain; }
 .is-reading-surface .crisp-intro { font-size:39px;line-height:1.52;color:#332d23; }
 .is-reading-surface .crisp-notes { top:828px;font-size:30px;line-height:39px;color:#514633; }
 .is-reading-surface .crisp-actions { inset:0;display:block;pointer-events:none; }
-.is-reading-surface .crisp-actions :is(a,button) { display:inline-flex;align-items:center;justify-content:center;margin:0;padding:0 5px;background:#9f86551b;border:0;border-bottom:2px solid #9d845a;color:#453822;font-size:27px;line-height:1.2;touch-action:manipulation; }
+.is-reading-surface .crisp-actions :is(a,button) { display:inline-flex;align-items:center;justify-content:center;margin:0;padding:0 8px;background:#9f86551b;border:0;border-bottom:2px solid #9d845a;color:#453822;font-size:27px;line-height:1.2;text-decoration:none;white-space:nowrap;touch-action:manipulation; }
 .is-reading-surface .crisp-actions a:first-child { background:#605138;color:#fff6e4; }
 .is-reading-surface .crisp-actions a::after { content:'↗';margin-left:5px;font-size:.72em; }
 .epic-crisp-page.is-reading-surface.is-cover { background:#2a211b url('../images/book/leather-binding-v1.webp') center/100% 100%;color:#c5ac7c; }
