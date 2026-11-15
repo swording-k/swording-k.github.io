@@ -47,7 +47,7 @@ function initBook() {
     const small=make('span','',String(ch.index+1).padStart(2,'0'));b.prepend(small);groups.get(ch.category).append(b);
     const left=page('epic-project-face');left.parentElement.dataset.chapter=ch.index;
     left.append(make('span','epic-running-head','杨锟 / 作品集'));
-    const icon=ch.icon.cloneNode();icon.removeAttribute('style');icon.className='epic-project-icon';icon.loading='lazy';left.append(icon);
+    if(ch.icon){const icon=ch.icon.cloneNode();icon.removeAttribute('style');icon.className='epic-project-icon';icon.loading='lazy';left.append(icon);}
     left.append(make('p','epic-project-kind',ch.label),make('h4','epic-project-title',ch.title));
     if(ch.notes) left.append(make('p','epic-project-notes',ch.notes));
     const read=make('button','epic-read', '完整项目与细节 ↗');read.type='button';read.dataset.read=ch.index;left.append(read);
