@@ -3947,3 +3947,15 @@ body::after,
         display: none;
     }
 }
+
+/* Personal signature: Chinese calligraphic title and a restrained serif roman name. */
+.hero-name-main, .hero-alias {
+    font-family: "Kaiti SC", STKaiti, KaiTi, "Songti SC", serif;
+    font-weight: 400;
+}
+.hero-name-main { letter-spacing: .08em; }
+.hero-roman {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: .025em;
+}
