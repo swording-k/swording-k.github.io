@@ -829,15 +829,11 @@ ul {
     padding: 22px;
 }
 
-.portrait-wrap {
-    overflow: hidden;
-    border-radius: var(--radius);
-    border: 1px solid var(--line);
-    aspect-ratio: 4 / 3;
-    background: var(--surface-muted);
+.life-carousel {
+    width: 100%;
 }
 
-.portrait-wrap img {
+.life-carousel img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -3946,4 +3942,37 @@ body::after,
     .hero-title::after {
         display: none;
     }
+}
+
+/* Personal signature: heavy-cut serif with a tempered steel-and-gold finish. */
+.hero-name-main {
+    font-family: "Noto Serif SC", "Songti SC", "STSong", "Source Han Serif SC", serif;
+    font-weight: 900;
+    font-size: clamp(64px, 7.6vw, 106px);
+    letter-spacing: 0.04em;
+    line-height: 0.98;
+    background: linear-gradient(178deg, #fffdf6 0%, #f3ecda 34%, #d8c49a 62%, #a8834e 88%, #8f6b3c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 4px 18px rgba(199, 165, 109, 0.22));
+}
+
+.hero-name-main .motion-char {
+    background: linear-gradient(178deg, #fffdf6 0%, #f3ecda 34%, #d8c49a 62%, #a8834e 88%, #8f6b3c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 4px 18px rgba(199, 165, 109, 0.22));
+}
+
+.hero-alias {
+    font-family: var(--font-sans);
+    font-weight: 700;
+}
+
+.hero-roman {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: .025em;
 }
